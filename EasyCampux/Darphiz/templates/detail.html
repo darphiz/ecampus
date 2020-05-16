@@ -1,0 +1,178 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+
+{% block content %}
+
+<!-- Post Header-->
+<div class="w3-container w3-hide-small w3-center w3-margin-top">
+	<h1 style= "font-size: 3.6rem">
+	{{ post.title }}
+	</h1>
+
+</div>
+
+<div class="w3-container w3-center w3-hide-large w3-hide-medium w3-margin-top">
+	<h4><b>
+	{{ post.title }}</b>
+	</h4>
+
+</div>
+
+
+<div class="w3-container w3-center">
+<p>
+Published by {{post.author}} ,<span class= "w3-opacity">{{post.publish|date:"Y-m-d"}}
+</span>
+</p>
+</div>
+<div class = "w3-container">
+<div class="w3-container w3-center w3-margin-top">
+<img class="w3-image" src='{{post.image_upload.url}}'alt="Post Image" style="width: 400px">
+</div>
+
+<div class= "w3-container w3-padding-16 w3-border w3-white  w3-margin-top">
+	<p class="w3-align-left">
+{{ post.body|safe|linebreaks }}
+</p>
+</div>
+
+
+</div>
+
+<!--Related Posts-->
+<div class="w3-container w3-margin-top">
+	<div class="w3-large w3-hide-small w3-container">
+		<h1>Related Articles</h1>
+	</div>
+
+	<div class="w3-container w3-center w3-hide-large w3-hide-medium w3-margin-top">
+	<h4><b>
+	Related Articles</b>
+	</h4>
+
+</div>
+
+
+	<ul class="w3-ul w3-hoverable w3-white">
+
+    	{% for relate in related %}
+
+		<a style="text-decoration: none;" href="{{ relate.get_absolute_url }}">
+			<li class="w3-padding-16">
+				<img class= "w3-round w3-margin-right w3-border w3-left" src="{{relate.image_upload.url}}" alt="post image" style="width:80px">
+ 				<b> {{relate.title|title}}</b>
+
+			</li>
+		</a><hr class="w3-clear">
+	{% endfor %}
+	</ul>
+</div>
+
+<!--comment Section-->
+
+<div class="w3-container w3-margin-left w3-padding-32 w3-margin-top">
+
+	{% with comment.count as total_comments %}
+	<h3 class="w3-xxlarge">
+	<b>{{ total_comments }} Comment{{ total_comments|pluralize }}</b>
+	</h3>
+
+
+{% endwith %}
+
+
+	{% for comment in comments %}
+	<div class="comment w3-white w3-margin-left w3-margin w3-container">
+		<div class="w3-container">
+			<h5 class="info"><b>{{ comment.name|title }} :</b></h5>
+			<h7 class="w3-text-grey"><small>{{ comment.created }}</small></h7>
+		</div>
+
+		<p class="w3-margin-left">{{ comment.body|linebreaks }}</p>
+	</div>
+
+
+	{% empty %}
+<p>There are no comments yet.</p>
+{% endfor %}
+
+<!-- paginator -->
+
+
+<div class="pagination w3-content w3-margin-top w3-center w3-container">
+	<div class="step-links">
+		{% if comments.has_previous %}
+		<a href="?page=1"><div class="w3-button w3-round-large w3-green w3-ripple">&laquo; first comments </div></a>
+		<a href="?page={{ comments.previous_page_number }}"><div class="w3-button w3-round-large w3-green w3-ripple">previous comments</div></a>
+		{% endif %}
+
+		<div class="w3-large w3-tag w3-round-xxlarge w3-card w3-green current">
+		Comment {{ comments.number }} of {{ comments.paginator.num_pages }}
+		</div><br>
+
+		<div class= "w3-margin-top">
+			{% if comments.has_next %}
+			<a href="?page={{ comments.next_page_number }}"><div class="w3-button w3-round-large w3-border-green w3-ripple">next comments</div></a>
+			<a href="?page={{ comments.paginator.num_pages }}"><div class="w3-button w3-round-large w3-green w3-ripple">last comment &raquo;</div></a>
+			{% endif %}
+		</div>
+	</div>
+</div>
+
+
+{% if new_comment %}
+<h2>Your comment has been added.</h2>
+{% else %}
+<div class="w3-container">
+	<h2>Add a new comment</h2>
+		<form action="." method="post">
+			{% if user.is_authenticated %}
+			<p>Commenting as <b>{{user.username}}</b> </p>
+		<p>
+		 <input class="w3-input" type="hidden" name="name" value="{{user.username}}" maxlength="80" required id="id_name">
+		</p>
+
+		<p>
+
+		<input class="w3-input " type="hidden" value="{{user.email}}" name="email" maxlength="254" required id="id_email">
+		</p>
+
+		<p>
+		<label class="w3-label w3-validate">Comment:</label>
+		<textarea class='w3-input' name="body"  cols="50" rows="10" required id="id_body">
+			</textarea>
+		</p>
+			{% else %}
+
+
+			<p>
+				<label class="w3-label w3-validate">Name:</label>
+				<input class="w3-input" type="text" name="name"  maxlength="80" required id="id_name">
+			</p>
+
+			   <p>
+				<label class="w3-label w3-validate">Email:</label>
+			   <input class="w3-input " type="email" value="{{user.email}}" name="email" maxlength="254" required id="id_email">
+			   </p>
+
+			   <p>
+			   <label class="w3-label w3-validate">Comment:</label>
+			   <textarea class='w3-input' name="body"  cols="50" rows="10" required id="id_body">
+				   </textarea>
+			   </p>
+
+{% endif %}
+		{% csrf_token %}
+
+		<p><input class="w3-btn w3-section w3-round-xxlarge w3-green w3-ripple "type="submit" value="Add comment"></p>
+	</form>
+{% endif %}
+</div>
+</div>
+
+{% endblock %}
+
+
+

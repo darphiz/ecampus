@@ -1,0 +1,153 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}
+{{ question.title }}
+{% endblock %}
+
+
+{% block content %}
+
+<!-- Post Header-->
+<div class="w3-container w3-center w3-hide-small w3-margin-top">
+	<h2>
+	{{ question.title }}
+	</h2>
+
+</div>
+
+<div class="w3-container w3-hide-large w3-hide-medium w3-center w3-margin-top">
+	<h6>
+	{{ question.title }}
+	</h6>
+
+</div>
+
+<div class="w3-container w3-center">
+<p>
+Asked by {{question.name}} ,<span class= "w3-opacity">{{question.date_asked|date:"Y-m-d"}}
+</span>
+</p>
+</div>
+
+<div class = "w3-container">
+    {% if question.image_upload %}
+<div class="w3-container w3-center w3-margin-top">
+<img class="w3-image" src='{{question.image_upload.url}}'alt="Question Image" >
+</div>
+{% endif %}
+<div class="w3-content">
+<div class= " w3-container w3-padding-32 w3-border w3-white  w3-margin-top">
+	<p class="w3-margin-left ">
+{{ question.body|linebreaks }}
+</p>
+
+</div>
+</div>
+
+
+<!--Answers Section-->
+
+<div class="w3-container w3-padding w3-margin-top">
+
+	{% with answer.count as total_answers %}
+	<h7 class="w3-xxlarge">
+	<b>{{ total_answers }} Answer{{ total_answers|pluralize }}</b>
+	</h7>
+
+
+{% endwith %}
+
+
+	{% for answer in answers %}
+	<div class="comment w3-white">
+		<div class="w3-container">
+			<h7 class="info"><b>{{ answer.name|title }} :</b></h7>
+			<h7 class="w3-text-grey"><small>{{ answer.created }}</small></h7>
+		</div>
+<div class="w3-margin">
+		{{ answer.body|linebreaks }}
+		</div>
+	</div>
+
+
+	{% empty %}
+<p>There are no answers yet, check back later.</p>
+{% endfor %}
+</div>
+<!-- paginator -->
+
+
+<div class="pagination w3-content w3-margin-top w3-center w3-container">
+    <div class="step-links">
+    {% if answers.has_previous %}
+    <a href="?page=1"><div class="w3-button w3-round-large w3-blue w3-ripple">&laquo; first </div></a>
+    <a href="?page={{ answers.previous_page_number }}"><div class="w3-button w3-round-large w3-blue w3-ripple">previous</div></a>
+    {% endif %}
+
+    <div class="w3-large w3-tag w3-card w3-blue current">
+    Page {{ answers.number }} of {{ answers.paginator.num_pages }}
+    </div><br>
+    <div class= "w3-margin-top">
+    {% if answers.has_next %}
+    <a href="?page={{ answers.next_page_number }}"><div class="w3-button w3-round-large w3-border-blue w3-ripple">next</div></a>
+    <a href="?page={{ answers.paginator.num_pages }}"><div class="w3-button w3-round-large w3-blue w3-ripple">last &raquo;</div></a>
+    {% endif %}
+    </div>
+    </div>
+    </div>
+
+
+
+
+
+<!--Answer Form-->
+
+{% if new_answer %}
+<div class="w3-content w3-leftbar w3-border-blue w3-margin-top w3-white w3-padding ">
+    <h5 class="w3-text-grey">Your answer has been added!. Do not reload the page</h5>
+</div>
+{% else %}
+						{% if user.is_authenticated %}
+    <div class="w3-container w3-leftbar w3-border-blue w3-content w3-border w3-margin-top w3-white w3-padding-32">
+        <h5 class="w3-center  w3-text-grey">Answer This Question</h5>
+
+            <form action="."  method="post">
+                {% csrf_token %}
+
+
+
+
+                    <input class="w3-input" type="hidden" name="name" placeholder="Adeboy28" maxlength="80" value="{{user.username}}" required id="id_name">
+
+
+
+
+                    <label class="w3-label w3-validate">Answer:</label>
+                    <textarea class='w3-input' name="body"  cols="10" rows="5" required id="id_body">
+                        </textarea>
+
+
+
+
+                <p><input class="w3-btn w3-section w3-border-blue w3-border w3-round w3-ripple "type="submit" value="Answer"></p>
+								{% else %}
+<h5 class="w3-content w3-container w3-margin-top w3-text-grey ">Please login to your easyCampus account to answer this question</h5>
+						{% endif %}
+			</form>
+
+    </div>
+    {% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+{% endblock %}

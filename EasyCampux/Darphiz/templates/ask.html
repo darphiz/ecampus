@@ -1,0 +1,253 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}
+Question and answer zone
+{% endblock %}
+
+
+{% block content %}
+<!--Search bar-->
+
+
+<div class=" w3-margin w3-margin-top w3-round-large ">
+    <form action="." method="get" class="form-inline mt-2 m\
+    t-md-0">
+
+    <input id="q" name="q" value="{{ request.GET.q }}" 
+    class="w3-input w3-round-xxlarge w3-card" type="text" placeholder="Search keyword..." aria-label="Search">
+    <button class="w3-btn w3-blue w3-round-xxlarge w3-margin-top
+    " type="submit">Search</button>
+    </form>
+</div>
+
+<!--Grid-->
+<div class="w3-row">
+
+    <!--Left Column-->
+<div class=" w3-col s12 m8 w3-container">
+<!--What is your question-->
+{% if user.is_authenticated  %}
+<div class="  w3-card  w3-white w3-border w3-padding">
+
+    <h4 class="w3-text-grey ">
+        <span>
+            {% if user.userprofile.gender|title == "Male" %}
+            <img src="{% static 'images/maleprofile.png' %}" alt='profile icon' class="w3-image w3-circle" style="width:50px">
+                        {% else %}
+                        <img src="{% static 'images/maleprofile.png' %}" alt='profile icon' class="w3-image w3-circle" style="width:50px">
+                        {% endif %}            
+            {{user.first_name|title}} {{user.last_name|title}}
+
+        </span>
+        <br><br>
+      <a href="#ask" style="text-decoration:none;"> <b>   What is your question?</b></a></h4>
+</div>
+    {% endif %}
+<!-- End what is ur question-->
+
+<!--Faculty Questions -->
+
+
+
+{% if faculty_questions %}
+<div class=" w3-text-grey">
+  <h4> <b> Asked By your Faculty Mates </b></h4>
+</div>
+{% for question in faculty_questions %}
+
+<div class=" w3-padding w3-margin-top w3-white w3-border">
+    <p class="w3-text-grey"><small>Answer.Reacommended</small></p>
+    <p class ="w3-tag w3-round-xxlarge">{{question.tags}}</p>
+    <h4><b>{{question.title|title}}</b></h4>
+    <p1 class="w3-text-grey">Asked by {{question.name}} on {{question.date_asked}}</p1>
+    {% if question.image_upload %}
+    <div class="w3-container w3-margin-top w3-image ">
+        <img src="{{question.image_upload.url}}" class="w3-image" alt="question image" style="width:600px">
+    </div>
+    {% endif %}
+    <div class="w3-margin-top w3-container">
+        <p>{{question.body|title|truncatewords:30}}</p>
+        <a href="{{ question.get_absolute_url }}" style="text-decoration: none;">
+     <button class="w3-border w3-btn w3-border-blue w3-round">Readmore</button> </a>
+    </div>
+
+</div>
+{% endfor %}
+{% endif %}
+
+
+
+
+<!--Recently asked questions-->
+{% if search_result %}
+<div class=" w3-text-grey">
+  <h4> <b>Search results: </b></h4>
+</div>
+
+
+    {% else %}
+
+<div class=" w3-text-grey">
+    <h4> <b> Recently Asked Questions</b></h4>
+  </div>
+
+{% endif %}
+
+    {% for question in questions %}
+<div class="w3-padding w3-margin-top w3-white w3-border">
+    <p class="w3-text-grey"><small>Answer.Recently Asked</small></p>
+    <h4><b>{{question.title|title}}</b></h4>
+    <p1 class="w3-text-grey">Asked by {{question.name}} on {{question.date_asked}}</p1>
+    {% if question.image_upload %}
+    <div class="w3-container w3-margin-top w3-image ">
+        <img src="{{question.image_upload.url}}" class="w3-image" alt="question image" style="width:600px">
+    </div>
+    {% endif %}
+    <div class="w3-margin-top w3-container">
+        <p>{{question.body|title|truncatewords:30}}</p>
+        <a href="{{ question.get_absolute_url }}" style="text-decoration: none;">
+     <button class="w3-border w3-btn w3-border-blue w3-round">Readmore</button> </a>
+    </div>
+
+</div>
+
+            {% empty %}
+
+            <div class="  w3-padding w3-margin-top w3-white w3-border">
+                <p class="w3-text-grey"><small>Answer.Recently Asked</small></p>
+                <h4><b>No questions yet , be the first to ask!</b></h4>
+              <button class="w3-border w3-btn w3-border-blue w3-round"> <a href="#ask" >Ask</a></button>
+
+            </div>
+
+    {% endfor %}
+
+<!-- paginator -->
+
+
+<div class="pagination  w3-margin-top w3-center w3-container">
+    <div class="step-links">
+    {% if questions.has_previous %}
+    <a href="?page=1"><div class="w3-button w3-round-large w3-blue w3-ripple">&laquo; first </div></a>
+    <a href="?page={{ questions.previous_page_number }}"><div class="w3-button w3-round-large w3-blue w3-ripple">previous</div></a>
+    {% endif %}
+
+    <div class="w3-large w3-tag w3-card w3-blue current">
+    Page {{ questions.number }} of {{ questions.paginator.num_pages }}
+    </div><br>
+    <div class= "w3-margin-top">
+    {% if questions.has_next %}
+    <a href="?page={{ questions.next_page_number }}"><div class="w3-button w3-round-large w3-border-blue w3-ripple">next</div></a>
+    <a href="?page={{ questions.paginator.num_pages }}"><div class="w3-button w3-round-large w3-blue w3-ripple">last &raquo;</div></a>
+    {% endif %}
+    </div>
+    </div>
+    </div>
+
+
+
+
+     <!--Ask your own question-->
+{% if new_question %}
+<div  class=" w3-leftbar w3-border-blue w3-margin-top w3-white w3-padding ">
+    <h2 class="w3-text-grey"><i class="fa fa-spinner fa-spin"></i>Your question has been added, please wait for approval.</h2>
+</div>
+
+{% else %}
+            {% if user.is_authenticated %}
+    <div id ="ask" class="w3-container w3-leftbar w3-border-blue  w3-border w3-margin-top w3-white w3-padding-32">
+        <h2 class="w3-center  w3-text-grey">Ask your own Question</h2>
+
+            <form action="." enctype="multipart/form-data" method="post">
+                {% csrf_token %}
+
+
+              <p>
+
+                    <input class="w3-input" type="hidden" name="name" placeholder="Adeboy28" maxlength="80" value="{{ user.username }}" required id="id_name">
+
+                </p>
+
+              <p>
+
+                <input class="w3-input" type="hidden" name="faculty" placeholder="" maxlength="80" value="{{  user.userprofile.faculty }}" required id="id_faculty">
+
+            </p>
+
+
+                <p>
+                    <label class="w3-label w3-validate">Title:</label>
+                    <input class="w3-input" type="text" name="title" placeholder="give a nice title for your question" required id="id_title">
+
+                </p>
+                <p>
+                    <label class="w3-label w3-validate">Question:</label>
+                    <textarea class='w3-input' name="body"  cols="10" rows="5" required id="id_body">
+                        </textarea>
+                </p>
+
+                <p>
+                    <label class="w3-label w3-validate">Tag:</label>
+                    <small class="w3-text-grey">optional(leave blank if not required)</small>
+                    <input class="w3-input" type="text" name="tags" placeholder="input your question tag for easy access"  id="id_tags">
+                </p>
+
+
+
+
+                <p>
+
+                    <label class="w3-label w3-validate">Add Image:</label> <br>
+                    <small class="w3-text-grey">optional(leave blank if not required)</small>
+                    <input type="file" class="w3-input" name="image_upload" accept="image/*"  id="id_image_upload">
+                </p>
+
+
+                <p><input class="w3-btn w3-section w3-border-blue w3-border w3-round w3-ripple "type="submit" value="submit"></p>
+
+
+            </form>
+            </div>
+            {% else %}
+            <h5 class=" w3-container w3-text-grey">Please <a href="{% url 'login' %}" class= 'w3-blue'>login</a> to your easyCampus account to ask your own question </h5>
+            {% endif %}
+
+    {% endif %}
+
+    <!--End left column container-->
+    </div>
+
+    <!--Right Colum-->
+    <div class="w3-col s12 m4 w3-container">
+            <div class="w3-card w3-round w3-pale-blue w3-center">
+              <div class="w3-container">
+                <h4><b>CBT Exam Portal</b></h4>
+                <img class="w3-round" src="{% static 'images/learn.jpg' %}" alt="cbt" style="width:100%;">
+                <p> <span class="w3-opacity">Did you know?</span><br>
+                An effective way to boost your CGPA is by practicing free
+                  cbt on easyCAMPUS. it increases confidence ,aids learning and increases the rate at which you decide during the
+                  exam. Select a mode to get started!
+                 </p>
+                 <a href= "{% url 'quiz_index' %}" class="w3-btn w3-block w3-teal w3-round-xxlarge">Quiz mode</a><br>
+                <a href= "{% url 'quiz_index' %}" class="w3-btn w3-block w3-teal w3-round-xxlarge w3-margin-bottom ">Exam mode</a>
+                
+              </div>
+            </div>
+            <br>
+                       <br>
+            
+            <div class="w3-card w3-round w3-white  w3-padding-16 w3-center">
+              <p>Click Here To Post Your ADS</p>
+            </div>
+            <br>
+          
+            
+          
+
+
+        <!--End right column container-->
+    </div>
+
+    <!--End Grid-->
+    </div>
+{% endblock %}

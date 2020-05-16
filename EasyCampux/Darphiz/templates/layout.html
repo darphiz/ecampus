@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+{% block title %}
+
+{% endblock %}
+
+</title>
+	 <!-- Add icon library -->
+	<link rel="stylesheet" href= "{% static 'css/w3.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<link rel="stylesheet" href="{% static 'css/w3.css' %}">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+	<link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
+	<script src="https://kit.fontawesome.com/468679e4e9.js" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<meta name= "viewport" content="width = device-width , initial-scale=1">
+	<meta charset="UTF-8">
+
+	<meta name="description" content=".......making your campus life Easy">
+</head>
+<style>
+	body,h1,h2,h3,h4,h5{font-family: "Raleway", sans-serif}
+	#heading{font-family: 'Sofia';}
+	.na i{-webkit-text-stroke: 1px white;}
+</style>
+<style>
+.icon-bar{
+ width:100%;/* Full-width */
+ background-color:white;/* white background */
+ overflow:auto;/* Overflow due to float */
+}
+.icon-bar a{
+ float:left;/* Float links side by side */
+ text-align:center;/* Center-align text */
+ width:20%;/* Equal width (5 icons with 20% width each = 100%) */
+padding:12px 0;/* Some top and bottom padding */
+transition:all 0.3s ease;/* Add transition for hover effects */
+color:white;/* green text color */
+font-size:20px;/* Increased font size*/}
+.icon-bar a:hover{
+ background-color:#000;/* Add a hover color */
+}
+
+.active{
+ color:white;/* Add an active/current color */
+}
+
+
+</style>
+	<script>
+		function w3_open() {
+		document.getElementById("mySidebar").style.width = "100%";
+		document.getElementById("mySidebar").style.display = "block";
+		}
+
+		function w3_close() {
+		document.getElementById("mySidebar").style.display = "none";
+		}
+		</script>
+
+
+
+<body class="w3-light-grey">
+
+
+		<!-- Header -->
+	<header class=" w3-center w3-container w3-blue" style= "max-width:1400px">
+		<!--Icons-->
+		<div class="w3-container w3-hide-small w3-left">
+		<a href="#"><i class="fab fa-twitter fa-2x"></i></a>
+		<a href="#"><i class="fab fa-facebook fa-2x"></i></a>
+		<a href="#"><i class="fab fa-instagram fa-2x"></i></a>
+		<a href="#"><i class="fab fa-whatsapp fa-2x "></i></a>
+	</div>
+			<h2 id="heading" class="w3-blue w3-center w3-text-white w3-padding-32">
+				<a style="text-decoration: none;" href="{% url 'blog:post_list' %}">
+								<b><span class="">easy</span>CAMPUS</b></h2></a>
+
+
+
+
+
+
+
+								<!--Desktop View-->
+		<div class="w3-white w3-stretch  w3-center w3-hide-small ">
+			<div class="w3-bar ">
+				<a href="{% url 'blog:post_list' %}" class="w3-bar-item w3-center w3-button w3-text-blue w3-hide-small">Home</a>
+				<a href="{% url 'question_list' %}" class="w3-bar-item w3-button w3-center w3-text-blue w3-hide-small ">ASK</a>
+				<a href="{% url 'blog:contact' %}" class="w3-bar-item w3-button w3-center w3-text-blue w3-hide-small">Contact Us</a>
+		{% if user.is_authenticated %}
+				<a href="{% url 'quiz_index' %}" class="w3-bar-item w3-button  w3-center w3-text-blue w3-hide-small">CBT/Quiz Home</a>
+				<a href="{% url 'quiz_progress' %}" class="w3-bar-item w3-button w3-center w3-text-blue w3-hide-small">DashBoard</a>
+				<a href="{% url 'logout' %}" class="w3-bar-item w3-button w3-center w3-text-blue w3-hide-small">Log Out</a>
+			{% else %}
+				<a href="{% url 'login' %}" class="w3-bar-item w3-button w3-center w3-text-blue w3-hide-small">Login/Register</a>
+				{% endif %}
+
+
+			</div>
+		</div>
+
+	
+		</header>
+
+<div class="icon-bar na w3-animate-zoom  w3-blue w3-hide-medium w3-hide-large">
+
+  <a class="" href="{% url 'blog:post_list'%}"><i class="fa fa-home fa-spin active "></i></a>
+  <a href="{% url 'quiz_index' %}"><i class="fa fa-laptop "></i></a>
+  <a href="http://www.fuoyepedia.com.ng"><i class="fa fa-file-pdf "></i></a>
+  {% if user.is_authenticated %}
+  <a href="{% url 'quiz_progress' %}"><i class="fa fa-user-circle-o"></i></a>
+  {% else %}
+  <a href ="{% url 'login' %}"><i class="fa fa-user-circle-o"></i></a>
+{% endif %}
+    <a href="{% url 'question_list' %}"><i class="fa fa-comments-o"></i></a>
+
+</div>
+
+<!--
+	<marquee behavior="alternate" direction="left">SITE UNDER MAINTENANCE!!!  SITE UNDER MAINTENANCE!!! </marquee> -->
+<!--loader-->
+	
+<body>
+
+
+
+		{% block content %}
+
+
+
+
+		{% endblock %}
+
+
+
+
+<!-- Footer -->
+<footer class="w3-container w3-dark-grey w3-padding-32 w3-margin-top">
+	<div class="w3-margin-top w3-hide-large">
+		<div>
+			<h5>Explore</h5>
+			<hr>
+			{% if user.is_authenticated %}
+			<p>
+			<a style="text-decoration: none;" href="{% url 'quiz_progress' %}">Dashboard : View Vour Profile</a>
+			</p>
+			{% endif %}
+			<p>
+				<a style="text-decoration: none;" href="{% url 'quiz_index' %}">Practice FUOYE Past Questions</a>
+			</p>
+
+			<p>
+				<a style="text-decoration: none;" href="{% url 'question_list' %}">Ask An Academic Question</a>
+			</p><br><br>
+		</div>
+
+
+			<div>
+			<h5>Welcome to easyCAMPUS</h5>
+			</div>
+			<hr>
+	</div>
+  <p>Developed by <a href="{% url 'blog:contact' %}" target="_blank">DayStar Developers</a></p>
+  <p>Powered by <a style="text-decoration: none;" href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+
+</footer>
+</body>
+</html>

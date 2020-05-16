@@ -1,0 +1,186 @@
+{% extends 'layout.html' %}
+{% load quiz_tags %}
+{% block title %}Past Questions Practice{% endblock %}
+
+{% block content %}
+
+<!--Page Header-->
+
+<div class="w3-container w3-hide-small w3-center w3-text-black w3-margin-top">
+		<h1 style= "font-size: 3.6rem">Past Questions Practice Center
+		</h1>
+	</div>
+
+
+	<div class="w3-container w3-hide-large w3-hide-medium w3-center w3-text-black w3-margin-top">
+		<h3><b>
+		Past Questions Practice Center
+	</b></h3>
+	</div>
+<!--End Page Header-->
+
+<!--Quiz Explanation-->
+<div class=" w3-margin-top w3-container">
+<div class="w3-container w3-border w3-white">
+	<p>Practice all <strong>FUOYE</strong> Past Questions here on easycampus.com and blast your upcoming exam!.
+	The simulator is useful for every students especially 1st year students,because most of their exams is
+	 Computer Based Test.<br><br>
+	For  wonderful experience, its recomended you use chrome browser.<br><br>
+	There are 2 modes available for now <br>
+	<b>1. The quiz mode;</b><br>
+	The answer and explanation to the question is shown after answering it and performance is shown after ten attempts.
+	This mode is not time dependent.<br><br>
+	<b>2. The CBT mode;</b><br>
+	This is like the real exam, answers and explanations are shown at the end of the exam. its is time dependent ,as the time counts down from 30minutes. The exam is automatically submitted when the time reach 0!<br><br>
+
+	Discipline yourself to practice at least 10  CBT tests right here everyday,by doing this you get rid of exam phobia and learn proper
+	time management .
+	</p>
+</div>
+</div>
+<div>
+<h2 class="w3-text-red w3-container w3-margin-top">Lets get started........</h2></div>
+<br>
+<!--End Quiz Explanation-->
+
+<!--Mode Selection-->
+
+<div class="w3-container w3-padding-16">
+
+	<div class="w3-container w3-white w3-border">
+		<h3> Select Exam Mode </h3>
+	<div>
+	
+	<ul class="w3-ul w3-white">
+		<a class= "w3-button w3-green" href="javascript:show()"><li class="w3-padding-16">A.  Quiz</li></a>
+	<!--List of quiz available-->
+    		{% if quiz_list %}
+		<div id="quiz" class="w3-hide w3-container">
+			<li>
+				<table class="w3-table-all w3-hoverable">
+				<thead>
+				<tr><th>Title</th><th></th></tr>
+				</thead>
+	
+				<tbody>	
+					
+				
+					<tr>
+						<td>GST101</td>								
+						<td><button name='select' onclick ="location.href='/cbt/gst101/'" class="w3-button w3-green w3-round-xxlarge w3-ripple">Select</button>
+						</td>							
+					</tr>
+
+					<tr>
+						<td>GST103</td>								
+						<td><button name='select' onclick ="location.href='/cbt/gst103/'" class="w3-button w3-green w3-round-xxlarge w3-ripple">Select</button>
+						</td>							
+					</tr>
+					<tr>
+						<td>GST105</td>								
+						<td><button name='select' onclick ="location.href='/cbt/gst105/'" class="w3-button w3-green w3-round-xxlarge w3-ripple">Select</button>
+						</td>							
+					</tr>
+
+				<tr>
+				<td>CHM101</td>
+				<td><button name='select' onclick ="location.href='/cbt/chm101/'" class="w3-button w3-green w3-round-xxlarge w3-ripple">Select</button></td>
+				</tr>
+					
+					<tr>
+					<td>BIO101</td>								
+					<td><button name='select' onclick ="location.href='/cbt/bio101/'" class="w3-button w3-green w3-round-xxlarge w3-ripple">Select</button>
+					</td>							
+					</tr>
+					
+
+				<td>PHY101</td>
+				<td><button name='select' onclick ="location.href='/cbt/phy101/'" class="w3-button w3-green w3-round-xxlarge w3-ripple">Select</button>
+				</td>
+				</tr>
+				<tr>
+				<td>PHY103</td>								
+				<td><button name='select' onclick ="location.href='/cbt/phy103/'" class="w3-button w3-green w3-round-xxlarge w3-ripple">Select</button>
+				</td>							
+				</tr>
+				
+				
+		
+				<td>MTH101</td>								
+				<td><button name='select' onclick ="location.href='/cbt/mth101/'" class="w3-button w3-green w3-round-xxlarge w3-ripple">Select</button>
+				</td>							
+				</tr>
+				
+				<td>MTH103</td>								
+				<td><button name='select' onclick ="location.href='/cbt/mth103/'" class="w3-button w3-green w3-round-xxlarge w3-ripple">Select</button>
+				</td>							
+				</tr>
+			  </tbody>
+					</table>
+				</li>
+			</div>
+		<!--End List-->
+		
+			{% else %}
+        		<p>There are no available quizzes.</p>
+			{% endif %}
+		</li>
+	</div>
+<!--End List-->
+
+<!--For CBT mode-->
+<a class = "w3-button w3-ul w3-blue" href="javascript:showExam()"><li class="w3-padding-16  ">B. CBT (exam mode)</li></a>
+
+<div id="cbt" class="w3-hide">
+	<ul class="w3-ul">
+	<li>
+		<table class="w3-table-all w3-hoverable">
+		<thead>
+		<tr><th>Title</th><th></th></tr>
+		</thead>
+
+		<tbody>		
+		
+			<tr>
+				<td>CHM101</td>
+				<td><button name='select' onclick ="location.href='/cbt/chm101exam/' " class="w3-button w3-green w3-round-xxlarge w3-ripple">Select</button></td>
+			</tr>
+
+			<tr>
+				<td>BIO101</td>
+				<td><button name='select' onclick ="location.href='/cbt/bio101exam/' " class="w3-button w3-green w3-round-xxlarge w3-ripple">Select</button></td>
+			</tr>	
+		</tbody>
+		</table>
+	</li>
+</ul>
+</div>
+			
+</ul>
+
+</div>
+
+</div>
+</div>
+
+
+
+<!--JavaScript to show and hide a content-->
+<script>
+	function show(){
+		var display= document.getElementById("quiz");
+		var close= document.getElementById("cbt");
+		close.className= "w3-hide";
+	 	display.className = "w3-show w3-container w3-margon-top ";
+		}
+	function showExam(){
+		var display= document.getElementById("quiz");
+		var close= document.getElementById("cbt");
+		close.className= "w3-show  w3-container w3-margin-bottom";
+	 	display.className = "w3-hide ";
+		}
+
+
+	</script>
+
+{% endblock %}
