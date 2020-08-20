@@ -1,11 +1,11 @@
 from django.shortcuts import render, get_object_or_404,redirect
-from .models import Post
+from .models import Post,Premium
 from django.urls  import reverse
 from django.core.paginator import Paginator
 from .forms import CommentForm
 from django.contrib.auth.decorators import login_required
 from community.models import Question
-
+from django.contrib.auth.models import User,auth
 
 def post_list(request):
     post_list = Post.published.all()
@@ -120,3 +120,14 @@ def premium_payment(request,pay):
     amount = int(pay)
     context = {'amount':amount}
     return render(request,'premium_payment.html',context)
+
+def end_sus(request):
+    try:
+        prem = Premium.objects.get(user=request.user)
+        user = get_object_or_404(User, username=request.user.username)
+        prem.delete()
+        user.userprofile.premium = False
+        user.userprofile.save()
+    except:
+        pass
+    return redirect('blog:post_list')

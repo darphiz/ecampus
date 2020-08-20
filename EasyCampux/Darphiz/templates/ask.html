@@ -13,7 +13,7 @@ Question and answer zone
     <form action="." method="get" class="form-inline mt-2 m\
     t-md-0">
 
-    <input id="q" name="q" value="{{ request.GET.q }}" 
+    <input id="q" name="q" value="{{ request.GET.q }}"
     class="w3-input w3-round-xxlarge w3-card" type="text" placeholder="Search keyword..." aria-label="Search">
     <button class="w3-btn w3-blue w3-round-xxlarge w3-margin-top
     " type="submit">Search</button>
@@ -35,7 +35,7 @@ Question and answer zone
             <img src="{% static 'images/maleprofile.png' %}" alt='profile icon' class="w3-image w3-circle" style="width:50px">
                         {% else %}
                         <img src="{% static 'images/maleprofile.png' %}" alt='profile icon' class="w3-image w3-circle" style="width:50px">
-                        {% endif %}            
+                        {% endif %}
             {{user.first_name|title}} {{user.last_name|title}}
 
         </span>
@@ -56,7 +56,7 @@ Question and answer zone
 {% for question in faculty_questions %}
 
 <div class=" w3-padding w3-margin-top w3-white w3-border">
-    <p class="w3-text-grey"><small>Answer.Reacommended</small></p>
+    <p class="w3-text-grey"><small>Answer.Recommended</small></p>
     <p class ="w3-tag w3-round-xxlarge">{{question.tags}}</p>
     <h4><b>{{question.title|title}}</b></h4>
     <p1 class="w3-text-grey">Asked by {{question.name}} on {{question.date_asked}}</p1>
@@ -230,19 +230,19 @@ Question and answer zone
                  </p>
                  <a href= "{% url 'quiz_index' %}" class="w3-btn w3-block w3-teal w3-round-xxlarge">Quiz mode</a><br>
                 <a href= "{% url 'quiz_index' %}" class="w3-btn w3-block w3-teal w3-round-xxlarge w3-margin-bottom ">Exam mode</a>
-                
+
               </div>
             </div>
             <br>
                        <br>
-            
+
             <div class="w3-card w3-round w3-white  w3-padding-16 w3-center">
               <p>Click Here To Post Your ADS</p>
             </div>
             <br>
-          
-            
-          
+
+
+
 
 
         <!--End right column container-->

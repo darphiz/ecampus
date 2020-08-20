@@ -8,24 +8,25 @@
 {% endblock %}
 
 </title>
+<meta name="google-site-verification" content="9AuNBo2tBt89bRKzdgHouxqzvGPMCDmMS-bYgCH85RA" />
 	 <!-- Add icon library -->
-	<link rel="stylesheet" href= "{% static 'css/w3.css' %}">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 	<link rel="stylesheet" href="{% static 'css/w3.css' %}">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 	<link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
+		<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
 	<script src="https://kit.fontawesome.com/468679e4e9.js" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<meta name= "viewport" content="width = device-width , initial-scale=1">
 	<meta charset="UTF-8">
-
 	<meta name="description" content=".......making your campus life Easy">
 </head>
 <style>
-	body,h1,h2,h3,h4,h5{font-family: "Raleway", sans-serif}
+	body,h1,h2,h3,h4,h5{font-family: "Roboto", sans-serif}
 	#heading{font-family: 'Sofia';}
-	.na i{-webkit-text-stroke: 1px white;}
+	.na i{-webkit-text-stroke: 1px #2196F3;}
 </style>
 <style>
 .icon-bar{
@@ -104,12 +105,12 @@ font-size:20px;/* Increased font size*/}
 			</div>
 		</div>
 
-	
+
 		</header>
 
-<div class="icon-bar na w3-animate-zoom  w3-blue w3-hide-medium w3-hide-large">
+<div class="icon-bar na w3-animate-zoom w3-border-top w3-border-white  w3-blue w3-hide-medium w3-hide-large">
 
-  <a class="" href="{% url 'blog:post_list'%}"><i class="fa fa-home fa-spin active "></i></a>
+  <a class="" href="{% url 'blog:post_list'%}"><i class="fa fa-home active "></i></a>
   <a href="{% url 'quiz_index' %}"><i class="fa fa-laptop "></i></a>
   <a href="http://www.fuoyepedia.com.ng"><i class="fa fa-file-pdf "></i></a>
   {% if user.is_authenticated %}
@@ -124,7 +125,7 @@ font-size:20px;/* Increased font size*/}
 <!--
 	<marquee behavior="alternate" direction="left">SITE UNDER MAINTENANCE!!!  SITE UNDER MAINTENANCE!!! </marquee> -->
 <!--loader-->
-	
+
 <body>
 
 
@@ -169,5 +170,23 @@ font-size:20px;/* Increased font size*/}
   <p>Powered by <a style="text-decoration: none;" href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
 
 </footer>
+
+{% if user.is_authenticated %}
+<div style="display: none;">
+<a class="w3-btn" id="hash_hash" href="{% url 'blog:end_sus' %}">hash</a>
+</div>
+
+
+<script>
+	function hasie_hash(){
+		var sub_stat = {{ user.premium.end_time	}};
+		if (sub_stat == true){
+			document.getElementById('hash_hash').click()
+		}
+
+	};
+window.onload = hasie_hash();
+	</script>
+	{% endif %}
 </body>
 </html>

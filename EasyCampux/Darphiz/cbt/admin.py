@@ -68,7 +68,7 @@ class MCQuestionAdmin(admin.ModelAdmin):
     fields = ('content', 'category',
               'figure', 'quiz', 'explanation', 'answer_order')
 
-    search_fields = ('content', 'explanation')
+    search_fields = ('content','id',)
     filter_horizontal = ('quiz',)
 
     inlines = [AnswerInline]

@@ -3,7 +3,7 @@ from .models import Post,Comment
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 import threading
-from .models import BroadCast_Email
+from .models import BroadCast_Email,Premium
 from django.conf import settings
 from django.http import HttpResponse
 from django.core.mail import (send_mail, BadHeaderError, EmailMessage)
@@ -59,3 +59,4 @@ class BroadCast_Email_Admin(admin.ModelAdmin):
     search_fields = ['subject',]
 
 admin.site.register(BroadCast_Email, BroadCast_Email_Admin)
+admin.site.register(Premium)

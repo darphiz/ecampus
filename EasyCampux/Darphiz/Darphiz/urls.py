@@ -18,12 +18,12 @@ from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('afeez_easycampus_admin/', admin.site.urls),
     path('accounts/',include('accounts.urls')),
     path('', include('blog.urls',  namespace='blog')),
     path('cbt/', include('cbt.urls')),
     path('community/',include('community.urls')),
     path("paystack", include(('paystack.urls','paystack'),namespace='paystack')),
-   
+
 ]
 urlpatterns= urlpatterns + static(settings.MEDIA_URL,document_root= settings.MEDIA_ROOT)

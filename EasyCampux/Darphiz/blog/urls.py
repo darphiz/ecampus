@@ -20,4 +20,5 @@ urlpatterns = [
     path('contact/',views.contact,name ='contact'),
     path('premium/',views.premium,name ='premium'),
     path('<pay>/pay/',views.premium_payment, name = 'pay'),
+    path('end_sus/',views.end_sus, name ='end_sus'),
 ]

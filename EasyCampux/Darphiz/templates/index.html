@@ -5,6 +5,60 @@ Welcome To easyCampus
 {% endblock %}
 
 {% block content %}
+<meta name="google-site-verification" content="9AuNBo2tBt89bRKzdgHouxqzvGPMCDmMS-bYgCH85RA" />
+<!--Loader-->
+<div id="preloader" class="preloader">
+
+  <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg"
+   viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-ripple"
+    style="background:0 0"><circle cx="50" cy="50" r="4.719" fill="none" stroke="#1d3f72" stroke-width="2">
+      <animate attributeName="r" calcMode="spline" values="0;40" keyTimes="0;1" dur="3" keySplines="0 0.2 0.8 1" begin="-1.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" calcMode="spline" values="1;0" keyTimes="0;1" dur="3" keySplines="0.2 0 0.8 1" begin="-1.5s" repeatCount="indefinite"/>
+    </circle><circle cx="50" cy="50" r="27.591" fill="none" stroke="#5699d2" stroke-width="2">
+      <animate attributeName="r" calcMode="spline" values="0;40" keyTimes="0;1" dur="3" keySplines="0 0.2 0.8 1" begin="0s" repeatCount="indefinite"/><animate attributeName="opacity" calcMode="spline" values="1;0" keyTimes="0;1" dur="3" keySplines="0.2 0 0.8 1" begin="0s" repeatCount="indefinite"/>
+    </circle>
+  </svg>
+
+</div>
+<style>
+  .preloader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  background:white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  transition: opacity 0.3s linear;
+}
+
+</style>
+
+<script>
+  const preloader = document.querySelector('.preloader');
+
+const fadeEffect = setInterval(() => {
+  // if we don't set opacity 1 in CSS, then   //it will be equaled to "", that's why we   // check it
+  if (!preloader.style.opacity) {
+    preloader.style.opacity = 1;
+  }
+  if (preloader.style.opacity > 0) {
+    preloader.style.opacity -= 0.1;
+  } else {
+    clearInterval(fadeEffect);
+    document.getElementById("preloader").style.display = "none";
+  }
+}, 200);
+
+window.addEventListener('load', fadeEffect);
+</script>
+
+<div class="page-content">
+
+
 
 <!--Page Container-->
 <div class="w3-container w3-content" style="max-width:1400px;margin-top:40px">
@@ -22,25 +76,25 @@ Welcome To easyCampus
               {% else %}
               <p class="w3-center"><img src="{% static 'images/femaleprofile.png' %}" class="w3-circle" style="height:106px;width:106px" alt="Avatar"></p>
               {% endif %}
-          
+
                      <hr>
               <p>{{ user.first_name|title }} {{ user.last_name|title }}</p>
               <p>{{ user.userprofile.faculty|title }}</p>
               <p> {{ user.userprofile.level }}</p>
               <p> {{ user.userprofile.gender|title }} </p>
-              
+
               <a href ="{% url 'logout' %}" class="w3-block w3-blue w3-btn w3-margin-bottom w3-round">Log Out</a>
-              
-              
+
+
               {% else %}
               <p class="w3-center"><img src="{% static 'images/maleprofile.png' %}" class="w3-circle" style="height:106px;width:106px" alt="Avatar"></p>
               <a href ="{% url 'login' %}" class="w3-block w3-blue w3-btn w3-margin-bottom w3-round">Log In</a>
               <a href ="{% url 'register' %}" class="w3-block w3-blue w3-btn w3-margin-bottom w3-round-xxlarge">Sign Up</a>
-              {% endif %}  
+              {% endif %}
           </div>
-          
+
       </div>
-          
+
       <div class="w3-container w3-white w3-round w3-margin-top">
         <p class="w3-center"><b>Community</b></p>
         <p>View the questions you've asked </p>
@@ -51,13 +105,27 @@ Welcome To easyCampus
         {% endif %}
       </div>
 
+
+  <div class="w3-card w3-round w3-white w3-margin-top  w3-padding-16 w3-center">
+    <p>Click Here To Post Your ADS</p>
+  </div>
+
+  <div class="w3-card w3-round w3-green w3-margin-top  w3-padding-16 w3-center">
+    <p>Click Here To Post Your ADS</p>
+  </div>
+
+  <div class="w3-card w3-round w3-blue w3-margin-top w3-padding-16 w3-center">
+    <p>Click Here To Post Your ADS</p>
+  </div>
+
+
                 <!--End Left Column-->
 
     </div>
 
 <!-- Middle Column -->
      <div class="w3-hide-small">
-          <div class="w3-col m7 mobile" style="overflow: auto; height: 1000px;">
+          <div class="w3-col m7 mobile" style="overflow: auto; height: 900px;">
 
             <div class="w3-row-padding">
             <div class="w3-col m12">
@@ -65,7 +133,7 @@ Welcome To easyCampus
             <div class="w3-container w3-padding">
             <h6 class="w3-opacity">Search For A Question</h6>
             <p contenteditable="true" class="w3-border w3-round-xxlarge w3-padding">Type in the keyword .......</p>
-            <a href="{% url 'question_list' %}" class="w3-button w3-round-xxlarge w3-blue"> Search</a> 
+            <a href="{% url 'question_list' %}" class="w3-button w3-round-xxlarge w3-blue"> Search</a>
             </div>
             </div>
             </div>
@@ -77,25 +145,54 @@ Welcome To easyCampus
         <h4><b>{{post.title}}</b></h4>
         <hr class="w3-clear">
         <img src="{{post.image_upload.url}}" style="width:100%" class="w3-margin-bottom" alt="Post Image" >
-        <p>{{ post.body|safe|truncatewords:30 }}<span class="w3-text-blue"><a href="{{ post.get_absolute_url }}">(Readmore)</a> </span></p> 
-        <a href="{{post.get_absolute_url}}" class="w3-button w3-blue w3-round-medium w3-margin-bottom"><i class="fa fa-comment"></i>  Comment</a> 
-    </div> 
+        <p>{{ post.body|safe|truncatewords:30 }}<span class="w3-text-blue"><a href="{{ post.get_absolute_url }}">(Readmore)</a> </span></p>
+
+    </div>
           {% endfor %}
           <!-- End Middle Column -->
+
+          <div>
+              <!-- paginator -->
+
+
+ <div class="pagination w3-content w3-hide-small w3-margin-top w3-center w3-container">
+  <div class="step-links">
+  {% if posts.has_previous %}
+  <a href="?page=1"><div class="w3-button w3-round-large w3-blue w3-ripple">&laquo; first </div></a>
+  <a href="?page={{ posts.previous_page_number }}"><div class="w3-button w3-round-large w3-blue w3-ripple">previous</div></a>
+  {% endif %}
+
+<div class="w3-large w3-tag w3-card w3-blue current">
+Page {{ posts.number }} of {{ posts.paginator.num_pages }}
+</div><br>
+<div class= "w3-margin-top">
+{% if posts.has_next %}
+  <a href="?page={{ posts.next_page_number }}"><div class="w3-button w3-round-large w3-border-green w3-ripple">next</div></a>
+  <a href="?page={{ posts.paginator.num_pages }}"><div class="w3-button w3-round-large w3-blue w3-ripple">last &raquo;</div></a>
+{% endif %}
+</div>
+</div>
+
+</div>
+
+
+          </div>
     </div>
+
+
   </div>
 
 <!-- Middle Column -->
 <div class="w3-hide-large w3-hide-medium">
   <div class="w3-col s12 m7 ">
-  
+
     <div class="w3-col s12 w3-margin-bottom">
       <div class="w3-col s12 m12">
         <div class="w3-card w3-round w3-white">
           <div class="w3-container w3-padding">
             <h6 class="w3-opacity">Search For A Question</h6>
             <p contenteditable="true" class="w3-border w3-round-xxlarge w3-padding">Type in the keyword .......</p>
-            <button type="button" class="w3-button w3-round-xxlarge w3-blue"> Search</button> 
+            <button type="button" class="w3-button w3-round-xxlarge w3-blue"> Search</button>
           </div>
         </div>
       </div>
@@ -109,16 +206,16 @@ Welcome To easyCampus
       <hr class="w3-black">
       <span class="w3-right w3-margin w3-opacity">{{post.publish|date:"Y-m-d"}}</span>
       <p class="w3-opacity">Published By: {{post.author}} </p>
-      
+
       <img src="{{post.image_upload.url}}" style="width:100%" class="w3-margin-bottom" alt="Post Image" >
-      <p>{{ post.body|safe|truncatewords:30 }}<span class="w3-text-blue"><a href="{{ post.get_absolute_url }}">(Readmore)</a> </span></p> 
-      <a href="{{post.get_absolute_url}}" class="w3-button w3-blue w3-round-medium w3-margin-bottom"><i class="fa fa-comment"></i>  Comment</a> 
-    </div> 
+      <p>{{ post.body|safe|truncatewords:30 }}<span class="w3-text-blue"><a href="{{ post.get_absolute_url }}">(Readmore)</a> </span></p>
+
+    </div>
     {% endfor %}
   <!-- End Middle Column -->
   </div>
   </div>
-  
+
 
   <div class="w3-margin-top w3-margin-bottom w3-hide-large w3-center w3-hide-medium">
 
@@ -145,7 +242,7 @@ Page {{ posts.number }} of {{ posts.paginator.num_pages }}
 
     </div>
 </div>
-  
+
 <!-- Right Column -->
 <div class="w3-col s12 m3">
   <div class="w3-card w3-round w3-pale-blue w3-center">
@@ -159,14 +256,14 @@ Page {{ posts.number }} of {{ posts.paginator.num_pages }}
        </p>
        <a href= "{% url 'quiz_index' %}" class="w3-btn w3-block w3-teal w3-round-xxlarge">Quiz mode</a><br>
       <a href= "{% url 'quiz_index' %}" class="w3-btn w3-block w3-teal w3-round-xxlarge w3-margin-bottom ">Exam mode</a>
-      
+
     </div>
   </div>
   <br>
-  
+
   <div class="w3-card w3-round w3-white w3-center">
-    
-          <div class="w3-container">
+
+          <div class="w3-container"  style="overflow: auto; height: 200px;">
 
           <h4><b>Student's Community</b></h4>
           {% for question in faculty_questions %}
@@ -178,7 +275,7 @@ Page {{ posts.number }} of {{ posts.paginator.num_pages }}
               </a>
 
               </div>
-      
+
        {% empty %}
       <div>
       <span>
@@ -186,23 +283,23 @@ Page {{ posts.number }} of {{ posts.paginator.num_pages }}
       </span>
     </div>
     {% endfor %}
-     
+
 
     </div>
-   
+
     <div class="w3-block w3-margin-top w3-container">
       <a href="{% url 'question_list' %}"> <button class="w3-btn w3-ripple w3-blue w3-margin-bottom w3-round-xxlarge">Ask your own question</button>  </a>
        </div>
 
   </div>
   <br>
-  
-  <div class="w3-card w3-round w3-white  w3-padding-16 w3-center">
+
+  <div class="w3-card w3-round w3-white w3-hide-medium w3-hide-large  w3-padding-16 w3-center">
     <p>Click Here To Post Your ADS</p>
   </div>
   <br>
 
-  
+
 <!-- End Right Column -->
 </div>
 
@@ -212,31 +309,9 @@ Page {{ posts.number }} of {{ posts.paginator.num_pages }}
       <!--End Grid-->
   </div>
 
- <!-- paginator -->
 
 
- <div class="pagination w3-content w3-hide-small w3-margin-top w3-center w3-container">
-  <div class="step-links">
-  {% if posts.has_previous %}
-  <a href="?page=1"><div class="w3-button w3-round-large w3-blue w3-ripple">&laquo; first </div></a>
-  <a href="?page={{ posts.previous_page_number }}"><div class="w3-button w3-round-large w3-blue w3-ripple">previous</div></a>
-  {% endif %}
 
-<div class="w3-large w3-tag w3-card w3-blue current">
-Page {{ posts.number }} of {{ posts.paginator.num_pages }}
-</div><br>
-<div class= "w3-margin-top">
-{% if posts.has_next %}
-  <a href="?page={{ posts.next_page_number }}"><div class="w3-button w3-round-large w3-border-green w3-ripple">next</div></a>
-  <a href="?page={{ posts.paginator.num_pages }}"><div class="w3-button w3-round-large w3-blue w3-ripple">last &raquo;</div></a>
-{% endif %}
-</div>
-</div>
-
-</div>
-
-
-  
   <!-- post categories-->
   <div class="w3-card  w3-white w3-container w3-margin-top">
 
@@ -245,79 +320,81 @@ Page {{ posts.number }} of {{ posts.paginator.num_pages }}
       <div class="w3-container w3-xxlarge w3-padding">
       <h5><b>  Browse by categories </b></h5>
       </div>
-  
+
       <ul class="w3-ul w3-hoverable w3-white">
-  
+
       <li class="w3-padding-16">
          <a style="text-decoration: none;" href="{% url 'blog:fnpost' %}"><img src="{% static 'images/fuoye.jpg' %}" alt="Image" class="w3-left w3-round w3-margin-right" style="width:50px; overflow: hidden; height: 40px;">
           <span class="w3-large">Fuoye News</span></a><br>
-  
+
         </li>
-  
-  
+
+
       <li class="w3-padding-16">
           <a style="text-decoration: none;" href="{% url 'blog:fapost' %}"><img src="{% static 'images/fuoye.jpg' %}" alt="Aspirant" class="w3-left w3-round w3-margin-right" style="width:50px; height: 40px;">
           <span class="w3-large">Fuoye Aspirant Support</span></a><br>
-  
+
         </li>
-  
+
       <li class="w3-padding-16">
           <a style="text-decoration: none;" href="{% url 'blog:entpost' %}"><img src="{% static 'images/entertainment.jpg' %}" alt="Entertainment" class="w3-left w3-round w3-margin-right" style="width:50px">
           <span class="w3-large">Entertainment</span></a><br>
-  
+
         </li>
       <li class="w3-padding-16">
           <a style="text-decoration: none;" href="{% url 'blog:spopost' %}"><img src="{% static 'images/sport.jpg' %}" alt="Sport" class="w3-left w3-round w3-margin-right" style="width:50px">
           <span class="w3-large">Sport</span></a><br>
-  
+
         </li>
       <li class="w3-padding-16">
           <a style="text-decoration: none;" href="{% url 'blog:hthpost' %}"><img src="{% static 'images/health.jpg' %}" alt="health" class="w3-left w3-round w3-margin-right" style="width:50px">
           <span class="w3-large">Health</span></a><br>
         </li>
-  
+
       <li class="w3-padding-16">
           <a style="text-decoration: none;" href="{% url 'blog:tipost' %}"><img src="{% static 'images/tips.jpg' %}" alt="Image" class="w3-left w3-margin-right w3-round" style="width:50px">
           <span class="w3-large">Tips</span></a><br>
         </li>
       </ul>
-  
+
     </div>
-  
+
       <div class=" w3-container w3-half">
     <div class= "w3-xxlarge w3-margin-top w3-center">
   <h5><b>	About easyCAMPUS </b></h5>
     </div>
-    <div class= "w3-container w3-center">
-    <p>easyCAMPUS: University student's Educational Resource Website</p>
+    <div class= "w3-container w3-justify w3-center">
+    <p class="w3-justify">easyCAMPUS: University student's Educational Resource Website</p>
+    <p class="w3-justify">Practice for your exams via <a href="{% url 'quiz_index' %}">easycampus exam simulator</a> ,<a href="{% url 'question_list' %}">ask academic questions</a>
+    and download pdfs right here on easy campus.</p>
     </div>
     </div>
-  
-  
+
+
   </div>
-  
-  
-  
+
+
+
   <div class="w3-container w3-white w3-center w3-margin-top w3-hide-large">
     <hr>
     <h2><b>We are Social!</b></h2>
-  
+
       <div class="w3-container w3-stretch w3-margin-top">
         <a href="#"><i class="fab fa-twitter fa-2x"></i></a>
         <a href="#"><i class="fab fa-facebook fa-2x"></i></a>
         <a href="#"><i class="fab fa-instagram fa-2x"></i></a>
         <a href="#"><i class="fab fa-whatsapp fa-2x "></i></a>
       </div>
-  
+
     </div>
-  
-  
+
+
   </div>
-  
-  
+
+
   </div>
-  
 
 
 
+</div>
 {% endblock %}

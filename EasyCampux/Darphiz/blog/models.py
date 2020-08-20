@@ -2,6 +2,9 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
+from datetime import timedelta
+from django.conf import settings
+import datetime
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
@@ -25,7 +28,7 @@ class Post(models.Model):
                     ('others','others'),
                     ('fuoyenews','fuoyenews')
     )
-   
+
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250,
     unique_for_date='publish')
@@ -88,3 +91,40 @@ class BroadCast_Email(models.Model):
         verbose_name = "BroadCast Email to all Member"
         verbose_name_plural = "BroadCast Email"
 
+
+class PremiumManager(models.Manager):
+
+    def subscribe_premium(self,user,money):
+        start_date = datetime.datetime.now()
+        if money == 250:
+            end_date = start_date + timedelta(days=30)
+        elif money == 700:
+            end_date = start_date + timedelta(days=90)
+        else:
+            end_date = start_date + timedelta(days=365)
+        new_user = self.create(user=user,
+        start=start_date,
+        end= end_date)
+        new_user.save()
+
+
+class Premium(models.Model):
+    user = models.OneToOneField(User,
+                            on_delete=models.CASCADE)
+    start = models.DateTimeField(auto_now_add=True)
+    end = models.DateTimeField(default=timezone.now)
+
+    @property
+    def end_time(self):
+        ending = float(self.end.timestamp()) * 1000
+        starting = float(datetime.datetime.now().timestamp()) * 1000
+        if starting >= ending:
+            sub = 'true'
+        else:
+            sub = 'false'
+        return sub
+    def __str__(self):
+        return self.user.username
+
+    objects = models.Manager()
+    subscribe = PremiumManager() # Our custom manager.
