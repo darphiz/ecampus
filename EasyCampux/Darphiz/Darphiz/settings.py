@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'x)1!2jt3rqq2*yfh9u0_s66#47wqig*nirl5g_c(oqqxu7_s6b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG =True
 
 ALLOWED_HOSTS = ['easycampus.pythonanywhere.com']
 

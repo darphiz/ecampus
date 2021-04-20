@@ -18,7 +18,7 @@ from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
-    path('afeez_easycampus_admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('accounts/',include('accounts.urls')),
     path('', include('blog.urls',  namespace='blog')),
     path('cbt/', include('cbt.urls')),
