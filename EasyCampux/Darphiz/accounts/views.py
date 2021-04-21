@@ -81,7 +81,7 @@ def user_login(request):
                             # If the account is valid and active, we can log the user in.
                             # We'll send the user back to the homepage.
                 login(request, user)
-                return HttpResponseRedirect(reverse('blog:post_list'))
+                return HttpResponseRedirect(reverse('question_list'))
             else:
                         # An inactive account was used - no logging in!
                 return HttpResponse("Your EASY Campus account is disabled.")
