@@ -1,0 +1,180 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load thumbnail %}
+{% block title %}
+{{ question.title }}
+{% endblock %}
+{% block content %}
+
+<div class="w3-row w3-margin-top">
+    <div class="w3-col m8 w3-white">
+        <!--Post thumbnail-->
+        {% if question.image_upload %}    
+        {% thumbnail question.image_upload "750x750" format="WEBP" as im %}
+        <img class="w3-image" src='{{im.url}}' alt="{{ question.title }} thumbnail" width="100%">
+        {% endthumbnail %}
+        {% endif %}
+        <!-- Post Header-->
+        <div class="w3-container">
+            <h1 class="w3-xxlarge"><b>{{ question.title }}</b></h1>
+        </div>
+        <div class="profile-img">
+            {% if question.asked_by.userprofile.profile_photo %}
+            {% thumbnail question.asked_by.userprofile.profile_photo "80x80" crop="center" format="WEBP" as im %}
+            <img class="w3-circle" width="{{im.width}}" height="{{im.height}}" src="{{im.url}}" alt="{{question.asked_by.username}}'s name" >
+            {% endthumbnail %}
+            {% endif %}
+            <div class="profile-text w3-text-grey">
+                <p><b>{{question.asked_by.username|title}}</b> {{question.date_asked}}</p>
+                <p class="w3-tag w3-round-large w3-blue">{{question.type}}</p>
+            </div>
+        </div><br>
+        <!--post body-->
+        <div class="w3-container article">
+
+        {{ question.body|safe }}
+        {% if tags %}
+        <p class="w3-text-grey">
+            {% for tag in tags %}
+            <a href="{% url 'query' action='tag' arg=tag %}">#{{tag}}</a>
+            {% endfor %}
+        </p>
+        {% endif %}
+        </div>
+        <!--Answers Section-->
+
+        <div class="w3-container w3-padding w3-margin-top">
+            {% with answer.count as total_answers %}
+            <h3 class="w3-xlarge">
+                <b>Answer{{ total_answers|pluralize }}({{ total_answers }})</b>
+            </h3>
+            {% endwith %}
+            {% for answer in answers %}
+            <div class="w3-container w3-row d-flex w3-border w3-round-medium">
+                <div class="w3-col m1 s2 w3-margin-top">
+                    <a href="#"><i class="fas fa-chevron-up fa-1x"></i></a>
+                <p class="w3-xlarge">{{answer.votes.count}}</p>
+                </div>
+                <div class="w3-col m11 s10">
+                <h4 class="info"><b>{{ answer.name}}:</b></h4>
+                <p class="w3-text-grey">{{ answer.created }}</p>
+                <p>{{ answer.body|linebreaks }}</p>
+                </div>
+            </div><br>
+            {% empty %}
+            <p>There are no answers yet, check back later.</p>
+            {% endfor %}
+            {% if new_answer %}
+            <h3 id="new_answer" class="w3-container">Your answer has been added</h3>
+            <br>            
+            <div class="w3-animate-zoom w3-container w3-row d-flex w3-border w3-round-medium">
+                <div class="w3-col m1 s2 w3-margin-top">
+                    <a href="#"><i class="fas fa-chevron-up fa-1x"></i></a>
+                <p class="w3-xlarge">{{new_answer.votes.count}}</p>
+                </div>
+                <div class="w3-col m11 s10">
+                <h4 class="info"><b>{{ new_answer.name}}:</b></h4>
+                <p class="w3-text-grey">{{ new_answer.created }}</p>
+                <p>{{ new_answer.body|linebreaks }}</p>
+                </div>
+            </div><br>
+            {% endif %}
+        </div>
+        
+        <!-- paginator -->
+        <div class="pagination w3-margin-top w3-center w3-container">
+            <div class="step-links">
+            {% if answers.has_previous %}
+            <a href="?page=1"><div class="w3-button w3-round-large w3-blue ">&laquo; first </div></a>
+            <a href="?page={{ answers.previous_page_number }}"><div class="w3-button w3-round-large w3-blue ">previous</div></a>
+            {% endif %}
+
+            <div class="w3-large w3-round-medium w3-tag w3-card w3-blue current">
+            Comment {{ answers.number }} of {{ answers.paginator.num_pages }}
+            </div><br>
+            <div class= "w3-margin-top">
+            {% if answers.has_next %}
+            <a href="?page={{ answers.next_page_number }}"><div class="w3-button w3-round-large w3-border-blue w3-border">next</div></a>
+            <a href="?page={{ answers.paginator.num_pages }}"><div class="w3-button w3-round-large w3-blue ">last &raquo;</div></a>
+            {% endif %}
+            </div>
+            </div>
+            </div><br>
+
+        <!--Answer Form-->
+        <div class="w3-margin w3-round-medium w3-leftbar w3-border-blue w3-border">
+           <div class="w3-container">
+            <form action="{% url 'question_detail' slug=question.slug pk=question.id %}#new_answer"  method="post">
+                {% csrf_token %}
+                {% if user.is_authenticated %}
+                <input class="w3-input" type="hidden" name="name" maxlength="80" value="{{request.user.username}}" required id="id_name">
+                {% else %}
+                <p>
+                <input class="w3-input" type="text" name="name" placeholder="Your Name" maxlength="80" required id="id_name">
+                </p>
+                {% endif %}
+                <p>
+                <textarea placeholder="Type in your answer..." class="w3-input" name="body" id="id_body" required></textarea>
+                </p>
+                <p>
+                <input class="w3-button w3-blue w3-round-medium" type="submit" value="Answer">
+                </p>
+            </form>
+        </div>
+        </div>
+    </div>
+
+    <div class="w3-col m4 w3-container container-mobile">
+        <div class="w3-container  w3-white">
+            <h3 class="w3-center w3-border-bottom w3-padding-16">Similar Questions</h3>
+            {% for question in similar_questions %}
+            <div class="d-flex-0 w3-margin-bottom">
+                {% if question.image_upload %}
+                {% thumbnail question.image_upload "80x80" crop="center" format="WEBP" as im %}
+                <img width="{{im.width}}" height="{{im.height}}" class=" w3-round-medium" src="{{im.url}}" alt="{{question.title}} thumbnail">
+                {% endthumbnail %}
+                {% else %}
+                {% thumbnail question.asked_by.userprofile.profile_photo "80x80" crop="center" format="WEBP" as im %}
+                <img width="{{im.width}}" height="{{im.height}}" class=" w3-round-medium" src="{{im.url}}" alt="{{question.title}} thumbnail">
+                {% endthumbnail %}
+                {% endif %}
+                <div>
+                    <a href="{{question.get_absolute_url}}">
+                    <h5 class="margin-2">{{question.title}}</h5> 
+                    <p class="w3-text-grey">{{question.asked_by}} - {{question.date_asked}} </p>   
+                    </a>           
+                </div>
+            </div>
+            
+            {% endfor %}         
+    </div><br>
+
+    <div class="w3-white w3-container">
+        {% for group in question.group_asked.all %}
+        <h4 class="w3-center w3-padding-16"><b>{{group.name}}</b></h3>
+            <div class="w3-center ">
+                {% thumbnail question.asked_by.userprofile.profile_photo "150x150" crop="center" format="WEBP" as im %}
+                <img width="{{im.width}}" height="{{im.height}}"class="w3-circle" src="{{group.group_thumb.url}}" alt="{{group.name}} Thumbnail">
+                {% endthumbnail %}
+            </div>
+            
+            <p class="w3-border w3-padding">{{group.description}}</p>
+            
+            <p><b>{{group.members.count}}</b> members</p>
+            
+        {% if request.user.is_authenticated %}
+            {% if request.user in group.members.all %}
+            <a href="{{group.get_absolute_url}}" class="w3-button w3-blue w3-round-medium w3-margin-bottom">Visit</a>
+            <a href="{{group.get_leave_url}}" class="w3-button w3-red w3-round-medium w3-margin-bottom">Leave</a>
+            {% else %}
+            <a href="{{group.get_absolute_url}}" class="w3-button w3-green w3-round-medium w3-margin-bottom">Visit</a>
+            <a href="{{group.get_join_url}}" class="w3-button w3-blue w3-round-medium w3-margin-bottom">Join</a>
+            {% endif %}
+        {% else %}
+            <a href="{{group.get_absolute_url}}" class="w3-button w3-blue w3-round-medium w3-margin-bottom">Visit</a>
+        {% endif %}
+            {% endfor %}
+    </div>
+</div>
+</div>
+        {% endblock %}

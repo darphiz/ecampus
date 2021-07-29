@@ -1,0 +1,97 @@
+{% extends "layout.html" %}
+{% block title %}
+Go Premium!
+{% endblock%}
+{% load paystack %}
+
+
+{% block content %}
+<div class="w3-padding w3-center  w3-sand">
+    <b><h1 class="w3-jumbo"> GO PREMIUM</h1></b>
+    <h5>This Course is only available to premium users</h5>
+    <div class=" w3-padding-32 w3-row">
+        <div class=" w3-container w3-col m6 s12">
+            {% paystack_button amount=250 email=request.user.email button_class="w3-button  w3-green w3-block w3-round-xxlarge" label="Pay Now"%}
+        </div>
+        <div class=" w3-container w3-col m6 s12">
+            <a href="#pricing" class="w3-button  w3-border w3-border-black w3-block w3-round-xxlarge "> View Plans </a>
+        </div>
+    </div>
+</div>
+
+<div class="w3-white w3-row w3-padding">
+    <b><h2 class="w3-center">Why go Premium?</h2></b>
+    <div class="w3-col s12 m6 w3-container" >
+        <b><h>Exam Mode</h></b>
+        <p>Get Access to all the courses in the Exam Mode section of the cbt portal</p>
+    </div>
+
+    <div class="w3-col s12 m6 w3-container" >
+        <b><h>No Ads</h></b>
+        <p>Browse the site freely with no disturbing ads</p>
+    </div>
+
+    <div class="w3-col s12 m6 w3-container" >
+        <b><h>Notifications</h></b>
+        <p>Get e-mails when new questions and quiz are added</p>
+    </div>
+    
+    <div class="w3-col s12 m6 w3-container" >
+        <b><h>Support</h></b>
+        <p>Going premium one of the ways to support easycampus. Its a way to get more resources to keep the app running </p>
+    </div>
+    
+
+</div>
+
+<div class="w3-row w3-white w3-margin-top">
+   <b> <h1 class="w3-center">How To Activate Premium Account</h1></b>
+    <div class="w3-container w3-col m6 s12">
+       <b><h>1. Automatically From This Page:</h></b> 
+        <p>You can activate the premium plan by clicking the "Get Started" button at the 
+            pricing section below. You will be redirected to paystack , make payment and your account will be activated immediately.
+        </p>
+    </div>
+    <div class="w3-container w3-col m6 s12">
+     <b>   <h>2. Manually by Contacting The Admin:</h> </b>
+        <p> You can reach our admins by sending a whatsapp message to +2349054009677. Which you can negotaite the process 
+            you wish to use
+        </p>
+    </div>
+
+</div>
+
+<div id ="pricing" class="w3-row w3-center">
+    <b><h2>Pick Your Premium Plan</h2></b>
+
+    <div class="w3-col s12 m4 w3-white  w3-card w3-container">
+        <h class="w3-tag w3-padding w3-blue w3-margin-top">Monthly</h>
+        <p>N250/month </p>
+        <p>Static Price</p>
+        <div class="w3-container">
+            <a href="{% url 'blog:pay' pay=250 %}" class="w3-btn w3-block w3-blue w3-margin w3-round-xxlarge">Get Started</a>
+    </div>
+    </div>
+
+    <div class="w3-col s12 m4 w3-white  w3-card w3-container">
+        <h class="w3-tag w3-padding w3-blue w3-margin-top">Quarterly</h>
+        <p>N700 for 3-months </p>
+        <p>7% discout</p>
+        <div class="w3-container">
+            <a href="{% url 'blog:pay' pay=700 %}" class="w3-btn w3-block w3-blue w3-margin w3-round-xxlarge">Get Started</a>
+    </div>
+    </div>
+
+    <div class="w3-col s12 m4 w3-white  w3-card w3-container">
+        <h class="w3-tag w3-padding w3-blue w3-margin-top">Annually</h>
+        <p>N2250/year </p>
+        <p>25% discount</p>
+        <div class="w3-container">
+            <a href="{% url 'blog:pay' pay=700 %}" class="w3-btn w3-block w3-blue w3-margin w3-round-xxlarge">Get Started</a>
+    </div>
+    </div>
+
+</div>
+
+
+{% endblock %}

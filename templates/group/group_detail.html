@@ -1,0 +1,148 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load thumbnail %}
+{% block title %}
+{{group.name}}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="w3-row container-mobile">
+
+    <div class="w3-col m3">
+        <div class="w3-card w3-round w3-white">
+            <div class="w3-stretched">
+                {% thumbnail group.group_thumb "350x350" format="WEBP" as im %}
+                <img height="{{im.height}}" width="100%" src="{{im.url}}" alt="{{group.name}} thumbnail" class="w3-round w3-image">
+                {% endthumbnail %}
+            </div>
+            <div class="w3-container">
+                <h1>{{group.name}}</h1>
+                <div class="w3-border w3-padding w3-round">
+                    <p class="w3-text-grey">{{group.description}}</p>
+                </div>
+                <p><strong>{{group.members.count}} members</strong></p>
+                <div class=" d-flex member-fix">
+                    {% for user in group.members.all|slice:5 %}
+                    {% if user.userprofile.profile_photo %}
+                    <img src="{{user.userprofile.profile_photo.url}}" alt="member image"
+                        class="w3-image w3-circle member-icon">
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <br>
+                {% if request.user.is_authenticated %}
+                    {% if request.user in group.members.all %}
+                    <a href="{{group.get_leave_url}}" class="w3-button w3-red w3-round-medium w3-margin-bottom">Leave</a>
+                    {% else %}
+                    <a href="{{group.get_join_url}}" class="w3-button w3-blue w3-round-medium w3-margin-bottom">Join</a>
+                    {% endif %}
+                {% endif %}
+                <p>Group by: <a href="#"> {{group.creator.get_full_name}}</a></p>
+            </div>
+        </div>
+        <br>
+    </div>
+  
+
+    <div class="w3-col m6 w3-row-padding container-mobile-0">
+
+        <div class="container-mobile-0 ">
+            <div class="w3-card w3-round container-mobile-0 w3-white ">
+                <div class="w3-container w3-padding">
+                    <h6 class="w3-opacity">{% if request.user.is_authenticated %}{{request.user.get_full_name}}, {% endif %}what is your question?</h6>
+                    <p contenteditable="true" class="w3-border w3-round-large w3-padding"></p>
+                    <a href="{% url 'question_list' %}" class="w3-button w3-round-large w3-blue"> Ask</a>
+                </div>
+            </div>
+        </div><br>
+
+        {% for question in group.questions.all %}
+        <div class="w3-card w3-round w3-white w3-container">
+
+            <div class="profile-img">
+                {% if question.asked_by.userprofile.profile_photo %}
+                {% thumbnail question.asked_by.userprofile.profile_photo "80x80" crop="center" format="WEBP" as im %}
+                <img class="w3-circle" src="{{im.url}}" alt="{{question.asked_by.username}}'s profile photo" height="{{im.height}}" width="{{im.width}}">
+                {% endthumbnail %}
+               
+                {% else %}
+                <img class="w3-circle" src="{% static 'images/femaleprofile.png' %}" alt="Profile">
+            {% endif %}
+                <div class="profile-text w3-text-grey">
+                    <p><b>{{question.asked_by.username|title}}</b></p>
+                    <p>{{question.date_asked}}</p>
+                    <p class="w3-tag w3-round-large w3-blue">{{question.type}}</p>
+                </div>
+            </div>
+
+            <div class="w3-container">
+                <a href="{{question.get_absolute_url}}">
+                    <h3 class="question-title"><b>{{question.title}}</b></h3>
+                </a>
+                {% if question.image_upload %}
+                {% thumbnail question.image_upload "350x350" crop="center" format="WEBP" as im %}
+                    <img src="{{im.url}}" class="w3-round-medium q-image" alt="{{question.title}} Thumbnail">
+                {% endthumbnail %}
+                {% endif %}
+                <div class="w3-margin-top w3-margin-bottom reaction">
+                    <i class="far fa-heart"></i><span class="w3-margin-left">{{question.votes.count}} reactions</span>
+                    <i class="far fa-comment w3-margin-left"></i><span class="w3-margin-left">{{question.answers.count}} comments</span>
+                </div>
+            </div>
+
+
+        </div><br>
+        {% empty %}
+        <div class="w3-container">
+            <p>No Questions Yet..</p>
+            <a href="{% url 'ask_question' %}"><p>Be the first to ask</p></a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!--right Column for group details-->
+    <div class="w3-col m3">
+        <div class="w3-container w3-card w3-white">
+            <h3>Group Trend</h3>
+            {% for tag in tags|slice:5 %}
+            <div class="w3-container">
+                <a href="{% url 'query' action='tag' arg=tag %}">
+                    <p class="w3-left">#{{tag.name}}</p>
+                    <p class="w3-right">........{{tag.count}}</p>
+                </a>
+            </div>
+            {% empty %}
+            <div class="w3-container">
+                <p class="w3-opacity">No trending Tags to show...</p>
+            </div>
+            {% endfor %}
+        </div><br>
+        <div class="w3-container w3-card w3-white">
+            <h3>Moderators</h3>
+            <div class="w3-margin">
+                <ul class="w3-ul w3-bordered w3-hoverable">
+                    {% for user in group.moderators.all|slice:5 %}
+                    <li class="profile-img-0">
+                        {% if user.userprofile.profile_photo %}
+                        <img src="{{user.userprofile.profile_photo.url}}" alt="image" class="w3-circle">
+                        {% endif %}
+                        <span class="w3-margin-left">{{user.username}}</span>
+                    </li>
+                    {% empty %}
+                    <div class="w3-container w3-opacity">
+                        <p>Moderated By AI.</p>
+                        <p>Complaints should be directed to the website administrator.</p>
+                    </div>
+                    
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock %}

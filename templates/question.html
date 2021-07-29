@@ -1,0 +1,274 @@
+{% extends "layout.html" %}
+{% load i18n%}
+{% load quiz_tags %}
+{% block title %} {{ quiz.title }}
+{% endblock %}
+
+{% block content %}
+
+<!--Quiz title always at the top-->
+
+
+
+
+<div class="w3-container w3-margin-top  w3-center w3-medium w3-text-blue">
+	<h3>{{ quiz.title|upper }} {% if exammode %}{% else %}QUIZ {% endif %}<small>ongoing</small></h3>
+</div>
+
+<!--Timer-->
+<div class="w3-container w3-margin-top  w3-center ">
+	{% if exammode %}
+	<h3 id="timer" class="w3-jumbo"> </h3>
+	{% endif %}
+</div>
+<!--Container for questions and  explanation-->
+<div class="w3-row w3-container">
+	<!--container for previous questions-->
+	<div class="w3-container w3-col s22 l6 m12 w3-card w3-margin-top w3-padding w3-white">
+			{% if previous.answers %}
+			<div class="w3-blue w3-container">
+				<p>The previous question:</p>
+			</div>
+
+			<div class="w3-container">
+				<p> {{ previous.previous_question|safe }} </p>
+			</div>
+
+  					{% if previous.previous_outcome %}
+  			<!--Start outcome-->
+			<div class="w3-green w3-container">
+  					{% else %}
+
+			<div class="w3-red w3-container">
+ 			 		{% endif %}
+  	  			<p>
+					Your answer was
+						<strong>
+		  						{{ previous.previous_outcome|yesno:"correct,incorrect"|safe }}
+						</strong>
+				</p>
+			<!--end outcome-->
+			</div>
+
+			{% include 'correct_answer.html' %}
+			<div>
+				<p><strong>Explanation:</strong></p>
+				<div class="w3-container" style="background-color: #fcf8e3;">
+	  				<p>{{ previous.previous_question.explanation|safe }}</p>
+				</div>
+			</div>
+
+			{% else %}
+<div class="w3-container w3-blue">
+		<h5>Profile</h5>
+</div>
+
+<ul class="w3-ul">
+
+
+	  <li class="w3-padding-16 ">
+	First Name:     {{ user.first_name|title }}
+
+	  </li>
+	  <li class="w3-padding-16 ">
+		Last Name:    {{ user.last_name|title }}
+
+		  </li>
+		  <li class="w3-padding-16 ">
+			Faculty:    {{ user.userprofile.faculty|title }}
+
+			  </li>
+			  <li class="w3-padding-16 ">
+				Level:{{ user.userprofile.level }}
+
+				  </li>
+
+
+  </ul>
+
+	{% endif %}
+
+	</div>
+
+
+{% if question %}
+
+
+{% if progress %}
+		<!--The question container-->
+	<div class="w3-container w3-padding w3-card w3-margin-top w3-col s22 l6 m12  w3-white">
+		<!--Progress bar-->
+		<div class="w3-blue w3-container">
+			<p>
+				{% if info %}
+				{{ info }}
+				{% else %}
+			Question {{ progress.0|add:1 }} of {{ progress.1 }}
+				{% endif %}
+			</p>
+		</div>
+				{% endif %}
+				<!--EndProgress Bar-->
+		<div class="w3-container">
+			<p>{{ question.content|safe }}</p>
+
+			{% if question.figure %}
+    			<img src="{{ question.figure.url }}" alt="{{ question.content }}" />
+				{% endif %}
+		</div>
+
+		<form action="" method="POST">{% csrf_token %}
+  			<input type=hidden name="question_id" value="{{ question.id }}">
+
+  			<ul class="w3-ul">
+
+				{% for answer in form.answers %}
+
+	  			<li class="w3-padding-16 w3-container">
+
+					{{ answer}}
+
+				  </li>
+
+				{% endfor %}
+
+  			</ul>
+    			{% if progress.0|add:1 == progress.1 %}
+			<input type="submit" value=Submit class="w3-button w3-border-blue w3-round-xxlarge w3-margin-bottom w3-border w3-ripple w3-round-medium" >
+
+
+			{% else %}
+
+        	<input type="submit" value=Next class="w3-button w3-border-blue w3-margin-bottom w3-border w3-ripple w3-round-xxlarge" >
+			{% endif %}
+			<!--Endtag for current quiz-->
+		</form>
+		<a href= '{% url "endquiz"  quiz_name=quiz.url %}' id = "endquiz" class= "w3-btn w3-red w3-round-xxlarge">
+			{% if exammode %}
+			End Exam
+			{% else %}
+			End Quiz
+			{% endif %}
+		</a>
+	</div>
+
+{% endif %}
+</div>
+{% if exammode %}
+<!--Buttons for small screen-->
+<div class="w3-margin-top  w3-hide-large w3-hide-medium">
+		<div class="w3-row w3-white">
+	<a href="{% url 'goto' question_number=1 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-margin  w3-col s2 " >1</a>
+	<a href="{% url 'goto' question_number=2 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-margin w3-col s2" >2</a>
+	<a href="{% url 'goto' question_number=3 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-margin w3-col s2 " >3</a>
+	<a href="{% url 'goto' question_number=4 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-margin  w3-col s2 " >4</a>
+
+	<a href="{% url 'goto' question_number=5 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >5</a>
+	<a href="{% url 'goto' question_number=6 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >6</a>
+
+
+	<a href="{% url 'goto' question_number=7 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >7</a>
+	<a href="{% url 'goto' question_number=8 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >8</a>
+	<a href="{% url 'goto' question_number=9 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >9</a>
+	<a href="{% url 'goto' question_number=10 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >10</a>
+	<a href="{% url 'goto' question_number=11 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >11</a>
+	<a href="{% url 'goto' question_number=12 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >12</a>
+	<a href="{% url 'goto' question_number=13 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >12</a>
+	<a href="{% url 'goto' question_number=14 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >14</a>
+	<a href="{% url 'goto' question_number=15 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >15</a>
+	<a href="{% url 'goto' question_number=16 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >16</a>
+	<a href="{% url 'goto' question_number=17 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >17</a>
+	<a href="{% url 'goto' question_number=18 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >18</a>
+	<a href="{% url 'goto' question_number=19 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >19</a>
+	<a href="{% url 'goto' question_number=20 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >20</a>
+	<a href="{% url 'goto' question_number=21 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >21</a>
+	<a href="{% url 'goto' question_number=22 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >22</a>
+	<a href="{% url 'goto' question_number=23 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >23</a>
+	<a href="{% url 'goto' question_number=24 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >24</a>
+	<a href="{% url 'goto' question_number=25 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >25</a>
+</div>
+	</div>
+
+<!--Buttons for desktop screen-->
+<div class="w3-margin-top w3-hide-small w3-content ">
+
+	<a href="{% url 'goto' question_number=1 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue     " >1</a>
+	<a href="{% url 'goto' question_number=2 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >2</a>
+	<a href="{% url 'goto' question_number=3 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue    " >3</a>
+	<a href="{% url 'goto' question_number=4 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue     " >4</a>
+
+	<a href="{% url 'goto' question_number=5 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >5</a>
+	<a href="{% url 'goto' question_number=6 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >6</a>
+
+
+	<a href="{% url 'goto' question_number=7 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >7</a>
+	<a href="{% url 'goto' question_number=8 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >8</a>
+	<a href="{% url 'goto' question_number=9 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >9</a>
+	<a href="{% url 'goto' question_number=10 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >10</a>
+	<a href="{% url 'goto' question_number=11 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >11</a>
+	<a href="{% url 'goto' question_number=12 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >12</a>
+	<a href="{% url 'goto' question_number=13 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >12</a>
+	<a href="{% url 'goto' question_number=14 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >14</a>
+	<a href="{% url 'goto' question_number=15 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >15</a>
+	<a href="{% url 'goto' question_number=16 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >16</a>
+	<a href="{% url 'goto' question_number=17 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >17</a>
+	<a href="{% url 'goto' question_number=18 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >18</a>
+	<a href="{% url 'goto' question_number=19 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >19</a>
+	<a href="{% url 'goto' question_number=20 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >20</a>
+	<a href="{% url 'goto' question_number=21 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >21</a>
+	<a href="{% url 'goto' question_number=22 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >22</a>
+	<a href="{% url 'goto' question_number=23 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >23</a>
+	<a href="{% url 'goto' question_number=24 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >24</a>
+	<a href="{% url 'goto' question_number=25 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue  " >25</a>
+
+</div>
+
+
+
+
+	{% endif %}
+{% if exammode %}
+<!--The timer Script-->
+<script>
+	function startTimer(duration,display){
+		var start = {{ start }} ,
+		diff,
+		minutes,
+		seconds;
+	function timer(){
+
+		diff = duration - (((Date.now() - start) /1000) |0);
+
+		minutes = (diff / 60) | 0;
+		seconds = (diff % 60) | 0;
+
+		minutes = minutes < 10 ? "0" + minutes : minutes;
+		seconds = seconds < 10 ? "0" + seconds : seconds;
+
+		display.textContent = minutes + ":" + seconds;
+
+		if (diff <= 0){
+			var autoend = function(){
+				document.getElementById('endquiz').click()
+			}
+			autoend()
+		display.textContent = "Time Is Up!"
+
+		}
+	};
+	timer();
+	setInterval(timer,1000);
+	}
+
+window.onload = function(){
+	var fiveMinutes = 60 * 20,
+	display = document.querySelector("#timer");
+	startTimer(fiveMinutes, display);
+
+};
+
+</script>
+
+{% endif %}
+<!--the timer-->
+{% endblock %}
