@@ -31,7 +31,7 @@ def register(request):
             user_form = UserForm()
             profile_form = UserProfileForm()
     return render(request,'auth/register.html',{'user_form': user_form,'profile_form': profile_form,'registered': registered})
-    
+
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -51,17 +51,17 @@ def user_login(request):
             form_error= "Invalid login details: {0}, {1}".format(username, password)
             return render(request,'auth/login.html',{'form_error':form_error})
     else:
-        return render(request, 'auth/login.html', {})    
-        
-        
+        return render(request, 'auth/login.html', {})
+
+
 @login_required
 def user_logout(request):
         # Since we know the user is logged in, we can now just log them out.
     logout(request)
         # Take the user back to the homepage.
     return HttpResponseRedirect(reverse('question_list'))
-    
-    
+
+
 @login_required
 def user_list(request):
     users = User.objects.filter(is_active=True).order_by('?')

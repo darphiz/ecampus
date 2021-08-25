@@ -1,0 +1,175 @@
+{% extends "layout.html" %}
+
+
+{% load quiz_tags %}
+
+{% block title %} {{ quiz.title}} 
+{% endblock %}
+
+
+{% block content %}
+
+<div class="w3-container w3-row w3-margin-top">
+
+
+    {% if previous.answers %}
+    <!--Previous Question-->
+  <div class="w3-col s12 l6 m12 w3-container  w3-margin-top w3-white"> 
+    <div class="w3-blue w3-margin-top w3-container">
+        <p>The previous question:</p>
+    </div>
+  
+    <div class="">
+      <p>{{ previous.previous_question|safe }}</p>
+    </div>
+            {% if previous.previous_outcome %}
+      <!--Start outcome-->
+    <div class="w3-green w3-container">
+            {% else %}
+
+    <div class="w3-red w3-container">
+            {% endif %}
+          <p>
+        Your answer was            <strong>
+                {{ previous.previous_outcome|yesno:"correct,incorrect" }}
+            </strong>
+          </p>
+    <!--end outcome-->
+    </div>
+
+    {% include 'correct_answer.html' %}
+    <div>
+      <p><strong>Explanation:</strong></p>
+        <div class="w3-container w3-margin-bottom" style="background-color:#fcf8e3;">
+          <p>{{ previous.previous_question.explanation|safe }}</p>
+        </div>
+    </div>
+
+</div>
+{% else %}
+<div class="w3-col s12 l6 m12 w3-container  w3-margin-top w3-padding w3-card w3-white"> 
+  <div class="w3-container w3-blue"> 
+    <h5>Profile</h5>
+  </div>
+  <ul class="w3-ul">
+    <li class="w3-padding-16 ">
+      First Name:     {{ user.first_name|title }}
+    </li>
+    <li class="w3-padding-16 ">
+      Last Name:    {{ user.last_name|title }}
+    </li>
+    <li class="w3-padding-16 ">
+      Faculty:    {{ user.userprofile.faculty|title }}
+    </li>
+    <li class="w3-padding-16 ">
+      Level:{{ user.userprofile.level }}
+    </li>
+  </ul>
+</div>
+  {% endif %}
+
+
+
+
+
+
+  {% if max_score %}
+<div class="w3-col s12 l6 m12 w3-margin-top w3-white w3-card w3-container">
+
+  <div class="w3-container  w3-center w3-text-blue ">
+    <h2 class="w3-jumbo">{{ percent }}% </h2>
+  </div>
+  
+  <div class="w3-center w3-animate-fading">
+    <h2>{% if questions %}Exam {% else %} Quiz {% endif %} Result</h2>
+  </div>
+  <ul class="w3-ul w3-hoverable w3-white">
+      <li>
+        <small>{% if questions %}Exam {% else %} Quiz {% endif %}title : </small>
+         <strong>{{ quiz.title }}</strong>
+      </li>
+
+
+       <li>
+         You answered {{ score }} questions correctly out of {{ max_score }}
+      </li>
+
+	    {% if quiz.pass_mark %}
+      <li>
+          <p><span class="w3-text-green">REMARKS:</span>{{ sitting.result_message }}</p>
+      </li>
+
+	      {% endif %}
+
+	    <li>
+       Review the questions and try the exam again in the future.
+      </li>
+
+  	    {% if user.is_authenticated %}
+
+	    <li>
+        <small class="w3-text-red">The result of this exam will be stored in your profile section so you can review and monitor your progress.</small>
+    </li>
+  </ul> 
+  <!--quiz result end div--> 
+</div>
+	{% endif %}
+  {% endif %}
+
+</div>
+
+</div>
+
+                                                          {% if possible %}
+
+                                                          <p>
+                                                         Your session score is {{ session }} out of a possible {{ possible }}
+                                                          </p>
+
+                                                          <hr>
+
+                                                          {% endif %}
+
+<hr>
+  {% if questions %}
+  <div class="w3-center w3-margin-top">
+    <h2>Review The Exam </h2>
+  </div>                                                        
+    {% for question in questions %}
+<div class="w3-container w3-card w3-margin w3-padding  w3-white">
+  <div class="w3-container">
+    <p>
+		{{ question.content|safe }}
+	  </p>
+  </div>
+
+	  {% correct_answer_for_all question %}
+
+      {% if question.user_answer %}
+      <div class="w3-blue w3-padding">
+      <p>Your answer: {{ question|answer_choice_to_string:question.user_answer }}</p>
+      </div>
+      {% endif %}
+
+	  <p><strong>Explanation:</strong></p>
+	  <div class="w3-container w3-border" style="background-color: #fcf8e3;">
+		<p>{{ question.explanation|safe }}</p>
+	  </div>
+</div>
+</div>
+
+
+  {% endfor %}
+  {% endif %}
+
+
+<!-- Take Another Quiz-->
+<div class="w3-container w3-margin-top w3-hide-large">
+  <a href="{% url 'quiz_index' %}" class="w3-button w3-border w3-block w3-border-blue w3-round-large w3-text-blue w3-hide-large">
+    Take Another Quiz
+  </a>
+  </div>
+
+
+
+{% endblock %}

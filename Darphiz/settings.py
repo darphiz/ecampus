@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'tagging',
     'django_summernote',
     'sorl.thumbnail',
-    
+
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -84,17 +84,18 @@ WSGI_APPLICATION = 'Darphiz.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-"""
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'easycampus$database',
+        'NAME': 'easycampus$appbase',
         'USER': 'easycampus',
         'PASSWORD': '@18061999Ayo',
         'HOST': 'easycampus.mysql.pythonanywhere-services.com',
 
     }
 }
+
 """
 DATABASES = {
     'default': {
@@ -102,6 +103,7 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+"""
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # Password validation
@@ -190,7 +192,7 @@ SUMMERNOTE_CONFIG = {
           "imageTitle": {
           "specificAltField": True,
         },
-        
+
         "popover": {
             "image": [
                 ['custom', ['imageTitle']],
