@@ -1,0 +1,225 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load thumbnail %}
+{% block title %}
+{{group.name}}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="w3-row container-mobile">
+
+    <div class="w3-col m3">
+        <div class="w3-card w3-round w3-white">
+            <div class="w3-stretched">
+                {% thumbnail group.group_thumb "350x350" crop="center" format="WEBP" as im %}
+                <img height="{{im.height}}" width="100%" src="{{im.url}}" alt="{{group.name}} thumbnail" class="w3-round w3-image">
+                {% endthumbnail %}
+            </div>
+            <div class="w3-container">
+                <h1>{{group.name}}</h1>
+                <div class="w3-border w3-padding w3-round">
+                    <p class="w3-text-grey readmore js-read-more" data-rm-words="30">{{group.description}}</p>
+                </div>
+                <p><strong><span id="group-info">{{group.members.count}}</span> member{{group.members.count|pluralize}}</strong></p>
+                <div class=" d-flex member-fix">
+                    {% for user in group.members.all|slice:5 %}
+                    {% if user.userprofile.profile_photo %}
+                    <a href="{{user.get_absolute_url}}">
+                    <img src="{{user.userprofile.profile_photo.url}}" alt="member image"
+                        class="w3-image w3-circle member-icon">
+                    </a>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <br>
+                {% if request.user.is_authenticated %}
+                    <a href="." data-id="{{group.id}}" 
+                    class="group-action w3-button {% if request.user in group.members.all %}w3-red{% else %}w3-blue{% endif %} w3-round-medium w3-margin-bottom"
+                    data-action= "{% if request.user in group.members.all %}leave{% else %}join{% endif %}">{% if request.user in group.members.all %}Leave{% else %}Join{% endif %}
+                    </a>
+                {% endif %}
+                <p>Group by: <a href="{{group.creator.get_absolute_url}}"> {{group.creator.get_full_name}}</a></p>
+            </div>
+        </div>
+        <br>
+    </div>
+  
+
+    <div class="w3-col m6 w3-row-padding middle-column overflow-container container-mobile-0">
+
+        <div class="container-mobile-0 ">
+            <div class="w3-card w3-round container-mobile-0 w3-white ">
+                <div class="w3-container w3-padding">
+                    <h6 class="w3-opacity">{% if request.user.is_authenticated %}{{request.user.get_full_name}}, {% endif %}what is your question?</h6>
+                    <p contenteditable="true" class="w3-border w3-round-large w3-padding"></p>
+                    <a href="{% url 'question_list' %}" class="w3-button w3-round-large w3-blue">Ask</a>
+                </div>
+            </div>
+        </div>
+        <br>
+        <!--Infinitely provide questions -->
+        <div class="infinite-container">
+            {% include 'group/group_quest_scroll.html' %}
+        </div>
+        <br>
+        {% if group_questions %}
+        <div id= "spinner-2" class="w3-white">
+            <svg
+            role="img"
+            width="100%"
+            height="100%"
+            aria-labelledby="loading-aria"
+            viewBox="0 0 400 460"
+            preserveAspectRatio="none"
+          >
+            <title id="loading-aria">Loading...</title>
+            <rect
+              x="0"
+              y="0"
+              width="100%"
+              height="100%"
+              clip-path="url(#clip-path)"
+              style='fill: url("#fill");'
+            ></rect>
+            <defs>
+              <clipPath id="clip-path">
+                  <circle cx="31" cy="31" r="20" /> 
+                  <rect x="58" y="18" rx="2" ry="2" width="140" height="10" /> 
+                  <rect x="58" y="34" rx="2" ry="2" width="140" height="10" /> 
+                  <rect x="19" y="117" rx="2" ry="2" width="357" height="320" /> 
+                  <rect x="19" y="68" rx="2" ry="2" width="357" height="21" /> 
+                  <rect x="177" y="447" rx="0" ry="0" width="5" height="0" /> 
+              
+              </clipPath>
+              <linearGradient id="fill">
+                <stop
+                  offset="0.599964"
+                  stop-color="#f3f3f3"
+                  stop-opacity="1"
+                >
+                  <animate
+                    attributeName="offset"
+                    values="-2; -2; 1"
+                    keyTimes="0; 0.25; 1"
+                    dur="2s"
+                    repeatCount="indefinite"
+                  ></animate>
+                </stop>
+                <stop
+                  offset="1.59996"
+                  stop-color="#c9e1ec"
+                  stop-opacity="1"
+                >
+                  <animate
+                    attributeName="offset"
+                    values="-1; -1; 2"
+                    keyTimes="0; 0.25; 1"
+                    dur="2s"
+                    repeatCount="indefinite"
+                  ></animate>
+                </stop>
+                <stop
+                  offset="2.59996"
+                  stop-color="#f3f3f3"
+                  stop-opacity="1"
+                >
+                  <animate
+                    attributeName="offset"
+                    values="0; 0; 3"
+                    keyTimes="0; 0.25; 1"
+                    dur="2s"
+                    repeatCount="indefinite"
+                  ></animate>
+                </stop>
+              </linearGradient>
+            </defs>
+          </svg>
+      </div>
+          {% endif %}
+    
+    </div>
+
+    <!--right Column for group details-->
+    <div class="w3-col m3">
+        <div class="w3-container w3-card w3-white">
+            <h3>Group Trend</h3>
+            {% for tag in tags|slice:5 %}
+            <div class="w3-container">
+                <a href="{% url 'query' action='tag' arg=tag %}">
+                    <p class="w3-left">#{{tag.name}}</p>
+                    <p class="w3-right">........{{tag.count}}</p>
+                </a>
+            </div>
+            {% empty %}
+            <div class="w3-container">
+                <p class="w3-opacity">No trending Tags to show...</p>
+            </div>
+            {% endfor %}
+        </div><br>
+        <div class="w3-container w3-card w3-white">
+            <h3>Moderators</h3>
+            <div class="w3-margin">
+                <ul class="w3-ul w3-bordered w3-hoverable">
+                    {% for user in group.moderators.all|slice:5 %}
+                    <a href="{{user.get_absolute_url}}">
+                    <li class="profile-img-0">
+                        {% if user.userprofile.profile_photo %}
+                        <img src="{{user.userprofile.profile_photo.url}}" alt="image" class="w3-circle">
+                        {% endif %}
+                        <span class="w3-margin-left">{{user.username}}</span>
+                    </li>
+                    </a>
+                    {% empty %}
+                    <div class="w3-container w3-opacity">
+                        <p>Moderated By AI.</p>
+                        <p>Complaints should be directed to the website administrator.</p>
+                    </div>
+                    
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dev"></div>
+
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'js/jquery-infinite-scroll.js' %}"></script>
+<script src="{% static 'js/readmore.js' %}"></script>
+<script> 
+     $.ajaxSetup({
+        headers: {"X-CSRFToken":'{{csrf_token}}'}
+
+    });
+        $('.group-action').click(
+        function(e){
+            e.preventDefault();
+            $.post('{% url "group_action" %}',
+            {
+                id: $(this).data('id'),
+                action: $(this).data('action')
+            },
+            function(data){
+                if(data["status"] == "ok"){
+                    var previous_action = $('a.group-action').data('action');
+                    // toggle data-action
+                $('a.group-action').data('action',
+                   previous_action == 'join' ? 'leave' : 'join');
+                    // toggle link text
+                $('a.group-action').text(previous_action == 'join' ? 'Leave' : 'Join');
+                        // update total followers
+                    var previous_followers = parseInt(
+                    $('#group-info').text());
+                    $('#group-info').text(previous_action == 'join' ? previous_followers + 1 : previous_followers - 1);
+                    $('a.group-action').toggleClass('w3-blue w3-red');
+                }
+        }
+    );
+
+    });
+    
+</script>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load thumbnail %}
+{% load class_name %}
+
+{% block title %}
+Search Result for "{{arg}}"
+{% endblock %}
+
+{% block content %}
+<div class="container-mobile">
+    <div class="w3-container">
+    {% if action == 'tag' %}
+        <h1 class="w3-xlarge">{{arg|title}}</h1>
+    {% else %}
+        <h1 class="w3-xlarge">Search results for "{{arg}}" </h1>
+    {% endif %}
+    </div>
+    <div class="w3-white container-mobile">
+
+        <div class="w3-row-padding container-mobile w3-margin-top">
+
+            <div class="w3-col m8  w3-round-medium w3-padding">
+                <h2 class="w3-center">Questions/Articles</h2>
+                {% for result in results %}
+                {% with result|class_name as klass %}
+                
+                {% if klass == 'Quest' %}
+                <div class="w3-container w3-border w3-padding w3-round-medium">
+                    <a href="{{result.get_absolute_url}}"><h3 class="w3-text-blue">{{result.title}}</h3></a>
+                    <p>{{result.body|truncatewords:20|pure_text}}</p>
+                    <p class="w3-small">{{result.asked_by.username}}, {{result.date_asked}}</p>
+                </div><br>    
+        
+                {% endif %}
+
+                {% if klass == 'UserProfile' %}
+                <a href="#">
+                <div class="w3-container w3-border w3-padding w3-round-medium">
+                    <p class="w3-small w3-opacity">.member</p>
+                    <div class="d-flex">
+                    {% thumbnail result.profile_photo "50x50" crop="center" format="WEBP" as im %}
+                    <img src="{{im.url}}"  " alt="{{result.user.username}}'s profile photo" height="{{im.height}}" width="{{im.width}}" class="w3-circle w3-image">
+                    {% endthumbnail %}
+                    <p class="w3-margin"><b>{{result.user.get_full_name}}</b></p>
+                    </div>
+                </div>
+                </a>
+                <br>
+                {% endif %}
+
+                {% endwith %}
+                {% endfor %}
+    
+    
+            </div>
+
+
+            <div class="w3-col m4 ">
+                <div class="w3-container ">
+                    <h2 class="w3-center">Groups</h2>
+                    {% if gr %}
+                    {% for result in results %}
+                    {% with result|class_name as klass %}
+                    
+                    {% if klass == 'Group' %}
+                    <div class="w3-padding w3-border w3-round-medium">
+                        <a href="{{result.get_absolute_url}}"><h3 class="w3-text-blue">{{result.name}}</h3></a>
+                        <p>{{result.description|truncatewords:20}}</p>
+                    </div><br>
+                    
+                    {% endif %}
+                    {% endwith %}
+                    {% endfor %}
+                    {% else %}
+                    <p>No suggestion for groups... </p>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}

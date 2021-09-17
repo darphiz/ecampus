@@ -1,0 +1,45 @@
+{% load thumbnail %}
+{% load static %}
+        {% for question in group_questions %}
+        <div class="w3-card w3-round w3-white w3-container">
+            <a href="{{question.asked_by.get_absolute_url}}">
+            <div class="profile-img">
+                {% if question.asked_by.userprofile.profile_photo %}
+                {% thumbnail question.asked_by.userprofile.profile_photo "80x80" crop="center" format="WEBP" as im %}
+                <img class="w3-circle" src="{{im.url}}" alt="{{question.asked_by.username}}'s profile photo" height="{{im.height}}" width="{{im.width}}">
+                {% endthumbnail %}
+               
+                {% else %}
+                <img class="w3-circle" src="{% static 'images/femaleprofile.png' %}" alt="Profile">
+            {% endif %}
+                <div class="profile-text w3-text-grey">
+                    <p><b>{{question.asked_by.username|title}}</b></p>
+                    <p>{{question.date_asked}}</p>
+                    <p class="w3-tag w3-round-large w3-blue">{{question.type}}</p>
+                </div>
+            </div>
+        </a>
+
+            <div class="w3-container">
+                <a href="{{question.get_absolute_url}}">
+                    <h3 class="question-title"><b>{{question.title}}</b></h3>
+                </a>
+                {% if question.image_upload %}
+                {% thumbnail question.image_upload "350x350" crop="center" format="WEBP" as im %}
+                    <img src="{{im.url}}" class="w3-round-medium q-image" alt="{{question.title}} Thumbnail">
+                {% endthumbnail %}
+                {% endif %}
+                <div class="w3-margin-top w3-margin-bottom reaction">
+                    <i class="fas fa-sort"></i><span class="w3-margin-left">{{question.votes.count}} upvote{{question.votes.count|pluralize}}</span>
+                    <i class="far fa-comment w3-margin-left"></i><span class="w3-margin-left">{{question.answers.count}} comment{{question.answers.count|pluralize}}</span>
+                </div>
+            </div>
+
+
+        </div><br>
+        {% empty %}
+        <div class="w3-container w3-center">
+            <p>No Questions Yet..</p>
+            <a href="{% url 'ask_question' %}"><p>Be the first to ask</p></a>
+        </div>
+        {% endfor %}

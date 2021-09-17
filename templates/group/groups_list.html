@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+{% block content %}
+{% load static %}
+<div class="w3-margin-top">
+<h1 class="w3-center"><b>Join a Community</b></h1>
+    <small class="grid-button w3-margin">
+        <a class="w3-btn {% if action == 'my' %}w3-border w3-border-blue{% else %}w3-blue{% endif %} w3-round-medium btn-flex" href="{% url 'groups_list' 'my' %}">My Groups</a>
+        <a class="w3-btn {% if action == 'all' %}w3-border w3-border-blue{% else %}w3-blue{% endif %} w3-round-medium btn-flex" href="{% url 'groups_list' 'all' %}">All Groups</a>
+        <a class="w3-btn w3-blue w3-round-medium btn-flex" href="{% url 'create_group' %}">Create Group <i class="fas fa-plus"></i></a>
+    </small>
+    <div class="grid-container">
+        {% include 'group/group_scroll.html' %}
+    </div>
+    {% if groups %}
+        <div id="spinner">
+            <div class="w3-white"><svg role="img" width="100%" height="100%" aria-labelledby="loading-aria" viewBox="0 0 400 460" preserveAspectRatio="none"><title id="loading-aria">Loading...</title><rect x="0" y="0" width="100%" height="100%" clip-path="url(#clip-path)" style='fill: url("#fill");'></rect><defs><clipPath id="clip-path"><rect x="19" y="18" rx="2" ry="2" width="357" height="320" /> <rect x="19" y="68" rx="2" ry="2" width="357" height="21" /> <rect x="58" y="370" rx="2" ry="2" width="300" height="10" /> <rect x="58" y="385" rx="2" ry="2" width="300" height="10" /><rect x="58" y="400" rx="2" ry="2" width="120" height="10" /> </clipPath><linearGradient id="fill"><stop offset="0.599964" stop-color="#f3f3f3" stop-opacity="1"><animate attributeName="offset" values="-2; -2; 1" keyTimes="0; 0.25; 1" dur="2s" repeatCount="indefinite"></animate></stop><stop offset="1.59996" stop-color="#c9e1ec" stop-opacity="1"><animate attributeName="offset" values="-1; -1; 2" keyTimes="0; 0.25; 1" dur="2s" repeatCount="indefinite"></animate></stop><stop offset="2.59996" stop-color="#f3f3f3" stop-opacity="1"><animate attributeName="offset" values="0; 0; 3" keyTimes="0; 0.25; 1" dur="2s" repeatCount="indefinite"></animate></stop></linearGradient></defs></svg></div>
+        </div>
+        {% endif %}
+    
+    
+<div id="dev"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/group-infinite-scroll.js' %}"></script>
+{% endblock %}

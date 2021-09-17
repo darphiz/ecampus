@@ -1,0 +1,26 @@
+{% load thumbnail %}
+{% for group in groups %}
+<div class="w3-border w3-round-medium w3-white">
+    <div>
+        {% thumbnail group.group_thumb "350x350" crop="center" format="WEBP" as im %}
+        <img height="{{im.height}}" width="100%" src="{{im.url}}" alt="{{group.name}} thumbnail" class="w3-round w3-image">
+        {% endthumbnail %}
+    </div>
+    <div class="w3-container w3-margin-bottom">
+        <div><h3>{{group.name|truncatechars:80}}</h3></div>
+        <div>{{group.description|truncatechars:80}}</div> <br>
+        <div>{{group.members.count}} <b>member{{group.members.count|pluralize}}</b>
+            <a class = "w3-btn w3-round-medium w3-blue w3-right" href="{{group.get_absolute_url}}">Visit</a>
+        </div>
+    </div>
+
+</div>
+{% empty %}
+{% if action == 'my' %}
+<div class="w3-container">
+    <p>You haven't joined any group yet ... (<a class="w3-text-blue" href="{% url 'groups_list' 'all' %}">find one</a>)</p>
+</div>
+{% else %}
+    <h2>We have no community yet... Be the first to <a href="#">create one</a></h2>
+{% endif %}
+{% endfor %}

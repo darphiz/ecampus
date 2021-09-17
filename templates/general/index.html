@@ -1,0 +1,271 @@
+{% extends "layout.html" %}
+{% load static %}
+{% load thumbnail %}
+{% block title %}
+
+Easy Campus
+{% endblock %}
+
+
+{% block content %}
+<!-- The Grid -->
+<div class="w3-row container-mobile">
+    <!-- Left Column -->
+    <div class="w3-col container-mobile m2 w3-margin-bottom w3-hide-small">
+        <!-- Profile -->
+        <div class="w3-card w3-round w3-white">
+            <div class="w3-container">
+                <h4 class="w3-center"><b>Profile</b></h4>
+                {% if request.user.is_authenticated %}
+                    {% if request.user.userprofile.profile_photo %}
+
+                    <p class="w3-center">
+                        {% thumbnail request.user.userprofile.profile_photo "106x106" crop="center" format="WEBP" as im %}
+                        <img src="{{im.url}}" class="w3-circle" height="{{im.height}}" width="{{im.width}}" alt="{{request.user.username}}'s Profile Pics">
+                        {% endthumbnail %}
+                    </p>
+                        {% else %}
+                    {% if request.user.userprofile.gender|title == "Male" %}
+                    <p class="w3-center"><img src="{% static 'images/maleprofile.png' %}" class="w3-circle"
+                            style="height:106px;width:106px" alt="Avatar"></p>
+                    {% else %}
+                    <p class="w3-center"><img src="{% static 'images/femaleprofile.png' %}" class="w3-circle"
+                            style="height:106px;width:106px" alt="Avatar"></p>
+                    {% endif %}
+                    {% endif %}
+                <hr>
+                    <p>{{ request.user.get_full_name|title }}</p>
+                    <p>{{ request.user.userprofile.faculty|title }}</p>
+                    <p> {{ request.user.userprofile.level }}</p>
+                    <p> {{ request.user.userprofile.gender|title }} </p>
+                    <a href="{% url 'logout' %}" class="w3-block w3-blue w3-btn w3-margin-bottom w3-round">Log Out</a>
+                {% else %}
+                    <p class="w3-center">
+                        <img src="{% static 'images/maleprofile.png' %}" class="w3-circle"
+                            style="height:106px;width:106px" alt="Avatar">
+                        </p>
+                    <a href="{% url 'login' %}" class="w3-block w3-blue w3-btn w3-margin-bottom w3-round">Log In</a>
+                    <a href="{% url 'register' %}" class="w3-block w3-blue w3-btn w3-margin-bottom w3-round">Sign Up</a>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="w3-container w3-white w3-round w3-margin-top">
+            <p class="w3-center"><b>My Question</b></p>
+            <p>View the questions you've asked </p>
+            {% if user.is_authenticated %}
+            <div class="w3-margin-top w3-margin-bottom">
+                <a href="{% url 'question_progress' %}"
+                    class="w3-round-large w3-center w3-btn w3-blue w3-block">View</a>
+            </div>
+            {% else %}
+            <p class="w3-text-red">Please Login To Your Account to View </p>
+            {% endif %}
+        </div> <br>
+        <!-- Accordion -->
+        <div class="w3-card w3-round">
+            <div class="w3-white">
+                <button onclick="myFunction('Demo1')" class="w3-btn w3-block w3-theme-l1 w3-left-align"><i
+                        class="fa fa-circle-o-notch fa-fw w3-margin-right"></i> My Groups</button>
+                <div id="Demo1" class="w3-hide w3-container">
+
+                    <ul class="w3-ul">
+                        {% for group in request.user.groups_joined.all %}
+                        <li><a href="{{group.get_absolute_url}}">{{group.name}}</a></li>
+                        {% endfor %}
+                    </ul>
+
+
+                </div>
+            </div>
+        </div> <br>
+
+        <!-- Interests -->
+        <div class="w3-card w3-round w3-white w3-hide-small">
+            <div class="w3-container">
+                <p>Interests</p>
+                <p>
+                    {% for interest in request.user.Interest.get_user_interest|slice:5 %}
+                    <span class="w3-tag w3-small w3-theme-d{{forloop.counter}}">{{interest}}</span>
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+        <!--End Left Column-->
+    </div>
+
+    <!-- Middle Column -->
+    <div class="w3-col m7 middle-column overflow-container">
+        
+        <!--TOP Middle-->
+        <div class="w3-row-padding ">
+            <div class="w3-col m12 container-mobile-0">
+                <div class="w3-card w3-round container-mobile-0 w3-white ">
+                    <div class="w3-container w3-padding">
+                        <h6 class="w3-opacity">{% if request.user.is_authenticated %}Hello {{request.user.get_full_name}}!, {% endif %}What would you like to do?</h6>
+                    <form action="{% url 'query' action='search' arg='query' %}" method="GET">
+                        <input name="search_query" type="text" id = "id_search_query"  class="w3-border w3-block w3-round-large w3-padding" placeholder="Type in the keyword and hit search...." required>
+                        <br>
+                        <small> 
+                            <button type="submit" class="w3-btn w3-round-large w3-blue">Search</button>    
+                            <a href="{% url 'quiz_index' %}" class="w3-btn w3-round-large w3-blue">Practice CBT</a>
+                            <a href="{% url 'ask_question' %}" class="w3-btn w3-round-large w3-blue">Ask Question</a>
+                        </small>
+                    </form>
+                        
+                   
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End Top Middle-->
+
+        <!--Suggested Questions Intro-->
+      
+
+        <div class="infinite-container">
+           
+        {% include 'general/index_scroll.html' %}
+        </div>
+        <!--SPinner Div-->
+        {% if questions %}
+        <!--Spinner svg Div-->
+
+        <div id= "spinner-2" class="w3-white margin-desktop container-mobile">
+            <svg
+      role="img"
+      width="100%"
+      height="100%"
+      aria-labelledby="loading-aria"
+      viewBox="0 0 400 460"
+      preserveAspectRatio="none"
+    >
+      <title id="loading-aria">Loading...</title>
+      <rect
+        x="0"
+        y="0"
+        width="100%"
+        height="100%"
+        clip-path="url(#clip-path)"
+        style='fill: url("#fill");'
+      ></rect>
+      <defs>
+        <clipPath id="clip-path">
+            <circle cx="31" cy="31" r="20" /> 
+            <rect x="58" y="18" rx="2" ry="2" width="140" height="10" /> 
+            <rect x="58" y="34" rx="2" ry="2" width="140" height="10" /> 
+            <rect x="19" y="117" rx="2" ry="2" width="357" height="320" /> 
+            <rect x="19" y="68" rx="2" ry="2" width="357" height="21" /> 
+            <rect x="177" y="447" rx="0" ry="0" width="5" height="0" /> 
+        
+        </clipPath>
+        <linearGradient id="fill">
+          <stop
+            offset="0.599964"
+            stop-color="#f3f3f3"
+            stop-opacity="1"
+          >
+            <animate
+              attributeName="offset"
+              values="-2; -2; 1"
+              keyTimes="0; 0.25; 1"
+              dur="2s"
+              repeatCount="indefinite"
+            ></animate>
+          </stop>
+          <stop
+            offset="1.59996"
+            stop-color="#c9e1ec"
+            stop-opacity="1"
+          >
+            <animate
+              attributeName="offset"
+              values="-1; -1; 2"
+              keyTimes="0; 0.25; 1"
+              dur="2s"
+              repeatCount="indefinite"
+            ></animate>
+          </stop>
+          <stop
+            offset="2.59996"
+            stop-color="#f3f3f3"
+            stop-opacity="1"
+          >
+            <animate
+              attributeName="offset"
+              values="0; 0; 3"
+              keyTimes="0; 0.25; 1"
+              dur="2s"
+              repeatCount="indefinite"
+            ></animate>
+          </stop>
+        </linearGradient>
+      </defs>
+    </svg>
+    </div>
+        {% endif %}
+        <!--End questions intro-->
+
+    </div>
+
+
+
+    <!-- Right Column -->
+    <div class="w3-col s12 m3 container-mobile-1">
+        <div class="w3-card w3-round border-fix-mobile w3-white">
+            <div class="w3-container">
+                <h4 class="w3-center"><b>CBT Exam Portal</b></h4>
+                <img class="w3-round w3-image" src="{% static 'images/learn.jpg' %}" alt="cbt">
+                <div class="w3-margin-top">
+                    <p class="w3-opacity w3-center">Did you know?</p>
+                    <p>
+                        An effective way to boost your CGPA is by practicing free
+                        cbt on easyCAMPUS. it increases confidence ,aids learning and increases the rate at which
+                        you
+                        decide during the
+                        exam. Select a mode to get started!
+                    </p>
+                </div>
+
+                <a href="{% url 'quiz_index' %}" class="w3-btn w3-margin-top w3-block w3-blue w3-round-large">Get Started</a><br>
+                
+            </div>
+        </div> <br>
+        <div class="w3-container w3-card w3-white">
+            <h3>Popular Tags</h3>
+            {% for tag in tags %}
+            <div class="w3-container">
+                <a href="{% url 'query' action='tag' arg=tag %}">
+                    <p class="w3-left">#{{tag.name}}</p>
+                    <p class="w3-right">........{{tag.count}}</p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- End Right Column -->
+    </div>
+
+    <!--End Grid-->
+</div>
+<div id="dev"></div>
+{% block scripts %}
+<script src="{% static 'js/jquery-infinite-scroll.js' %}"></script>
+<script>
+    // Accordion
+    function myFunction(id) {
+        var x = document.getElementById(id);
+        if (x.className.indexOf("w3-show") == -1) {
+            x.className += " w3-show";
+            x.previousElementSibling.className += " w3-theme-d1";
+        } else {
+            x.className = x.className.replace("w3-show", "");
+            x.previousElementSibling.className =
+                x.previousElementSibling.className.replace(" w3-theme-d1", "");
+        }
+    }
+</script>
+{% endblock %}
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block title %}Create group{% endblock %}
+{% block content %}
+<h1 class="w3-center">Create Group</h1>
+<form class="w3-content w3-white w3-round-medium" action="{% url 'create_group' %}" method="POST" enctype="multipart/form-data">
+    {%csrf_token%}
+    <div class="w3-padding-32 w3-container"> 
+        {% if form.non_field_errors %}
+        <p>
+            {{form.non_field_errors}}
+        </p>
+        {% endif %}
+        <p>
+            <input class="w3-input" placeholder="Group name" type="text" name="name" value="{% if form.name.value %}{{form.name.value}}{% endif %}" maxlength="250" required id="id_name">
+            <span>{{form.name.errors}}</span>
+        </p>
+        <p> 
+            <textarea placeholder="Group Description" class="w3-input" name="description" cols="40" rows="5" required id="id_description">{% if form.description.value %}{{form.description.value}}{% endif %}</textarea>
+            <span>{{form.description.errors.}}</span>
+        </p>
+            <div class="img-preview">
+                <img src="{% static 'images/thumbnail.png' %}" alt="article_image" id="img_preview" class="w3-border w3-round-medium">
+            </div>
+            <div class="custom-file">
+                <label class ="w3-btn w3-light-blue w3-round-medium" for="id_group_thumb">Add group thumbnail</label>
+                <input type="file" name="group_thumb" accept="image/*" onchange ='PreviewImage(event)'  id="id_group_thumb" required>
+                <span>{{form.group_thumb.errors}}</span>
+            </div>
+        <p>
+            <input type="submit" class="w3-btn w3-blue w3-round-medium" value="Create">
+        </p>
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    function PreviewImage(event){
+        var output = document.getElementById('img_preview');
+        output.src = URL.createObjectURL(event.target.files[0]);
+    };
+</script>
+{% endblock %}
