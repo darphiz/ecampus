@@ -1,3 +1,4 @@
+from community.models import Quest
 from django.shortcuts import render,redirect
 from django.contrib.auth.models import User,auth
 from accounts.form import UserForm, UserProfileForm
@@ -7,8 +8,12 @@ from django.urls  import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.shortcuts import get_object_or_404
+from .models import Contact
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+from common.decorator import ajax_required
+import random
 
-#Create your views here.
 def register(request):
     registered = False
     if request.method == 'POST':
@@ -70,4 +75,40 @@ def user_list(request):
 @login_required
 def user_detail(request, username):
     user = get_object_or_404(User, username=username, is_active=True)
-    return render(request, 'auth/user/detail.html',{'user': user})
+    timelines = Quest.Approved.filter(asked_by = user).select_related('asked_by')
+    context = {'user': user, 'timelines' :timelines}
+    return render(request, 'auth/user/detail.html',context)
+
+
+@login_required
+@ajax_required
+@require_POST
+def user_follow(request):
+    user_id = request.POST.get('id')
+    action = request.POST.get('action')
+    if user_id and action:
+        try:
+            user = User.objects.get(id=user_id)
+            if action == 'follow':
+                Contact.objects.get_or_create(
+                    user_from=request.user, user_to=user)
+            else:
+                Contact.objects.filter(
+                    user_from=request.user, user_to=user).delete()
+            return JsonResponse({'status': 'ok'})
+        except User.DoesNotExist:
+            return JsonResponse({'status': 'ko'})
+    return JsonResponse({'status': 'ko'})
+
+
+def auto_users(request):
+    creating = 0
+    def get_username():
+        name = random.randint(777777,9999999)
+        return name
+    while creating < 200:
+        create = User(username = get_username(), password = "BODmas99", first_name = "Bot", last_name = "generated" )
+        create.save()
+        creating+=1
+    context = {"status": True}
+    return render(request, 'auto.html',context)

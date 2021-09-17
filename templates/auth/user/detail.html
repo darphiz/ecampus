@@ -1,23 +1,78 @@
 {% extends "layout.html" %}
+{% load static %}
 {% load thumbnail %}
 {% block title %}{{ user.get_full_name }}{% endblock %}
 {% block content %}
-    <h1>{{ user.get_full_name }}</h1>
-        <div class="profile-info">
-        <img src="{% thumbnail user.profile.photo 180x180 %}" class="userdetail">
-        </div>
-    {% with total_followers=user.followers.count %}
-        <span class="count">
-        <span class="total">{{ total_followers }}</span>
-        follower{{ total_followers|pluralize }}
-        </span>
-        <a href="#" data-id="{{ user.id }}" data-action="{% if request.user in user.followers.all %}un{% endif %}follow" class="followbutton">
-        {% if request.user not in user.followers.all %}
-        Follow
-        {% else %}
-        Unfollow
-        {% endif %}
-        </a>
-    {% endwith %}
 
+<div class="w3-white w3-stretch w3-padding-32 w3-row">
+    <div class="w3-col m7 s12" >
+        <div class="w3-center">
+            {% if user.userprofile.profile_photo %}
+            {% thumbnail user.userprofile.profile_photo "150x150" crop="center" format="WEBP" as im %}            
+                <img src="{{im.url}}" class="w3-circle" height="{{im.height}}px" width="{{im.width}}px" alt="{{user.username}}'s Profile Pics">
+          {% endthumbnail %}
+            {% else %}
+            <img src="{% static 'images/maleprofile.png' %}" class="w3-circle" width="150px" height="150px" alt="{{user.username}}'s Profile Pics">
+          {% endif %}
+            <h1>{{ user.get_full_name }}</h1>
+        </div>
+        <!--Total followers section -->
+        <div class="w3-container w3-center">
+        {% with total_followers=user.followers.count %}
+            <h2 class="total"><span>{{ total_followers }}</span> Follower{{ total_followers|pluralize }}</h2>
+            <a class=" follow w3-btn {% if request.user not in user.followers.all %}w3-blue{% else %}w3-red{% endif %} w3-round-medium" href="." data-id="{{ user.id }}" data-action="{% if request.user in user.followers.all %}un{% endif %}follow">
+                {% if request.user not in user.followers.all %}
+                    Follow
+                {% else %}
+                    UnFollow
+                {% endif %}
+            </a>
+        {% endwith %}
+        </div>
+    </div>
+
+    <div class=" w3-col m5 s12 w3-container">
+        <h2 class="w3-center">Timeline{{timelines|pluralize}}</h2>
+        <ul class="w3-ul w3-hoverable w3-margin-32">
+        {% for timeline in timelines %}
+            <li><a href="{{timeline.get_absolute_url}}">{{timeline.title}}</a></li>
+        {% empty %}
+        <li>{{user.get_full_name}} haven't asked any question yet...</li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<script>
+    $.ajaxSetup({
+        headers: {"X-CSRFToken":'{{csrf_token}}'}
+
+    });
+$(document).ready(function(){  
+    $('a.follow').click(function(e){
+        e.preventDefault();
+        $.post('{% url "user_follow" %}',
+            {
+                id: $(this).data('id'),
+                action: $(this).data('action')
+            },
+            function(data){
+                if (data['status'] == 'ok') {
+                    var previous_action = $('a.follow').data('action');
+                    // toggle data-action
+                $('a.follow').data('action',
+                   previous_action == 'follow' ? 'unfollow' : 'follow');
+                    // toggle link text
+                $('a.follow').text(previous_action == 'follow' ? 'Unfollow' : 'Follow');
+                        // update total followers
+                    var previous_followers = parseInt(
+                    $('h2.total span').text());
+                    $('h2.total span').text(previous_action == 'follow' ? previous_followers + 1 : previous_followers - 1);
+                    $('a.follow').toggleClass('w3-blue w3-red');
+                }
+            }
+        );
+    });
+  });
+</script>
 {% endblock %}

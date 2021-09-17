@@ -6,10 +6,11 @@ from django.urls import reverse
 from django.utils.text import slugify
 from tagging.fields import TagField
 from django.db.models import Q
-
+import json
+from random import randint
 class ApprovedManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(approved=True)
+        return super().get_queryset().filter(status="approved")
     def search(self, query):
         qs = self.get_queryset()
         if query is not None:
@@ -28,6 +29,12 @@ class Quest(models.Model):
         ('question', 'Question'),
         ('link', 'Link'),
     )
+    
+    STATUS_CHOICES = (
+        ('approved', 'Approved'),
+        ('pending', 'Pending'),
+        ('rejected', 'Rejected'),
+    )
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250, unique=True, blank=True, null=True)
     asked_by = models.ForeignKey(User,
@@ -35,10 +42,11 @@ class Quest(models.Model):
                                  related_name='user', null=True,blank=True)
     body = models.TextField()
     date_asked = models.DateTimeField(auto_now_add=True)
-    approved = models.BooleanField(default=False)
+    status = models.CharField(max_length=10,
+                            choices=STATUS_CHOICES,
+                            default='pending')
     image_upload = models.ImageField(upload_to="QThumbnail", blank=True,
                                      null=True)
-    faculty = models.CharField(max_length=250, null=True, blank=True)
     tags = TagField()
     type = models.CharField(max_length=10,
                             choices=TYPE_CHOICES,
@@ -48,6 +56,7 @@ class Quest(models.Model):
 
     class Meta:
         ordering = ('date_asked',)
+        indexes = [models.Index(fields=[ 'date_asked', 'asked_by', 'title','tags'])]
 
     objects = models.Manager()  # The default manager.
     Approved = ApprovedManager()  # Our custom manager.
@@ -80,8 +89,8 @@ class Answer(models.Model):
         return 'Answered by {} on {}'.format(self.name, self.Quest)
 
 class Group(models.Model):
-    name = models.CharField(max_length=250)
-    slug = models.SlugField()
+    name = models.CharField(max_length=250,unique=True)
+    slug = models.SlugField(unique=True)
     group_thumb = models.ImageField(
         upload_to='group_thumbnail', blank=True, null=True)
     members = models.ManyToManyField(User, related_name='groups_joined',
@@ -102,10 +111,33 @@ class Group(models.Model):
     def get_absolute_url(self):
         return reverse('group_details',
         kwargs={'slug': self.slug})
-    def get_join_url(self):
-        return reverse('group_join',
-        kwargs={'slug': self.slug})
-    def get_leave_url(self):
-        return reverse('group_leave',
-        kwargs={'slug': self.slug})
+    def save(self, *args,**kwargs):
+        if Group.objects.filter(slug=slugify(self.name)).exists():
+            extra = str(randint(1, 10000))
+            self.slug = slugify(self.name) + "-" + extra
+        else:
+            self.slug = slugify(self.name)
+        super(Group, self).save(*args, **kwargs)
 
+
+class Interest(models.Model):
+    user = models.OneToOneField(User, on_delete=CASCADE, related_name="Interest",db_index=True)
+    keytags = models.TextField(blank=True,null=True, db_index=True)
+    
+    def save(self, *args, **kwargs):
+        self.keytags = json.dumps(self.keytags)
+        super(Interest, self).save(*args, **kwargs)
+    def get_user_interest(self):
+        jsonDec = json.decoder.JSONDecoder()
+        get_interests = jsonDec.decode(self.keytags)
+        return get_interests 
+
+    def __str__(self):
+        return self.user.username
+
+class Visit(models.Model):
+    user = models.OneToOneField(User, on_delete=CASCADE, related_name= 'visits', db_index=True)
+    questions = models.ManyToManyField(Quest, blank=True)
+    def __str__(self):
+        return self.user.username
+    
