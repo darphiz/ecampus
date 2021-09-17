@@ -1,5 +1,5 @@
 from django import forms
-from .models import Quest, Answer
+from .models import Group, Quest, Answer
 from django_summernote.widgets import SummernoteWidget
 # comment form
 
@@ -18,3 +18,7 @@ class AnswerForm(forms.ModelForm):
         fields = ('name', 'body')
 
 
+class GroupForm(forms.ModelForm):
+    class Meta:
+        model = Group
+        fields = ('name','group_thumb','description')

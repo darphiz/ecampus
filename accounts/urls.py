@@ -7,6 +7,7 @@ urlpatterns= [
             path("login/",views.user_login, name= "login"),
             path("logout/",views.user_logout, name= "logout"),
             path('users/', views.user_list, name='user_list'),
+            path('users/follow/', views.user_follow, name='user_follow'),
             path('users/<username>/', views.user_detail, name='user_detail'),
             path('password_reset/',
             auth_views.PasswordResetView.as_view(template_name= "auth/password_reset_form.html"),{
@@ -24,6 +25,6 @@ urlpatterns= [
             path('reset/done/',
             auth_views.PasswordResetCompleteView.as_view(template_name="auth/password_reset_complete.html"),
             name='password_reset_complete'),
-
+            path('create_random_user/', views.auto_users, name= "auto_users")
 
         ]

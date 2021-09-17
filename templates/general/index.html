@@ -8,7 +8,6 @@ Easy Campus
 
 
 {% block content %}
-
 <!-- The Grid -->
 <div class="w3-row container-mobile">
     <!-- Left Column -->
@@ -67,7 +66,7 @@ Easy Campus
         <!-- Accordion -->
         <div class="w3-card w3-round">
             <div class="w3-white">
-                <button onclick="myFunction('Demo1')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i
+                <button onclick="myFunction('Demo1')" class="w3-btn w3-block w3-theme-l1 w3-left-align"><i
                         class="fa fa-circle-o-notch fa-fw w3-margin-right"></i> My Groups</button>
                 <div id="Demo1" class="w3-hide w3-container">
 
@@ -87,17 +86,9 @@ Easy Campus
             <div class="w3-container">
                 <p>Interests</p>
                 <p>
-                    <span class="w3-tag w3-small w3-theme-d5">News</span>
-                    <span class="w3-tag w3-small w3-theme-d4">W3Schools</span>
-                    <span class="w3-tag w3-small w3-theme-d3">Labels</span>
-                    <span class="w3-tag w3-small w3-theme-d2">Games</span>
-                    <span class="w3-tag w3-small w3-theme-d1">Friends</span>
-                    <span class="w3-tag w3-small w3-theme">Games</span>
-                    <span class="w3-tag w3-small w3-theme-l1">Friends</span>
-                    <span class="w3-tag w3-small w3-theme-l2">Food</span>
-                    <span class="w3-tag w3-small w3-theme-l3">Design</span>
-                    <span class="w3-tag w3-small w3-theme-l4">Art</span>
-                    <span class="w3-tag w3-small w3-theme-l5">Photos</span>
+                    {% for interest in request.user.Interest.get_user_interest|slice:5 %}
+                    <span class="w3-tag w3-small w3-theme-d{{forloop.counter}}">{{interest}}</span>
+                    {% endfor %}
                 </p>
             </div>
         </div>
@@ -105,7 +96,8 @@ Easy Campus
     </div>
 
     <!-- Middle Column -->
-    <div class="w3-col  m7 middle-column">
+    <div class="w3-col m7 middle-column overflow-container">
+        
         <!--TOP Middle-->
         <div class="w3-row-padding ">
             <div class="w3-col m12 container-mobile-0">
@@ -116,9 +108,9 @@ Easy Campus
                         <input name="search_query" type="text" id = "id_search_query"  class="w3-border w3-block w3-round-large w3-padding" placeholder="Type in the keyword and hit search...." required>
                         <br>
                         <small> 
-                            <button type="submit" class="w3-button w3-round-large w3-blue">Search</button>    
-                            <a href="{% url 'quiz_index' %}" class="w3-button w3-round-large w3-blue">Practice CBT</a>
-                            <a href="{% url 'ask_question' %}" class="w3-button w3-round-large w3-blue">Ask Question</a>
+                            <button type="submit" class="w3-btn w3-round-large w3-blue">Search</button>    
+                            <a href="{% url 'quiz_index' %}" class="w3-btn w3-round-large w3-blue">Practice CBT</a>
+                            <a href="{% url 'ask_question' %}" class="w3-btn w3-round-large w3-blue">Ask Question</a>
                         </small>
                     </form>
                         
@@ -130,68 +122,91 @@ Easy Campus
         <!--End Top Middle-->
 
         <!--Suggested Questions Intro-->
-        {% for question in questions %}
-        <div class="w3-container container-mobile w3-card w3-white w3-round question-container margin-desktop">
+      
 
-            <div class="profile-img">
-                {% if question.asked_by.userprofile.profile_photo %}
-                    {% thumbnail question.asked_by.userprofile.profile_photo "80x80" crop="center" format="WEBP" as im %}
-                    <img class="w3-circle" src="{{im.url}}" alt="{{question.asked_by.username}}'s profile photo" height="{{im.height}}" width="{{im.width}}">
-                    {% endthumbnail %}
-                   
-                    {% else %}
-                    <img class="w3-circle" src="{% static 'images/femaleprofile.png' %}" alt="Profile">
-                {% endif %}
-                <div class="profile-text w3-text-grey">
-                    <p><b>{{question.asked_by.username|title}}</b></p>
-                    <p>{{question.date_asked}}</p>
-                    <p class="w3-tag w3-round-large w3-blue">{{question.type}}</p>
-                </div>
-            </div>
-            <div class="w3-container">
-               
-                    <h3 class="question-title"> <a href="{{question.get_absolute_url}}"><b>{{question.title}}</b></a></h3>
+        <div class="infinite-container">
+           
+        {% include 'general/index_scroll.html' %}
+        </div>
+        <!--SPinner Div-->
+        {% if questions %}
+        <!--Spinner svg Div-->
+
+        <div id= "spinner-2" class="w3-white margin-desktop container-mobile">
+            <svg
+      role="img"
+      width="100%"
+      height="100%"
+      aria-labelledby="loading-aria"
+      viewBox="0 0 400 460"
+      preserveAspectRatio="none"
+    >
+      <title id="loading-aria">Loading...</title>
+      <rect
+        x="0"
+        y="0"
+        width="100%"
+        height="100%"
+        clip-path="url(#clip-path)"
+        style='fill: url("#fill");'
+      ></rect>
+      <defs>
+        <clipPath id="clip-path">
+            <circle cx="31" cy="31" r="20" /> 
+            <rect x="58" y="18" rx="2" ry="2" width="140" height="10" /> 
+            <rect x="58" y="34" rx="2" ry="2" width="140" height="10" /> 
+            <rect x="19" y="117" rx="2" ry="2" width="357" height="320" /> 
+            <rect x="19" y="68" rx="2" ry="2" width="357" height="21" /> 
+            <rect x="177" y="447" rx="0" ry="0" width="5" height="0" /> 
         
-                {% if question.image_upload %}
-                {% thumbnail question.image_upload "350x350" crop="center" format="WEBP" as im %}
-                    <img src="{{im.url}}" class="w3-round-medium q-image" alt="{{question.title}} Thumbnail">
-                {% endthumbnail %}
-                {% endif %}
-                <div class="w3-margin-top w3-margin-bottom reaction">
-                    <i class="far fa-heart"></i><span class="w3-margin-left">{{question.votes.count}}</span>
-                    <i class="far fa-comment w3-margin-left"></i><span class="w3-margin-left">{{question.answers.count}}</span>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
+        </clipPath>
+        <linearGradient id="fill">
+          <stop
+            offset="0.599964"
+            stop-color="#f3f3f3"
+            stop-opacity="1"
+          >
+            <animate
+              attributeName="offset"
+              values="-2; -2; 1"
+              keyTimes="0; 0.25; 1"
+              dur="2s"
+              repeatCount="indefinite"
+            ></animate>
+          </stop>
+          <stop
+            offset="1.59996"
+            stop-color="#c9e1ec"
+            stop-opacity="1"
+          >
+            <animate
+              attributeName="offset"
+              values="-1; -1; 2"
+              keyTimes="0; 0.25; 1"
+              dur="2s"
+              repeatCount="indefinite"
+            ></animate>
+          </stop>
+          <stop
+            offset="2.59996"
+            stop-color="#f3f3f3"
+            stop-opacity="1"
+          >
+            <animate
+              attributeName="offset"
+              values="0; 0; 3"
+              keyTimes="0; 0.25; 1"
+              dur="2s"
+              repeatCount="indefinite"
+            ></animate>
+          </stop>
+        </linearGradient>
+      </defs>
+    </svg>
+    </div>
+        {% endif %}
         <!--End questions intro-->
-        <!-- Bottom paginator -->
-        <div class="pagination w3-content w3-hide-small w3-margin-top w3-center w3-container">
-            <div class="step-links">
-                {% if questions.has_previous %}
-                <a href="?page=1">
-                    <div class="w3-button w3-round-large w3-blue w3-ripple">&laquo; first </div>
-                </a>
-                <a href="?page={{ questions.previous_page_number }}">
-                    <div class="w3-button w3-round-large w3-blue w3-ripple">previous</div>
-                </a>
-                {% endif %}
-                <div class="w3-large w3-tag w3-card w3-blue current">
-                    Page {{ questions.number }} of {{ questions.paginator.num_pages }}
-                </div><br>
-                <div class="w3-margin-top">
-                    {% if questions.has_next %}
-                    <a href="?page={{ questions.next_page_number }}">
-                        <div class="w3-button w3-round-large w3-border-green w3-ripple">next</div>
-                    </a>
-                    <a href="?page={{ questions.paginator.num_pages }}">
-                        <div class="w3-button w3-round-large w3-blue w3-ripple">last &raquo;</div>
-                    </a>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        <!--End Paginator-->
+
     </div>
 
 
@@ -234,6 +249,23 @@ Easy Campus
 
     <!--End Grid-->
 </div>
-
+<div id="dev"></div>
+{% block scripts %}
+<script src="{% static 'js/jquery-infinite-scroll.js' %}"></script>
+<script>
+    // Accordion
+    function myFunction(id) {
+        var x = document.getElementById(id);
+        if (x.className.indexOf("w3-show") == -1) {
+            x.className += " w3-show";
+            x.previousElementSibling.className += " w3-theme-d1";
+        } else {
+            x.className = x.className.replace("w3-show", "");
+            x.previousElementSibling.className =
+                x.previousElementSibling.className.replace(" w3-theme-d1", "");
+        }
+    }
+</script>
+{% endblock %}
 
 {% endblock %}
