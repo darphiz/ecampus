@@ -88,10 +88,10 @@ FORCE_LOWERCASE_TAGS = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'easycampus$appbase',
-        'USER': 'easycampus',
+        'NAME': '',
+        'USER': '',
         'PASSWORD': '',
-        'HOST': 'easycampus.mysql.pythonanywhere-services.com',
+        'HOST': '',
 
     }
 }
@@ -166,14 +166,13 @@ LOGOUT_URL = reverse_lazy("logout")
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'mail.easycampus@gmail.com'
+EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-PAYSTACK_PUBLIC_KEY = 'pk_live_ccfbf4385f33ed39dc8ea792f5ce29014b8f0acb'
-PAYSTACK_SECRET_KEY = 'sk_live_b6cea368dd07dbfaec401bc58a009806b30c3921'
+
 
 def static_url(url):
     return os.path.join(STATIC_URL, url)
