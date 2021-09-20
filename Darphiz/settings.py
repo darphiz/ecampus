@@ -84,7 +84,6 @@ FORCE_LOWERCASE_TAGS = True
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-"""
 
 """
 DATABASES = {
@@ -93,89 +92,4 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
-
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
-# Password validation
-# https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/2.2/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
-# this tells django to look for a folder called static and add it as a static folder
-# the django automaticall create folder named assets ,by typing pyhton mange.py collectstatic on the command prompt
-
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-X_FRAME_OPTIONS = 'ALLOWALL'
-XS_SHARING_ALLOWED_METHODS = ['POST','GET','OPTIONS', 'PUT', 'DELETE']
-
-
-ABSOLUTE_URL_OVERRIDES = {'auth.user': lambda u: reverse_lazy('user_detail',args=[u.username])}
-LOGIN_REDIRECT_URL = reverse_lazy("question_list")
-LOGIN_URL = reverse_lazy("login")
-LOGOUT_URL = reverse_lazy("logout")
-
-
-def static_url(url):
-    return os.path.join(STATIC_URL, url)
-
-SUMMERNOTE_CONFIG = {
-    'toolbar': [
-        ['style', ['style']],
-        ['font', ['bold', 'italic',]],
-        ['para', ['ul', 'ol', 'paragraph']],
-        ['height', ['height']],
-
-        ['insert', ['link', 'picture', 'video',]],
-        ['view', ['codeview']],
-        ['help', ['help']],
-        ],
-          "imageTitle": {
-          "specificAltField": True,
-        },
-
-        "popover": {
-            "image": [
-                ['custom', ['imageTitle']],
-            ]},
-     'js': (static_url('js/imageedit.js'),),
-    'attachment_filesize_limit': 10240 * 10240, # specify the file size
-}
+"""

@@ -15,8 +15,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 def question_list(request):
     tags = get_popular_tag(Quest)
-    question_list = recommend_questions(request,Quest.Approved.all())    
-    
+    question_list = recommend_questions(request,Quest.Approved.all())
+
     paginator = Paginator(question_list, 4)
     page = request.GET.get('page')
     try:
@@ -58,7 +58,7 @@ def question_detail(request,slug,pk):
     response = track_user(request,question,context)
     return response
 
-    
+
 
 @login_required
 def question_progress(request):
@@ -80,7 +80,7 @@ def ask_question(request):
     form = AskForm()
     if request.method == 'POST':
         form = AskForm(request.POST, request.FILES)
-        if form.is_valid():   
+        if form.is_valid():
             new_form = form.save(commit=False)
             new_form.asked_by = request.user
             new_form.save()
@@ -89,7 +89,8 @@ def ask_question(request):
         form = AskForm()
     context = {'form':form}
     return render(request,'general/askquestion.html', context)
-                  
+
+@login_required
 def groups_list(request,action):
     if action == 'my':
         group = request.user.groups_joined.all()
@@ -161,7 +162,7 @@ def query(request, action, arg):
                              reverse=True)
             if not group_results:
                 gr = False
-            
+
     context = {'results':results,'gr':gr,'action':action,'arg':arg}
     return render(request, 'general/query.html',context)
 

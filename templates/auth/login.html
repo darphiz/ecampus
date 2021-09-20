@@ -7,9 +7,9 @@ Login
 
 {% block content%}
 <div class=" w3-row">
-    <div class=" w3-container w3-col s12 m6">
-        <div class="w3-container w3-large w3-blue ">
-            <h4>Login</h4>
+    <div class="w3-container container-mobile w3-col s12 m6">
+        <div class="w3-container w3-center w3-blue ">
+            <h1>Login</h1>
         </div>
 
     <div class="w3-container w3-white">
@@ -21,36 +21,34 @@ Login
         <form id="login_form" method="post" action="{% url 'login' %}">
             {%csrf_token%}
             <input type="hidden" name="next" value="{{ request.GET.next }}" />
+            {% if request.GET.next %}
+            <p class="w3-text-red">You must login first!</p>
+            {% endif %}
             <p>
-                <input class="w3-input w3-round-xxlarge w3-block" type="text" placeholder="username" name="username" required>
+                <input class="w3-input " type="text" placeholder="username" name="username" required>
             </p>
             <p>
-                <input class="w3-input w3-round-xxlarge w3-block" type="password"  placeholder="enter your password" name="password" required>
+                <input class="w3-input" type="password"  placeholder="enter your password" name="password" required>
             </p>
             <p>
                 <a class="w3-text-blue" href="{% url 'password_reset' %}">Forgotten your password?</a>
             </p>
             <p>
-                <button type= 'submit' class="w3-button w3-section w3-green w3-round-xxlarge">Login</button>
-                <a href="{% url 'register' %}" class="w3-button w3-round-xxlarge w3-section w3-blue">Register</a>
+                <button type= 'submit' class="w3-btn w3-border-blue w3-text-blue w3-border w3-round-medium">Login</button>
+                <a href="{% url 'register' %}" class="w3-btn w3-round-medium w3-blue">Register</a>
             </p>
-</form>
-<p>
-
-</p>
-
+        </form>
 </div>
 </div>
 
-<div class="w3-container w3-panel w3-leftbar  w3-col s12 m6 w3-white">
-<p class="w3-xxlarge w3-serif">
-<i>
-Learn as though you would never be able to master it; hold it as though you would be in fear of losing it
-</i>
-<p>Confucious</p>
-</p>
+<div class="w3-container container-mobile w3-leftbar w3-border-blue w3-col s12 m6 w3-white">
+    <div class="w3-padding">
 
+<h2><i>Learn as though you would never be able to master it; hold it as though you would be in fear of losing it</i></h2>
+<p>-Confucious</p>
 </div>
+</div>
+
 </div>
 
 {% endblock %}
