@@ -1,146 +1,133 @@
 {% extends "layout.html" %}
-{%load static%}
-<!DOCTYPE html>
-
-{% block title_block %}
-Register User
-{% endblock %}
-
-			{% block content %}
+{% load static %}
+{% block title_block %}Register User{% endblock %}
+{% block content %}
 			
-			
-{% if registered %}
+<div class= "w3-content w3-white w3-margin-top w3-round-medium">
 
-<div class= " w3-container w3-xxlarge w3-card w3-blue">
- <strong>Success!</strong>
-</div>
-<div class= "w3-container">
-<p>
-<a href="{% url 'login' %}">login to your new account</a>
-</p>
-<br />
-</div>
-{% else %}
+	<form action="{% url 'register' %}" enctype="multipart/form-data" method="POST">
+		
+		<div class="w3-container w3-center w3-blue w3-round-medium">
+			<h1>Register</h1>
+		</div>
+		{%csrf_token%}
+		<div class="w3-padding">
+			{% if form.non_field_errors %}
+        <p class="w3-text-red">
+            {{form.non_field_errors}}
+        </p>
+        {% endif %}
+		{% if form_error %}
+        <p class="w3-text-red">
+            <i class="fas fa-exclamation-circle"></i>{{form_error}}
+        </p>
+        {% endif %}
+	<p>
+	<p>
+		{% if form.username.value %}
+		<input value="{{form.username.value}}" class="w3-input" id= "id_username" type="text" placeholder="Enter username" name= "username" required>
+		{% else %}
+		<input class="w3-input" id= "id_username" type="text" placeholder="Enter username" name= "username" required>
+		{% endif %}
+		<span class="w3-text-red">{{form.username.errors}}</span>
+	</p>
 
-		<header class="w3-container w3-center w3-green">
-		<h1>Register</h1>
-		</header>
-<div class= "w3-row">
+	<p>
+		{% if form.email.value %}
+		<input value="{{form.email.value}}" class="w3-input" id = "id_email" type="email" placeholder="Enter email address" name= "email" required>
+		{% else %}
+		<input class="w3-input" id = "id_email" type="email" placeholder="Enter email address" name= "email" required>
+		{% endif %}
+		<span class="w3-text-red">{{form.email.errors}}</span>
+		<span class="w3-text-red" id="error"></span>
+	</p>
 
-<div class="w3-container w3-half w3-margin-top">
+	<p>
+		{% if form.password.value %}
+		<input value="{{form.password.value}}" id = "id_password" placeholder="Password" class="w3-input" type="password" name= "password" required>
+		{% else %}
+		<input id = "id_password" placeholder="Password" class="w3-input" type="password" name= "password" required>
+		{% endif %}
+		<span class="w3-text-red">{{form.password.errors}}</span>
+	</p>
 
-<form id= "user_form" action="{% url 'register' %}" enctype="multipart/form-data" method="post" class="w3-container w3-card-4">
-
-	{%csrf_token%}
+	<p>
+		<input id= "cpassword" class="w3-input" type="password" placeholder="Retype password" name= "cpassword" required>
+	</p>
+	<p class="w3-row">
+		<input id= "otp"
+		{% if otp %}
+		value="{{otp}}"
+		{% endif %}
+		class="w3-input w3-col m9 s9" type="text" placeholder="click get otp" name= "otp" required><button id="get_otp" class="w3-col m3 s3 w3-btn w3-blue w3-round-medium">
+		{% if otp %}
+		Resend
+		{% else %}
+			Get otp
+			{% endif %}
+		</button>
+	</p>
 	
-{% if user_form.errors %}
- {% for field in user_form %}
- 
-<div class="w3-container w3-red">
-{{ field.errors }}
+	<p>
+		<button  type="submit" class="w3-btn w3-blue w3-round-medium">Register</button> <p>Already have an account? <a href="{% url 'login' %}" class="w3-text-blue">Login</a></p>
+	</p>
 </div>
-
-{% endfor %}
-{% endif %}
-
-{% if form_error %}
-<div class="w3-container w3-red w3-margin-top">
-
-<p>{{ form_error }}</p>
-</div>
-{% endif %}
-
-<p>
-<label class="w3-label w3-validate">First Name:</label>
-<input id = "id_first_name" class="w3-input" type="text" style="width:90%" placeholder="Adebayo" name="first_name" required>
-</p>
-
-<p>
-<label class="w3-label w3-validate">Last Name:</label>
-<input class="w3-input" id= "id_last_name"  type="text" style="width:90%" placeholder="Olusegun" name= "last_name" required>
-</p>
-
-<p>
-<label class="w3-label w3-validate">Username:</label>
-<input class="w3-input" id= "id_username" type="text" style="width:90%" placeholder="Username" name= "username" required>
-</p>
-
-<p>
-<label class="w3-label w3-validate">Email Address</label>
-<input class="w3-input" id = "id_password" type="email" style="width:90%" placeholder="example@mail.com" name= "email" required>
-</p>
-
-<p>
-<label class="w3-label w3-validate">Faculty:</label>
-<select id= "id_faculty" class="w3-input" style="width:90%" name= "faculty" >
-<option value="Faculty of Education"> Faculty of Education</option>
-<option value="Faculty of Engineering"> Faculty of Engineering</option>
-<option value="Faculty of Agriculture"> Faculty of Agriculture</option>
-<option value="Faculty of Science"> Faculty of Science</option>
-<option value="Faculty of Art"> Faculty of Art</option>
-<option value="Faculty of Faculty of Management Science"> Faculty of Management Science</option>
-<option value="Faculty of Social Science"> Faculty of Social Science</option>
-<option value="Others">Others</option>
-</select>
-</p>
-
-
-<p>
-<label id = "id_level" class="w3-label w3-validate">Level</label>
-<select class="w3-input" style="width:90%" name= "level" >
-<option value="100L">100L</option>
-<option value="200L">200L</option>
-<option value="300L">300L</option>
-<option value="400L">400L</option>
-<option value="500L">500L</option>
-<option value="600L">600L</option>
-
-</select>
-</p>
-
-<p>
-<label class="w3-label w3-validate">Password:</label>
-<input id = "id_password" class="w3-input" type="password" style="width:90%" name= "password" required>
-</p>
-
-<p>
-<label class="w3-label w3-validate"> Confirm Password:</label>
-<input id= "cpassword" class="w3-input" type="password" style="width:90%" name= "cpassword" required>
-</p>
-
-<p>
-Gender: <br>
-<input id= "id_gender" class="w3-radio" type="radio" name="gender" value="male" checked>
-<label class="w3-validate">Male</label></p>
-
-<p>
-<input id= "id_gender" class="w3-radio" type="radio" name="gender" value="female">
-<label class="w3-validate">Female</label></p>
-
-<p>
-<input id="milk" class="w3-check" type="checkbox" checked="checked">
-<label class="w3-validate">Stay logged in</label></p>
-
- <!-- Provide a button to click to submit the form. -->
-<p>
-<button  name="submit" value="Register" class="w3-btn w3-section w3-blue w3-ripple">Submit</button></p>
-
 </form>
 
 </div>
 
-
-<div class="w3-container w3-half w3-margin-top">
-<p>Already have an account? <br>
-<button onclick ="location.href='{% url "login" %}'" class="w3-btn w3-section w3-green w3-ripple">Login</button></p>
-
-<!--w3 second half ends-->
-</div>
-
-<!--w3 row ends-->
-</div>
-
-
-{% endif %}
 		{% endblock %}
 
+{% block scripts %}
+	<script>
+	$.ajaxSetup({
+			headers: {"X-CSRFToken":'{{csrf_token}}'}
+
+    });
+	function validateEmail(email) {
+  const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
+
+function validate() {
+  const $result = $("#error");
+  const email = $("#id_email").val();
+  $result.text("");
+
+  if (validateEmail(email)) {
+    return true;
+  } else {
+    $result.text(email + " is not a valid email address");
+    $result.css("color", "red");
+    $result.show()
+    return false;
+  }
+}
+$(document).ajaxStart(function () {
+		$('#get_otp').html(`<i class="fas fa-spinner fa-spin"></i>`);
+  });
+	$('#get_otp').click(function(e){
+		e.preventDefault();
+
+		var username = $('#id_username').val();
+		var email = $('#id_email').val();
+		if (validate()){
+		$.post('{% url "otp" %}',
+            {
+                email: email,
+                username: username
+            },function(data){
+                if(data["status"] == "ok"){
+					$('#get_otp').html(`<i class="fas fa-check"></i>`).toggleClass('w3-green w3-blue');
+					$("#otp").attr("placeholder", "Enter the otp sent to your mail").val("").focus().blur();;
+				}
+				else{
+					var get_error = data["error"]
+					$('#get_otp').html(`<i class="fas fa-exclamation-triangle w3-text-white"></i>`).toggleClass('w3-yellow w3-blue');
+					$('#error').text(get_error)
+				}}
+			);}
+		
+	})
+		</script>
+		{% endblock %}

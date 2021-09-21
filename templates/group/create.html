@@ -2,27 +2,7 @@
 {% load static %}
 {% block title %}Create group{% endblock %}
 {% block content %}
-<style>
-    .float{
-        float: left;
-        margin-right: 50px;
-    }
-    .clearfix {
-  overflow: auto;
-}
-.clearfix::after {
-  content: "";
-  clear: both;
-  display: table;
-}
-  textarea{
-      position: relative;
-  }
-  textarea::placeholder{
-    position: absolute;
-    bottom: 0;
-  }
-</style>
+
 <div class="w3-margin-top w3-white">
 
 <form class="w3-content  w3-round-medium" action="{% url 'create_group' %}" method="POST" enctype="multipart/form-data">
@@ -40,11 +20,11 @@
         </p>
         <p>
             <textarea placeholder="Group Description" class="w3-input" name="description" cols="40" rows="2" required id="id_description">{% if form.description.value %}{{form.description.value}}{% endif %}</textarea>
-            <span>{{form.description.errors.}}</span>
+            <span>{{form.description.errors}}</span>
         </p>
         <div class="clearfix">
-            <div class="img-preview float">
-                <img src="{% static 'images/thumbnail.png' %}" alt="article_image" id="img_preview" class="w3-border w3-round-medium">
+            <div class="img-preview-2 float">
+                <img src="{% static 'images/thumbnail.png' %}" alt="article_image" id="img_preview" class="w3-circle">
             </div>
             <div class="custom-file">
                 <label class ="w3-btn w3-light-blue w3-round-medium" for="id_group_thumb">Add group thumbnail</label>

@@ -1,7 +1,7 @@
 from community.models import Quest
 from django.shortcuts import render,redirect
-from django.contrib.auth.models import User,auth
-from accounts.form import UserForm, UserProfileForm
+from django.contrib.auth.models import User
+from accounts.form import UserForm
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls  import reverse
@@ -13,29 +13,54 @@ from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from common.decorator import ajax_required
 import random
+from OTP.models import OTP
+def otp_valid(email,username,otp):
+    try:
+        otp_email = OTP.objects.get(user=email)
+    except:
+        status = {"message":"You entered a wrong OTP", "status":False}
+        return status
+    if otp_email.code == otp and otp_email.user_name == username and otp_email.user == email:
+        if otp_email.has_timeout:
+            status = {"message":"Your OTP has expired", "status":False}
+            return status
+        else:
+            status = {"message":"Success", "status":True}
+            return status
+    else:
+        status = {"message":"You entered a wrong OTP", "status":False}
+        return status
 
 def register(request):
-    registered = False
     if request.method == 'POST':
-        user_form = UserForm(data=request.POST)
-        profile_form = UserProfileForm(data=request.POST)
+        form = UserForm(data=request.POST)
         cpassword= request.POST.get('cpassword')
         password= request.POST.get('password')
-        if cpassword != password:
-            form_error= "password not matching"
-            return render(request,'auth/register.html',{'form_error':form_error})
-        elif user_form.is_valid() and profile_form.is_valid():
-            user = user_form.save()
-            user.set_password(user.password)
-            user.save()
-            profile = profile_form.save(commit=False)
-            profile.user = user
-            profile.save()
-            registered = True
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        otp = request.POST.get('otp')
+        validate = otp_valid(email,username,otp) 
+        if validate['status']==False:
+            form_error = validate["message"]
+            return render(request,'auth/register.html',{'form_error':form_error,'form':form})
+        else:
+            if cpassword != password:
+                form_error = "password not matching"
+                return render(request,'auth/register.html',{'form_error':form_error,'form':form})
+            elif form.is_valid():
+                user = form.save()
+                user.set_password(user.password)
+                user.save()
+                u = authenticate(username=username, password=password)
+                if u:
+                    if u.is_active:
+                        login(request,u)
+                        return redirect('question_list')
+                    else:
+                        return HttpResponse("Your EASY Campus account is disabled.")
     else:
-            user_form = UserForm()
-            profile_form = UserProfileForm()
-    return render(request,'auth/register.html',{'user_form': user_form,'profile_form': profile_form,'registered': registered})
+        form = UserForm()
+    return render(request,'auth/register.html',{'form': form})
 
 def user_login(request):
     if request.method == 'POST':
@@ -112,3 +137,16 @@ def auto_users(request):
         creating+=1
     context = {"status": True}
     return render(request, 'auto.html',context)
+
+def edit_profile(request):
+    if request.method == 'POST':
+        request.user.first_name = request.POST.get('first_name')
+        request.user.last_name  = request.POST.get('last_name')
+        request.user.userprofile.faculty  = request.POST.get('faculty')
+        request.user.userprofile.level = request.POST.get('level')
+        request.user.userprofile.gender  = request.POST.get('gender')
+        request.user.userprofile.profile_photo  = request.FILES.get('profile_photo')
+        request.user.save()
+        request.user.userprofile.save()
+        return redirect('profile')
+    return render(request, 'auth/edit.html')

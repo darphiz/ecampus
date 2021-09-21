@@ -1,0 +1,107 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block title %}Edit Profile{% endblock %}
+{% block content %}
+<div class="container-mobile">
+
+<form  action="{% url 'edit_profile' %}" method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+<div class="w3-padding-32 w3-white w3-content w3-container w3-round-large">
+<h1 class="w3-center"><b>Edit Profile</b></h1> <br>
+    <div class="w3-row">
+        <div class="w3-col m4 s1 w3-container">
+                                                
+        </div>
+        <div class="w3-col w3-margin-left m4 s10 w3-row">
+            <div class="img-preview-2 w3-col m8 s8">
+                {% if request.user.userprofile.profile_photo %}
+                <img src="{{request.user.userprofile.profile_photo.url}}" alt="article_image" id="img_preview" class="w3-border w3-circle">
+                {% else %}
+                <img src="{% static 'images/maleprofile.png' %}" alt="article_image" id="img_preview" class="w3-border w3-circle">
+                {% endif %}
+            </div>
+            <div class="custom-file w3-col m4 s4">
+                <label for="id_image"><i class="fas fa-pen "></i></label>
+                <input type="file" name="profile_photo" accept="image/*" onchange ='PreviewImage(event)'  id="id_image" >
+                <span>{{form.group_thumb.errors}}</span>
+            </div>
+        </div>
+        <div class="w3-col m4 s1 w3-container">
+      
+        </div>
+    </div>
+        
+    <p>
+        {% if request.user.first_name %}
+        <input value="{{request.user.first_name}}" id = "id_first_name" class="w3-input" type="text" placeholder="first name" name="first_name">
+        {% else %}
+        <input id = "id_first_name" class="w3-input" type="text" placeholder="first name" name="first_name">
+        {% endif %}
+    </p>
+        
+    <p>
+        {% if request.user.last_name %}
+        <input value="{{request.user.last_name}}" class="w3-input" id= "id_last_name"  placeholder="last name" type="text" name= "last_name" >
+        {% else %}
+        <input class="w3-input" id= "id_last_name"  type="text"  placeholder="last name" name= "last_name" >
+        {% endif %}
+    </p>
+        
+    <p>
+        <select id= "id_faculty" class="w3-input" name= "faculty" >
+            <option value="" selected>Faculty</option>
+            <option value="Faculty of Education">Faculty of Education</option>
+            <option value="Faculty of Engineering">Faculty of Engineering</option>
+            <option value="Faculty of Agriculture">Faculty of Agriculture</option>
+            <option value="Faculty of Science">Faculty of Science</option>
+            <option value="Faculty of Art">Faculty of Art</option>
+            <option value="Faculty of Faculty of Management Science">Faculty of Management Science</option>
+            <option value="Faculty of Social Science">Faculty of Social Science</option>
+            <option value="Others">Others</option>
+        </select>
+    </p>    
+    <p>
+        <select class="w3-input" name= "level" >
+            <option value="" selected>Level</option>
+            <option value="100L">100L</option>
+            <option value="200L">200L</option>
+            <option value="300L">300L</option>
+            <option value="400L">400L</option>
+            <option value="500L">500L</option>
+            <option value="600L">600L</option>
+    
+        </select>
+        </p>        
+        <p>
+            {% if request.user.userprofile.gender == 'male' %}
+        <input id= "id_gender_1" class="w3-radio" type="radio" name="gender" value="male" checked>
+            {% else %}
+        <input id= "id_gender_1" class="w3-radio" type="radio" name="gender" value="male">
+        {% endif %}
+        <label for="id_gender_1">Male</label></p>
+        
+        <p>
+            {% if request.user.userprofile.gender == 'female' %}
+        <input id= "id_gender_2" class="w3-radio" type="radio" name="gender" value="female" checked>
+            {% else %}
+        <input id= "id_gender_2" class="w3-radio" type="radio" name="gender" value="female">
+            {% endif %}
+        <label for="id_gender_2">Female</label></p>
+           
+        <button type="submit" class="w3-btn w3-round-medium w3-blue"><i class="fas fa-save"></i> Save changes</button>
+        
+</div>
+</div>
+</form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function PreviewImage(event){
+        var output = document.getElementById('img_preview');
+        output.src = URL.createObjectURL(event.target.files[0]);
+    };
+
+</script>
+{% endblock %}

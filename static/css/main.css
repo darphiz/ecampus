@@ -294,6 +294,19 @@ body{
   width: 100%;
   height: 100%;
   object-fit: cover;
+ 
+}
+.img-preview-2{
+  height: 200px;
+  width: 200px;
+  background: #fff;
+  overflow: hidden;
+
+}
+.img-preview-2 img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .custom-file input[type='file']{
   display: none;
@@ -303,4 +316,23 @@ body{
   color: #000;
   margin: auto;
   margin-top: 15px;
+}
+.float{
+  float: left;
+  margin-right: 50px;
+}
+.clearfix {
+overflow: auto;
+}
+.clearfix::after {
+content: "";
+clear: both;
+display: table;
+}
+textarea{
+position: relative;
+}
+textarea::placeholder{
+position: absolute;
+bottom: 0;
 }

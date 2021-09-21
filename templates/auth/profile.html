@@ -7,102 +7,110 @@ Dash Board
 
 
 {% block content %}
-{%  if user.is_authenticated %}
 
-
-<div class="w3-margin-top  w3-row">
+<div class="w3-row">
 
 <!--User Details Container-->
-	<div class=" w3-container w3-col s12 m6">
+	<div class=" w3-container w3-col s12 m6 container-mobile">
 		<div class="w3-container w3-blue">
-			<h5>Basic Info</h5>
+			<h1>{{request.user.username|title}} Info</h1>
 		</div>
-
 		<ul class="w3-ul w3-white">
-
-
 	  		<li class="w3-padding-16 ">
-				First Name:     {{ user.first_name|title }}
+				First Name:     {% if request.user.first_name %}{{ request.user.first_name|title }} {% else %}(not set){% endif %}
 
 	  		</li>
 	  		<li class="w3-padding-16 ">
-				Last Name:    {{ user.last_name|title }}
+				Last Name:    {% if request.user.last_name %}{{ request.user.last_name|title }} {% else %}(not set){% endif %}
 
 		  	</li>
 		  	<li class="w3-padding-16 ">
-				Faculty:    {{ user.userprofile.faculty|title }}
+				Faculty:    {% if request.user.userprofile.faculty %}{{ request.user.userprofile.faculty }} {% else %}(not set){% endif %}
 
 			</li>
 			<li class="w3-padding-16 ">
-				Level:     {{ user.userprofile.level }}
+				Level:     {% if request.user.userprofile.level %}{{ request.user.userprofile.level }} {% else %}(not set){% endif %}
 			</li>
 
 			<li class="w3-padding-16 ">
-				Gender:     {{ user.userprofile.gender|title }}
+				Gender:     {% if request.user.userprofile.gender %}{{ request.user.userprofile.gender|title }} {% else %}(not set){% endif %}
 			</li>
-
+			<li class="w3-padding-16 ">
+				Chakra: <i class="fas fa-fire-alt fa-spin  w3-margin-left w3-text-blue"></i>10
+			</li>
   		</ul>
 
 
 	</div>
-
-	<!--Quiz Histrory container-->
-	<div class="w3-container w3-col s12 m6 ">
-
-		<div class="w3-blue w3-center ">
-			<h1>Quiz History</h1>
+	<div class="w3-container w3-col s12 m6 container-mobile">
+		<div class="w3-blue w3-container">
+			<h2>Profile Actions</h2>
 		</div>
+		<ul class="w3-ul w3-white w3-hoverable">
+			<li class="w3-padding-16 w3-hover-blue">
+				<a href=""><i class="fas fa-bell"></i><span class="w3-margin-left">Notifications</span></a>
+			</li>
+			<li class="w3-padding-16 w3-hover-blue">
+				<a href="{% url 'edit_profile' %}"><i class="fa fa-pen"></i><span class="w3-margin-left">Edit Profile</span></a>
+			</li>
+			<li class="w3-padding-16 w3-hover-blue">
+				<i class="fas fa-users"></i><span class="w3-margin-left">Manage your groups</span>
+			</li>
+			<li class="w3-padding-16 w3-hover-blue">
+				<a href="{% url 'question_progress' %}"><i class="fas fa-question-circle"></i><span class="w3-margin-left">Monitor your questions</span></a>
+		  	</li>
+			<li class="w3-padding-16 w3-hover-blue">
+				<a href="{% url 'quiz_index' %}"><i class="fas fa-mouse-pointer"></i><span class="w3-margin-left">Proceed to CBT portal</span></a>
+		  	</li>
+		  <li class="w3-padding-16 w3-hover-red">
+			<a href="{% url 'logout' %}"><i class="fas fa-exclamation-triangle w3-text-yellow"></i><span class="w3-margin-left">Logout</span></a>
+		  </li>
+		</ul>
 
-<div class="w3-white">
-			<table class=" w3-table w3-margin-bottom w3-bordered w3-striped w3-white">
 
-				<thead>
-				<tr>
-					<th>Quiz</th>
-					<th>Correctly answered</th>
-					<th>Incorrect</th>
-					<th>GD<br>(5.0)</th>
-				</tr>
-				</thead>
-
-				<tbody>
-
-
-				{% for cat, value in cat_scores.items %}
-				<tr>
-				{% if value.1 > 1 %}
-					<td>{{ cat }}</td>
-					<td>{{ value.0 }}</td>
-					<td>{{ value.1 }}</td>
-					<td>{{ value.2|floatformat:'2' }}</td>
-				{% endif %}
-				</tr>
-
-				{% endfor %}
-
-				</tbody>
-
-			</table>
-		</div>
 
 	</div>
-	{% endif %}
-
-
+	
 </div>
-<br>
+<!--Quiz Histrory container-->
+<div class="w3-container container-mobile">
 
-<div class="w3-container w3-center">
-	<a href="{% url 'quiz_index' %}" class="w3-button w3-round-xxlarge w3-blue ">Proceed To Take New Quiz</a>
-</div>
+	<div class="w3-blue w3-center ">
+		<h3>Quiz History</h3>
+	</div>
+
+<div class="w3-white">
+		<table class=" w3-table w3-margin-bottom w3-bordered w3-striped w3-white">
+
+			<thead>
+			<tr>
+				<th>Quiz</th>
+				<th>Correctly answered</th>
+				<th>Incorrect</th>
+				<th>GD<br>(5.0)</th>
+			</tr>
+			</thead>
+
+			<tbody>
 
 
-<div class="w3-container w3-margin-top w3-center">
-	<a href="{% url 'question_progress' %}" class="w3-round-xxlarge w3-button w3-blue">View the questions you've asked</a>
-</div>
+			{% for cat, value in cat_scores.items %}
+			<tr>
+			{% if value.1 > 1 %}
+				<td>{{ cat }}</td>
+				<td>{{ value.0 }}</td>
+				<td>{{ value.1 }}</td>
+				<td>{{ value.2|floatformat:'2' }}</td>
+			{% endif %}
+			</tr>
+			
+			
+			{% endfor %}
 
+			</tbody>
 
-<div class="w3-container w3-margin-top    w3-center">
-	<a href="{% url 'logout' %}" class="w3-round-xxlarge w3-border w3-border-red w3-button">Logout</a>
+		</table>
+	</div>
+
 </div>
 {% endblock %}

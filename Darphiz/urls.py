@@ -24,5 +24,6 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('summernote/', include('django_summernote.urls')),
     path('cbt/', include('cbt.urls')),
+    path('verify/', include('OTP.urls'))
 ]
 urlpatterns= urlpatterns + static(settings.MEDIA_URL,document_root= settings.MEDIA_ROOT)
