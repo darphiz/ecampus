@@ -53,6 +53,5 @@ def send_otp(request):
         except:
             error = 'An error occurred, Try again'
             return JsonResponse({'status': 'ko',"error": error})
-        print(message)
-        
+
     return JsonResponse({'status': 'ko'})

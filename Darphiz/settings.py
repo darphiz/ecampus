@@ -23,10 +23,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'x)1!2jt3rqq2*yfh9u0_s66#47wqig*nirl5g_c(oqqxu7_s6b'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 
 ALLOWED_HOSTS = ['*']
@@ -86,11 +86,23 @@ FORCE_LOWERCASE_TAGS = True
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 
-
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+"""
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'easycampus$appbase',
+        'USER': 'easycampus',
+        'PASSWORD': os.getenv("DATA_BASE_PASSWORD"),
+        'HOST': 'easycampus.mysql.pythonanywhere-services.com',
+
     }
 }
 
@@ -175,6 +187,20 @@ SUMMERNOTE_CONFIG = {
             "image": [
                 ['custom', ['imageTitle']],
             ]},
-     'js': (static_url('js/imageedit.js'),),
+
     'attachment_filesize_limit': 10240 * 10240, # specify the file size
 }
+
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+PAYSTACK_PUBLIC_KEY = os.getenv('PAYSTACK_PUBLIC_KEY')
+PAYSTACK_SECRET_KEY = os.getenv('PAYSTACK_SECRET_KEY')
+PASSWORD_MIN_LENGTH = 8
+
