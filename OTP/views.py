@@ -40,12 +40,15 @@ def send_otp(request):
         if User.objects.filter(email=email).exists():
             error = 'Email taken, try another one'
             return JsonResponse({'status': 'ko', "error": error})
+        if User.objects.filter(username=username).exists():
+            error = 'Username taken, try another one'
+            return JsonResponse({'status': 'ko', "error": error})
         try:
             otp = generate_otp(email, username)
         except:
             otp = reset_otp(email, username)
         subject = "Confirm Your Email On Easy Campus"
-        message = f"Hello there, Your OTP is {otp}"
+        message = f"Hello {username}, Your OTP is {otp}. Do not share this otp if you do not intend to create an account on easycampus."
         try:
             send_mail(subject, message, 'mail.easycampus@gmail.com',
                   [email], fail_silently=False)

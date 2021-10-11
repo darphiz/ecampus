@@ -14,6 +14,9 @@ from django.http import JsonResponse
 from common.decorator import ajax_required
 import random
 from OTP.models import OTP
+from django.contrib import messages
+from notifications.signals import notify
+
 def otp_valid(email,username,otp):
     try:
         otp_email = OTP.objects.get(user=email)
@@ -54,7 +57,12 @@ def register(request):
                 u = authenticate(username=username, password=password)
                 if u:
                     if u.is_active:
-                        login(request,u)
+                        try:
+                            login(request,u)
+                            messages.success(request, 'You are logged in to your new account.')
+                        except:
+                            form_error = "An error occurred"
+                            return render(request,'auth/register.html',{'form_error':form_error,'form':form})
                         return redirect('question_list')
                     else:
                         return HttpResponse("Your EASY Campus account is disabled.")
@@ -117,6 +125,8 @@ def user_follow(request):
             if action == 'follow':
                 Contact.objects.get_or_create(
                     user_from=request.user, user_to=user)
+                message = "is now following you, follow them back."
+                notify.send(request.user ,recipient=user, verb=message, url=request.user.get_absolute_url())
             else:
                 Contact.objects.filter(
                     user_from=request.user, user_to=user).delete()
@@ -148,5 +158,6 @@ def edit_profile(request):
         request.user.userprofile.profile_photo  = request.FILES.get('profile_photo')
         request.user.save()
         request.user.userprofile.save()
+        messages.success(request, 'Profile updated successfully.')
         return redirect('profile')
     return render(request, 'auth/edit.html')

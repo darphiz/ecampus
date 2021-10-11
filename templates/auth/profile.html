@@ -9,7 +9,6 @@ Dash Board
 {% block content %}
 
 <div class="w3-row">
-
 <!--User Details Container-->
 	<div class=" w3-container w3-col s12 m6 container-mobile">
 		<div class="w3-container w3-blue">
@@ -36,35 +35,45 @@ Dash Board
 				Gender:     {% if request.user.userprofile.gender %}{{ request.user.userprofile.gender|title }} {% else %}(not set){% endif %}
 			</li>
 			<li class="w3-padding-16 ">
-				Chakra: <i class="fas fa-fire-alt fa-spin  w3-margin-left w3-text-blue"></i>10
+				Chakra: <i class="fas fa-fire-alt fa-spin  w3-margin-left w3-text-blue"></i>{{request.user.chakras.value|floatformat:'0'}}
 			</li>
   		</ul>
-
-
 	</div>
 	<div class="w3-container w3-col s12 m6 container-mobile">
 		<div class="w3-blue w3-container">
 			<h2>Profile Actions</h2>
 		</div>
 		<ul class="w3-ul w3-white w3-hoverable">
+			<a href="{% url 'notify_user'%}">
 			<li class="w3-padding-16 w3-hover-blue">
-				<a href=""><i class="fas fa-bell"></i><span class="w3-margin-left">Notifications</span></a>
+				<i class="fas fa-bell"></i><span class="w3-margin-left">Notifications</span>
 			</li>
+			</a>
+			<a href="{% url 'edit_profile' %}">
 			<li class="w3-padding-16 w3-hover-blue">
-				<a href="{% url 'edit_profile' %}"><i class="fa fa-pen"></i><span class="w3-margin-left">Edit Profile</span></a>
+				<i class="fa fa-pen"></i><span class="w3-margin-left">Edit Profile</span>
 			</li>
+			</a>
+			<a href="{% url 'groups_list' 'my' %}">
 			<li class="w3-padding-16 w3-hover-blue">
 				<i class="fas fa-users"></i><span class="w3-margin-left">Manage your groups</span>
 			</li>
+			</a>
+			<a href="{% url 'question_progress' %}">
 			<li class="w3-padding-16 w3-hover-blue">
-				<a href="{% url 'question_progress' %}"><i class="fas fa-question-circle"></i><span class="w3-margin-left">Monitor your questions</span></a>
+				<i class="fas fa-question-circle"></i><span class="w3-margin-left">Monitor your questions</span>
 		  	</li>
+			</a>
+			<a href="{% url 'quiz_index' %}">
 			<li class="w3-padding-16 w3-hover-blue">
-				<a href="{% url 'quiz_index' %}"><i class="fas fa-mouse-pointer"></i><span class="w3-margin-left">Proceed to CBT portal</span></a>
+				<i class="fas fa-mouse-pointer"></i><span class="w3-margin-left">Proceed to CBT portal</span>
 		  	</li>
-		  <li class="w3-padding-16 w3-hover-red">
-			<a href="{% url 'logout' %}"><i class="fas fa-exclamation-triangle w3-text-yellow"></i><span class="w3-margin-left">Logout</span></a>
+			</a>
+			<a href="{% url 'logout' %}">
+				<li class="w3-padding-16 w3-hover-red">
+				<i class="fas fa-exclamation-triangle w3-text-yellow"></i><span class="w3-margin-left">Logout</span>
 		  </li>
+		</a>
 		</ul>
 
 

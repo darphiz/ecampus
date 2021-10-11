@@ -7,8 +7,7 @@
     <h1>Members Lists</h1>
         <div class="w3-row">
         {% for user in users %}
-        <a href="{{ user.get_absolute_url }}">
-            <div class="w3-col w3-white m2 s6 w3-card w3-border w3-round-medium w3-padding">
+            <div style="height: 375px" class="w3-col w3-white m2 s6 w3-card w3-border w3-round-medium w3-padding">
                 <div class="w3-center">
                     {% if user.userprofile.profile_photo  %}
                         {% thumbnail user.userprofile.profile_photo "106x106" crop="center" format="WEBP" as im %}            
@@ -19,11 +18,11 @@
                     {% endif %}
                 </div><br>
                 <div style="background-color: rgb(241, 243, 245);" class="w3-round-medium w3-padding">
-                    <p><b>{{ user.get_full_name }}</b></p>
+                    <p><b>{% if user.get_full_name %}{{ user.get_full_name }}{% else %}{{user.username}}{% endif %}</b></p>
                     <p>{{user.followers.count}} Follower{{user.followers.count|pluralize}}</p>
                 </div><br>
                 <div class="w3-center">
-                    <button class="w3-blue w3-medium w3-round-medium w3-btn">View</button>
+                    <a href="{{user.get_absolute_url}}" class="w3-blue w3-medium w3-round-medium w3-btn">View</a>
                 </div>
             </div>
         </a>

@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Quest, Group
+from .models import Quest, Group, Answer
 from .forms import  AnswerForm, AskForm, GroupForm
 from django.core.paginator import Paginator, EmptyPage,PageNotAnInteger
 from django.contrib.auth.decorators import login_required
@@ -11,7 +11,10 @@ from django.db.models import Count
 from common.decorator import ajax_required
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from notifications.signals import notify
+from django.contrib import messages
+
+  
 
 def question_list(request):
     tags = get_popular_tag(Quest)
@@ -51,7 +54,10 @@ def question_detail(request,slug,pk):
         if answer_form.is_valid():
             new_answer = answer_form.save(commit=False)
             new_answer.question = question
+            new_answer.name = request.user
             new_answer.save()
+            message = f"answered your question:  \"{question.title}\""
+            notify.send(request.user ,recipient=question.asked_by, verb=message, url=question.get_absolute_url())
     else:
         answer_form = AnswerForm()
     context = {'tags':tags, 'answers': answers, 'new_answer': new_answer, 'question': question, 'answer_form': answer_form, 'answer': answer, 'similar_questions':similar_questions}
@@ -62,27 +68,23 @@ def question_detail(request,slug,pk):
 
 @login_required
 def question_progress(request):
-    username = request.user
-    question = Quest.objects.filter(asked_by =username)
-    approved = question.filter(approved=True)
-    unapproved_questions = question.filter(approved=False)
+    question = Quest.objects.filter(asked_by =request.user).order_by('-date_asked')
         # paginator
-    paginator = Paginator(approved, 5)
+    paginator = Paginator(question, 5)
     page = request.GET.get('page')
-    approved_questions = paginator.get_page(page)
+    questions = paginator.get_page(page)
+    return render(request, 'general/question_progress.html', {'questions': questions})
 
-    return render(request,
-                  'general/question_progress.html', {
-                      'approved_questions': approved_questions, 'unapproved_questions': unapproved_questions}
-                  )
 @login_required
 def ask_question(request):
     form = AskForm()
     if request.method == 'POST':
         form = AskForm(request.POST, request.FILES)
+        form.status = 'Pending'
         if form.is_valid():
             new_form = form.save(commit=False)
             new_form.asked_by = request.user
+
             new_form.save()
             return redirect('question_progress')
     else:
@@ -178,12 +180,42 @@ def vote_on_question(request):
                 question = Quest.objects.get(id=question_id)
                 if action == 'up_vote':
                     question.votes.add(request.user)
+                    if question.type == 'article':
+                        question.asked_by.chakras.value+=0.2
+                        question.asked_by.chakras.save()
                 else:
                     question.votes.remove(request.user)
+                    if question.type == 'article':
+                        question.asked_by.chakras.value-=0.2
+                        if question.asked_by.chakras.value > 0:
+                            question.asked_by.chakras.save()
                 return JsonResponse({'status': 'ok'})
             except Quest.DoesNotExist:
                 return JsonResponse({'status': 'ko'})
     return JsonResponse({'status': 'ko'})
+
+@login_required
+@ajax_required
+@require_POST
+def upvote_answer(request):
+    if request.method == 'POST':
+        try:
+            id = request.POST.get('id')
+            get_answer = Answer.objects.get(id=id)
+            if request.user in get_answer.votes.all():
+                get_answer.votes.remove(request.user)
+                get_answer.name.chakras.value-=0.1
+                if get_answer.name.chakras.value > 0:
+                    get_answer.name.chakras.save()
+                return JsonResponse({'status': 'ok', 'add': -1})
+            else:
+                get_answer.votes.add(request.user)
+                get_answer.name.chakras.value+=0.1
+                get_answer.name.chakras.save()
+                return JsonResponse({'status': 'ok', 'add': 1})
+        except:
+            return JsonResponse({'status': 'ko','add': 0})
+    return JsonResponse({'status': 'ko', 'add': 0})
 
 @login_required
 @ajax_required
@@ -220,3 +252,18 @@ def create_group(request):
         form = GroupForm()
     context = {'form':form}
     return render(request, 'group/create.html', context)
+
+def notify_user(request):
+    notifications = request.user.notifications.all()
+    notifications.mark_all_as_read()
+    context = {"all_notifications": notifications}
+    return render(request, 'general/notification.html', context)
+
+
+@login_required
+def top_up(request):
+    return render(request, 'premium/premium.html')
+
+@login_required
+def top_up_discount(request,amount):
+    return render(request, 'premium/premium_payment.html', {'amount':amount})

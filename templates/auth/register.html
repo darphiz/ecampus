@@ -16,7 +16,9 @@
         <p class="w3-text-red">
             {{form.non_field_errors}}
         </p>
+		
         {% endif %}
+		<p><span class="w3-text-red" id="error"></span></p>
 		{% if form_error %}
         <p class="w3-text-red">
             <i class="fas fa-exclamation-circle"></i>{{form_error}}
@@ -39,7 +41,6 @@
 		<input class="w3-input" id = "id_email" type="email" placeholder="Enter email address" name= "email" required>
 		{% endif %}
 		<span class="w3-text-red">{{form.email.errors}}</span>
-		<span class="w3-text-red" id="error"></span>
 	</p>
 
 	<p>
@@ -84,16 +85,29 @@
 			headers: {"X-CSRFToken":'{{csrf_token}}'}
 
     });
+
+	var field = document.querySelector('[name="username"]');
+
+field.addEventListener('keyup', function ( event ) {  
+   var userName = field.value;
+  userName = userName.replace(/\s/g, '');
+  field.value = userName;
+});
+
 	function validateEmail(email) {
   const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
+}
+
+function isEmpty(str){
+	return !str.trim().length;
 }
 
 function validate() {
   const $result = $("#error");
   const email = $("#id_email").val();
   $result.text("");
-
+  if (!isEmpty(email)){
   if (validateEmail(email)) {
     return true;
   } else {
@@ -101,7 +115,29 @@ function validate() {
     $result.css("color", "red");
     $result.show()
     return false;
+  }}
+  else{
+	$result.text(" Email cannot be empty");
+    $result.css("color", "red");
+    $result.show()
+    return false;
   }
+}
+
+
+function username_not_empty(){
+	const email = $("#id_username").val();
+	const $result = $("#error");
+	if (isEmpty(email)){
+		$result.text("username field cannot be empty");
+    	$result.css("color", "red");
+    	$result.show();
+		return false;
+
+	}	
+	else{
+		return true;		
+	}
 }
 $(document).ajaxStart(function () {
 		$('#get_otp').html(`<i class="fas fa-spinner fa-spin"></i>`);
@@ -111,7 +147,7 @@ $(document).ajaxStart(function () {
 
 		var username = $('#id_username').val();
 		var email = $('#id_email').val();
-		if (validate()){
+		if (validate() && username_not_empty()){
 		$.post('{% url "otp" %}',
             {
                 email: email,

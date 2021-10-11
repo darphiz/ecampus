@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+<div class="w3-white w3-stretched w3-padding">
+<div class="w3-content">
+    <h1>Notifications</h1>
+    <ul class="w3-ul w3-border w3-round-medium w3-padding">
+        {% for nt in all_notifications %}
+        <li class='w3-hover-light-grey w3-round-medium'>
+            <a href="{{nt.data.url}}">
+                <p>{{nt.actor}} {{nt.verb}}</p>
+                <p><b>{{nt.timestamp|timesince}} ago</b></p>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+
+
+</div>
+</div>
+{% endblock %}

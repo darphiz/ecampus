@@ -1,30 +1,44 @@
 @import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500&display=swap');
 /*--------------------UTILITIES-------------------*/
+* {
+  box-sizing: border-box;
+}
+
+h1{
+  font-size: 24px;
+  font-family: Poppins, sans-serif;
+}
+@media only screen and (max-width: 600px) {
+h1{
+  font-size: large;
+  font-family: Poppins, sans-serif;
+}
+}
 header {
   font-size: 35px;
   font-weight: 600;
-  padding: 10px 0;
-  font-family: Poppins;
+  padding: 6px 0;
+  font-family: Poppins, sans-serif;
   z-index: 999999;
+}
+
+
+header a:hover{
+    text-decoration:none;
 }
 a{
   text-decoration: none;
-  color: #0b78d1 ;
 }
-a:hover{
-  color: #db4f17 ;
+
+.question-container a:hover{
+  text-decoration: underline;
 }
-.red{
-  outline: 1px solid red;
-}
-.blue{
-  outline: 1px solid blue;
-}
+
 .d-flex-0{
-  display:inline-flex; 
+  display:inline-flex;
   flex-direction: row;
-   
+
   gap: 15px;
 }
 .margin-2{
@@ -48,14 +62,14 @@ a:hover{
   border-radius:5px
 }
 .article{
-  font-size:18px!important
+  font-size:18px!important;
   }
 body{
   font-family: 'Prompt', sans-serif;
+  max-width:1400px;
 }
 .body-div{
-  max-width:1400px;
-  margin-top:40px;
+  margin-top: 48px;
 }
 .link-mobile{
   margin-top: 20px;
@@ -123,13 +137,13 @@ body{
 /*   [------------FOOTER--------------- ]*/
 
 .footer{
-  height: auto;
+  height: 400px;
   font-weight: 200;
   position: relative;
   bottom: 0;
   width: 100%;
   background-color: #333333;
-  z-index: -1;
+
 }
 .footer .footer-container{
   position: absolute;
@@ -141,7 +155,7 @@ body{
 }
 .footer-link{
     opacity: 0.5;
-} 
+}
 
 .quick-links {
   list-style-type: none;
@@ -151,7 +165,8 @@ body{
 
 }
 .quick-links a{
- margin-top: 20px; 
+ margin-top: 20px;
+ transition: padding-left 0.5s;
 }
 .quick-links a:hover{
   padding-left: 10px;
@@ -173,6 +188,7 @@ body{
 /* ----------------[Media Queries] --------------------- */
 
 @media only screen and (max-width: 600px) {
+
 
   .middle-column{
     overflow: hidden;
@@ -224,4 +240,99 @@ body{
   .ml-desk{
     margin-left: 0px;
   }
+}
+#spinner{
+  height: 470px;
+  width: 324px;
+}
+   /* Smartphones ----------- */
+  @media only screen and (max-width: 760px) {
+    #dev { display: none; }
+    #spinner{
+      width: 100%;
+    }
+  }
+
+.grid-container{
+  display: inline-grid;
+  grid-gap: .5rem;
+  grid-template-columns: auto;
+  justify-content: space-between;
+}
+#spinner{
+  display: inline-grid;
+  grid-gap: .5rem;
+  grid-template-columns: auto;
+  justify-content: space-between;
+}
+@media (min-width: 600px) {
+  .grid-container{ grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 900px) {
+  .grid-container { grid-template-columns: repeat(4, 1fr); }
+}
+.grid-button{
+  display: inline-grid;
+  grid-gap: .2rem;
+    grid-auto-flow: column;
+    grid-template-columns: repeat(auto-flow, 186px);
+}
+.errorlist{
+  list-style-type: none;
+}
+.errorlist li{
+  color: red;
+}
+.img-preview{
+  height: 200px;
+  width: 260px;
+  background: #fff;
+  overflow: hidden;
+
+}
+.img-preview img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+ 
+}
+.img-preview-2{
+  height: 200px;
+  width: 200px;
+  background: #fff;
+  overflow: hidden;
+
+}
+.img-preview-2 img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.custom-file input[type='file']{
+  display: none;
+}
+.custom-file label{
+  cursor: pointer;
+  color: #000;
+  margin: auto;
+  margin-top: 15px;
+}
+.float{
+  float: left;
+  margin-right: 50px;
+}
+.clearfix {
+overflow: auto;
+}
+.clearfix::after {
+content: "";
+clear: both;
+display: table;
+}
+textarea{
+position: relative;
+}
+textarea::placeholder{
+position: absolute;
+bottom: 0;
 }

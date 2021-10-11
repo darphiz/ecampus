@@ -15,6 +15,23 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 
+def charge_user(user,exam_type):
+    if exam_type == "quiz":
+        user.chakras.value-= 5
+        if user.chakras.value < 0:
+            return False
+        else:
+            user.chakras.save()
+            return True
+    else:
+        user.chakras.value -= 10
+        if user.chakras.value < 0:
+            return False
+        else:
+            user.chakras.save()
+            return True
+
+
 class QuizMarkerMixin(object):
     @method_decorator(login_required)
     @method_decorator(permission_required('quiz.view_sittings'))
@@ -46,12 +63,14 @@ class QuizDetailView(DetailView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-
         if self.object.draft and not request.user.has_perm('quiz.change_quiz'):
             raise PermissionDenied
-        if self.object.premium and not request.user.userprofile.premium:
-            return render(request, 'premium.html')
-
+        if self.object.answers_at_end is True:
+            charge_able = charge_user(self.request.user, "exam")
+        else:
+            charge_able = charge_user(self.request.user, "quiz")
+        if not charge_able:
+            return redirect('top_up')
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 
@@ -150,16 +169,12 @@ class QuizTake(FormView):
 
         if self.quiz.draft and not request.user.has_perm('quiz.change_quiz'):
             raise PermissionDenied
-        if self.quiz.premium and not request.user.userprofile.premium:
-            return render(request, 'premium.html')
-
         self.logged_in_user = self.request.user.is_authenticated
-
         if self.logged_in_user:
             self.sitting = Sitting.objects.user_sitting(request.user,
                                                         self.quiz)
         else:
-            form_error= "You must login to your easyCampus account to access the page you requested!"
+            form_error= "You must login to your account to access the page you requested!"
             return render(request, 'login.html', { 'form_error': form_error})
 
         if self.sitting is False:

@@ -40,7 +40,7 @@
                     data-action= "{% if request.user in group.members.all %}leave{% else %}join{% endif %}">{% if request.user in group.members.all %}Leave{% else %}Join{% endif %}
                     </a>
                 {% endif %}
-                <p>Group by: <a href="{{group.creator.get_absolute_url}}"> {{group.creator.get_full_name}}</a></p>
+                <p>Group by: <a href="{{group.creator.get_absolute_url}}">{% if group.creator.get_full_name %}{{group.creator.get_full_name}}{% else %}{{ group.creator.username }}{% endif %}</a></p>
             </div>
         </div>
         <br>
@@ -52,7 +52,7 @@
         <div class="container-mobile-0 ">
             <div class="w3-card w3-round container-mobile-0 w3-white ">
                 <div class="w3-container w3-padding">
-                    <h6 class="w3-opacity">{% if request.user.is_authenticated %}{{request.user.get_full_name}}, {% endif %}what is your question?</h6>
+                    <h6 class="w3-opacity">{% if request.user.is_authenticated %}Hello {% if request.user.get_full_name %}{{ request.user.get_full_name|title }}{% else %}{{ request.user.username|title }}{% endif %}!, {% endif %}What is your question?</h6>
                     <p contenteditable="true" class="w3-border w3-round-large w3-padding"></p>
                     <a href="{% url 'question_list' %}" class="w3-button w3-round-large w3-blue">Ask</a>
                 </div>
