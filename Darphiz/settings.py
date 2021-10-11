@@ -86,7 +86,7 @@ FORCE_LOWERCASE_TAGS = True
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 
-"""
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -105,7 +105,7 @@ DATABASES = {
 
     }
 }
-
+"""
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
