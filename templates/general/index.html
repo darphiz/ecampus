@@ -34,7 +34,11 @@ Easy Campus
                     {% endif %}
                     {% endif %}
                 <hr>
+                        {% if request.user.get_full_name %}
                     <p>{{ request.user.get_full_name|title }}</p>
+                        {% else %}
+                    <p>{{ request.user.username|title }}</p>
+                        {% endif %}
                     <p>{{ request.user.userprofile.faculty|title }}</p>
                     <p> {{ request.user.userprofile.level }}</p>
                     <p> {{ request.user.userprofile.gender|title }} </p>
@@ -103,7 +107,7 @@ Easy Campus
             <div class="w3-col m12 container-mobile-0">
                 <div class="w3-card w3-round container-mobile-0 w3-white ">
                     <div class="w3-container w3-padding">
-                        <h6 class="w3-opacity">{% if request.user.is_authenticated %}Hello {{request.user.get_full_name}}!, {% endif %}What would you like to do?</h6>
+                        <h6 class="w3-opacity">{% if request.user.is_authenticated %}Hello {% if request.user.get_full_name %}{{ request.user.get_full_name|title }}{% else %}{{ request.user.username|title }}{% endif %}!, {% endif %}What would you like to do?</h6>
                     <form action="{% url 'query' action='search' arg='query' %}" method="GET">
                         <input name="search_query" type="text" id = "id_search_query"  class="w3-border w3-block w3-round-large w3-padding" placeholder="Type in the keyword and hit search...." required>
                         <br>

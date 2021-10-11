@@ -18,12 +18,18 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from community import views
+import notifications.urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('community.urls')),
     path('accounts/', include('accounts.urls')),
     path('summernote/', include('django_summernote.urls')),
     path('cbt/', include('cbt.urls')),
-    path('verify/', include('OTP.urls'))
+    path('verify/', include('OTP.urls')),
+    path('inbox/notifications/', include( notifications.urls, namespace='notifications')),
+    path("paystack/", include(('paystack.frameworks.django.urls','paystack' ), namespace='paystack')),
+    #REST API
+    path('api/accounts/', include('accounts.api.urls', 'accounts')),
+    path('api/community/', include('community.api.urls', 'community')),
 ]
 urlpatterns= urlpatterns + static(settings.MEDIA_URL,document_root= settings.MEDIA_ROOT)

@@ -8,6 +8,9 @@ from tagging.fields import TagField
 from django.db.models import Q
 import json
 from random import randint
+from django.db.models.signals import post_save
+from notifications.signals import notify
+
 class ApprovedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(status="approved")
@@ -44,7 +47,8 @@ class Quest(models.Model):
     date_asked = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10,
                             choices=STATUS_CHOICES,
-                            default='pending')
+                            default='pending', blank=True,
+                                     null=True)
     image_upload = models.ImageField(upload_to="QThumbnail", blank=True,
                                      null=True)
     tags = TagField()
@@ -66,6 +70,11 @@ class Quest(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
+        """
+        if self.status == "approved":
+            message = "approved your question."
+            notify.send(request.user ,recipient=self.asked_by, verb=message, url=self.get_absolute_url())
+        """
         super(Quest, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -77,7 +86,9 @@ class Answer(models.Model):
     question = models.ForeignKey(Quest,
                                  on_delete=models.CASCADE,
                                  related_name='answers')
-    name = models.CharField(max_length=80)
+    name = models.ForeignKey(User,
+                                 on_delete=models.CASCADE,
+                                 related_name='question_answered',blank=True, null=True)
     body = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
@@ -87,6 +98,7 @@ class Answer(models.Model):
 
     def __str__(self):
         return 'Answered by {} on {}'.format(self.name, self.Quest)
+
 
 class Group(models.Model):
     name = models.CharField(max_length=250,unique=True)

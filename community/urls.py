@@ -13,7 +13,9 @@ urlpatterns = [
     path('group/<slug:slug>/', views.group_details, name='group_details'),
     path('query/<str:action>/<str:arg>/', views.query, name="query"),
     path('question/vote/', views.vote_on_question, name='vote_post'),
-    
-]
+    path('question/vote/answer/', views.upvote_answer, name='upvote_answer'),
+    path('notify/my_notifications/', views.notify_user, name="notify_user"),
+    path('account/topup/', views.top_up, name="top_up"),
+    path('account/topup/<int:amount>/', views.top_up_discount, name="discount")
 
-   
+]

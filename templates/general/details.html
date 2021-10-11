@@ -50,24 +50,26 @@
                     <b>Answer{{ total_answers|pluralize }}({{ total_answers }})</b>
                 </h3>
                 {% endwith %}
+                {% if request.user.is_authenticated %}
                 <div class="w3-right">
                     <a class="vote-button w3-btn {% if request.user in question.votes.all %}w3-red{% else %}w3-blue{% endif %} w3-round-medium" href="." data-id="{{ question.id }}" data-action="{% if request.user in question.votes.all %}down_{% else %}up_{% endif %}vote">
                        <span>
                         {% if request.user in question.votes.all %}
-                        Down Vote
+                        Down vote
                         {% else %}
-                        Up Vote
+                        Up vote
                         {% endif %}
                         </span>
-                        (<b class="vote-count">{{question.votes.count}}</b>)
+                        <b class="vote-count">{{question.votes.count}}</b>
                     </a>
                 </div>
+                {% endif %}
             </div>
             {% for answer in answers %}
             <div class="w3-container w3-row d-flex w3-border w3-round-medium">
                 <div class="w3-col m1 w3-center s2 w3-margin-top">
-                    <a href="#"><i class="fas fa-chevron-up fa-1x"></i></a>
-                    <p class="w3-xlarge">{{answer.votes.count}}</p>
+                    <a href="#" onclick="upvote_question({{answer.id}},'link_{{answer.id}}'); return false;"><i id="link_{{answer.id}}" class="fas fa-chevron-up fa-1x {% if request.user in answer.votes.all %}w3-text-blue{% endif %}"></i></a>
+                    <p id="{{answer.id}}" class="w3-xlarge">{{answer.votes.count}}</p>
                 </div>
                 <div class="w3-col m11 s10">
                 <h4 class="info"><b>{{ answer.name}}:</b></h4>
@@ -83,8 +85,8 @@
             <br>            
             <div class="w3-animate-zoom w3-container w3-row d-flex w3-border w3-round-medium">
                 <div class="w3-col m1 s2 w3-margin-top">
-                    <a href="#"><i class="fas fa-chevron-up fa-1x"></i></a>
-                <p class="w3-xlarge">{{new_answer.votes.count}}</p>
+                    <a href="#"  onclick="upvote_question({{new_answer.id}},'link_{{new_answer.id}}'); return false;"><i id="link_{{new_answer.id}}" class="fas fa-chevron-up fa-1x {% if request.user in answer.votes.all %}w3-text-blue{% endif %}"></i></a>
+                    <p id="{{new_answer.id}}" class="w3-xlarge">{{new_answer.votes.count}}</p>
                 </div>
                 <div class="w3-col m11 s10">
                 <h4 class="info"><b>{{ new_answer.name}}:</b></h4>
@@ -115,18 +117,13 @@
             </div>
             </div><br>
 
-        <!--Answer Form-->
+        {% if request.user.is_authenticated %}
+            <!--Answer Form-->
+
         <div class="w3-margin w3-round-medium w3-leftbar w3-border-blue w3-border">
            <div class="w3-container">
             <form action="{% url 'question_detail' slug=question.slug pk=question.id %}#new_answer"  method="post">
                 {% csrf_token %}
-                {% if user.is_authenticated %}
-                <input class="w3-input" type="hidden" name="name" maxlength="80" value="{{request.user.username}}" required id="id_name">
-                {% else %}
-                <p>
-                <input class="w3-input" type="text" name="name" placeholder="Your Name" maxlength="80" required id="id_name">
-                </p>
-                {% endif %}
                 <p>
                 <textarea placeholder="Type in your answer..." class="w3-input" name="body" id="id_body" required></textarea>
                 </p>
@@ -136,6 +133,13 @@
             </form>
         </div>
         </div>
+        {% else %}
+        <div class="w3-container">
+        <small>
+            Please <a class="w3-text-blue" href="{% url 'login' %}">login</a> to add your react on question...
+        </small>
+    </div> <br>
+        {% endif %}
     </div>
 
     <div class="w3-col m4 w3-container container-mobile">
@@ -209,14 +213,13 @@
                      previous_action == 'up_vote' ? 'down_vote' : 'up_vote');
                       // toggle link text
                       if (previous_action == 'up_vote'){
-                          $('a.vote-button span').text('Down Vote');
+                          $('a.vote-button span').text('Down vote');
                           
                       }
                       else{
-                        $('a.vote-button span').text('Up Vote');
-  
+                        $('a.vote-button span').text('Up vote');
+
                       }
-                  
                           // update total followers
                       var previous_followers = parseInt(
                       $('b.vote-count').text());
@@ -227,4 +230,23 @@
           );
       });
   </script>  
+  <script>
+      function upvote_question(id,a){
+        var count_id =document.getElementById(id);
+        var link = document.getElementById(a)
+          $.post('{% url "upvote_answer" %}',
+              {
+                  id: id
+              },
+              function(data){
+                if (data['status'] =='ok'){
+                    var action = Number(data['add']);
+                    var increase = Number(count_id.innerHTML) + action;
+                    count_id.innerHTML = increase;
+                    link.classList.toggle('w3-text-blue');
+                }
+              });
+
+      }
+  </script>
   {% endblock %}

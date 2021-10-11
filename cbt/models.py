@@ -100,8 +100,6 @@ class Quiz(models.Model):
                     " Non users cannot sit this exam."),
         verbose_name=_("Single Attempt"))
     
-    premium = models.BooleanField(default=False, help_text = ("If yes, only premium users will be able to take the quiz"))
-
     pass_mark = models.SmallIntegerField(
         blank=True, default=0,
         verbose_name=_("Pass Mark"),

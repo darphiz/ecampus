@@ -1,5 +1,5 @@
 from django.contrib import admin
-from community.models import Quest, Group, Interest, Visit
+from community.models import Quest, Group, Interest, Visit, Answer
 from django_summernote.admin import SummernoteModelAdmin
 
 def approve_selected(modeladmin, request, queryset):
@@ -29,3 +29,4 @@ admin.site.register(Quest, QuestionAdmin)
 admin.site.register(Group, GroupAdmin)
 admin.site.register(Interest)
 admin.site.register(Visit)
+admin.site.register(Answer)

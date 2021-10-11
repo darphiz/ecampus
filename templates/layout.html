@@ -1,5 +1,6 @@
 {% load static %}
 {% load thumbnail %}
+{% load notifications_tags %}
 <!DOCTYPE html>
 <html>
 
@@ -27,7 +28,6 @@
 				<a href="{% url 'quiz_index' %}" class="w3-bar-item w3-btn w3-padding-large">Practice CBT</a>
 				<a href="{% url 'ask_question' %}" class="w3-bar-item w3-btn w3-padding-large">Ask a question</a>
 				<hr class="w3-clear">
-				<a href="#" class="w3-bar-item w3-btn w3-padding-large">Notifications</a>
 				<a href="{% url 'groups_list' 'my' %}" class="w3-bar-item w3-btn w3-padding-large">Groups</a>
 				<a href="{% url 'user_list' %}" class="w3-bar-item w3-btn w3-padding-large">Members List</a>
 				{% if request.user.is_authenticated %}
@@ -47,28 +47,42 @@
 		</div>
 		<!-- Navbar -->
 		<div class="w3-top">
-			<div class="w3-bar w3-theme-d2 w3-left-align   w3-large">
+			<div class="w3-bar w3-theme-d2 w3-left-align w3-large">
 				<button id="openNav"
-					class="w3-bar-item w3-btn w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2"><i
-						class="fa fa-bars"></i></button>
-				<a href="{% url 'question_list' %}" class="w3-bar-item ">easyCampus</a>
+					class="w3-bar-item w3-btn w3-hide-medium w3-hide-large w3-right w3-padding-large w3-large w3-theme-d2"><i
+						class="fa fa-bars"></i>
+				</button>
+				<a href="{% url 'notify_user' %}" class="w3-bar-item w3-btn w3-hide-medium w3-hide-large w3-right w3-padding-large w3-large w3-theme-d2" ><i class="fa fa-bell"></i>
+					<span class="notification w3-badge w3-right w3-small w3-green">{% live_notify_badge %}</span>
+				</a>
+				
+				<a href="{% url 'question_list' %}" class="w3-bar-item">
+					<div class="logo-width">
+					<span class="txt-rotate" data-period="8000" data-rotate='[ "easyCampus", "Practice", "Ask", "Learn", "Connect" ]'></span>
+					</div>
+				</a>
 
 				<a href="{% url 'user_list' %}" title="Members List" class="w3-bar-item w3-btn w3-padding-large w3-hide-small"><i class="fas fa-user"></i></a>
 				<a href="{% url 'groups_list' 'my' %}" title="Groups" class="w3-bar-item w3-btn w3-padding-large w3-hide-small"><i class="fas fa-users"></i></a>
 				<div class="w3-dropdown-hover w3-hide-small">
-					<button class="w3-btn w3-padding-large" title="Notifications"><i class="fa fa-bell"></i><span
-							class="w3-badge w3-right w3-small w3-green">3</span></button>
-					<div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:auto;">
-						<a href="#" class="w3-bar-item w3-btn">One new friend request</a>
-						<a href="#" class="w3-bar-item w3-btn">John Doe posted on your wall</a>
-						<a href="#" class="w3-bar-item w3-btn">Jane likes your post</a>
+					<button class="w3-btn  w3-padding-large" title="Notifications"><i class="fa fa-bell"></i>
+						<span class="notification w3-badge w3-right w3-small w3-green">{% live_notify_badge %}</span>
+					</button>
+					<div class="w3-dropdown-content  w3-card-4 w3-bar-block" style="width:auto;">
+						{% live_notify_list list_class="w3-dropdown-content"%}	
+						<div class="note_menu w3-dropdown-content-1">
+							
+						</div>
+						<div class="w3-container w3-center w3-margin">
+							<a href="{% url 'notify_user' %}" class="w3-center w3-small w3-round-medium w3-btn w3-blue">View all</a>
+						</div>
 					</div>
+					
+					
 				</div>
 				<a href="{% url 'profile' %}" class="w3-bar-item w3-btn w3-hide-small w3-right w3-padding-large w3-hover-white"
 					title="My Account">
 					{% if request.user.userprofile.profile_photo %}
-
-
                         {% thumbnail request.user.userprofile.profile_photo "26x26" crop="center" format="WEBP" as im %}
                         <img src="{{im.url}}" class="w3-circle" height="{{im.height}}" width="{{im.width}}" alt="{{request.user.username}}'s Profile Pics">
                         {% endthumbnail %}
@@ -85,6 +99,17 @@
 		</div>
 	</header>
 	<div class="w3-container container-mobile-1 body-div">
+		{% if messages %}
+		<div class="w3-panel w3-green w3-display-container">
+			<span onclick="this.parentElement.style.display='none'" class="w3-btn w3-display-topright">&times;</span>
+			<h2>Success!</h2>
+			<ul class="w3-ul">
+				{% for message in messages %}
+				<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+				{% endfor %}
+			</ul>
+		</div>
+		{% endif %}
 		{% block content %}
 		{% endblock %}
 	</div>
@@ -153,6 +178,63 @@
 			});
 		});
 	</script>
-</body>
+	<script>
+		var TxtRotate = function(el, toRotate, period) {
+  this.toRotate = toRotate;
+  this.el = el;
+  this.loopNum = 0;
+  this.period = parseInt(period, 10) || 2000;
+  this.txt = '';
+  this.tick();
+  this.isDeleting = false;
+};
 
+TxtRotate.prototype.tick = function() {
+  var i = this.loopNum % this.toRotate.length;
+  var fullTxt = this.toRotate[i];
+
+  if (this.isDeleting) {
+    this.txt = fullTxt.substring(0, this.txt.length - 1);
+  } else {
+    this.txt = fullTxt.substring(0, this.txt.length + 1);
+  }
+
+  this.el.innerHTML = this.txt;
+
+  var that = this;
+  var delta = 300 - Math.random() * 100;
+
+  if (this.isDeleting) { delta /= 2; }
+
+  if (!this.isDeleting && this.txt === fullTxt) {
+    delta = this.period;
+    this.isDeleting = true;
+  } else if (this.isDeleting && this.txt === '') {
+    this.isDeleting = false;
+    this.loopNum++;
+    delta = 500;
+  }
+
+  setTimeout(function() {
+    that.tick();
+  }, delta);
+};
+
+window.onload = function() {
+  var elements = document.getElementsByClassName('txt-rotate');
+  for (var i=0; i<elements.length; i++) {
+    var toRotate = elements[i].getAttribute('data-rotate');
+    var period = elements[i].getAttribute('data-period');
+    if (toRotate) {
+      new TxtRotate(elements[i], JSON.parse(toRotate), period);
+    }
+  }
+  // INJECT CSS
+
+};
+	</script>
+	<script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
+	{% register_notify_callbacks callbacks='fill_notification_list,fill_notification_badge' badge_class='notification' menu_class='note_menu' refresh_period=3 %}
+	
+</body>
 </html>
