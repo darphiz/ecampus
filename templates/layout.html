@@ -11,7 +11,7 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<!-- Add icon library -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/w3-css/4.1.0/w3.min.css" integrity="sha512-Z6UIAdEZ7JNzeX5M/c5QZj+oqbldGD+E8xJEoOwAx5e0phH7kdjsWULGeK5l2UjehKtChHDaUY2rQAF/NEiI9w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-	<link rel="stylesheet" href="{% static 'css/main.css' %}?v=3" />
+	<link rel="stylesheet" href="{% static 'css/main.css' %}?v=6" />
 	<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue.css">
 	<link rel="stylesheet" href="{% static 'css/w3.css' %}"/>
 	<link rel="stylesheet" href="{% static 'css/all.min.css' %}"/>
@@ -55,31 +55,43 @@
 				<a href="{% url 'notify_user' %}" class="w3-bar-item w3-btn w3-hide-medium w3-hide-large w3-right w3-padding-large w3-large w3-theme-d2" ><i class="fa fa-bell"></i>
 					<span class="notification w3-badge w3-right w3-small w3-green">{% live_notify_badge %}</span>
 				</a>
-				
-				<a href="{% url 'question_list' %}" class="w3-bar-item">
+                {% if exammode %}
+                <a href="{% url 'question_list' %}" class="w3-bar-item">
+					<div class="logo-width">
+					<span>Exam Mode</span>
+					</div>
+				</a>
+                {% else %}
+                <a href="{% url 'question_list' %}" class="w3-bar-item">
 					<div class="logo-width">
 					<span class="txt-rotate" data-period="8000" data-rotate='[ "easyCampus", "Practice", "Ask", "Learn", "Connect" ]'></span>
 					</div>
 				</a>
-
+                {% endif %}
 				<a href="{% url 'user_list' %}" title="Members List" class="w3-bar-item w3-btn w3-padding-large w3-hide-small"><i class="fas fa-user"></i></a>
 				<a href="{% url 'groups_list' 'my' %}" title="Groups" class="w3-bar-item w3-btn w3-padding-large w3-hide-small"><i class="fas fa-users"></i></a>
+				{% if not exammode %}
 				<div class="w3-dropdown-hover w3-hide-small">
 					<button class="w3-btn  w3-padding-large" title="Notifications"><i class="fa fa-bell"></i>
 						<span class="notification w3-badge w3-right w3-small w3-green">{% live_notify_badge %}</span>
 					</button>
 					<div class="w3-dropdown-content  w3-card-4 w3-bar-block" style="width:auto;">
-						{% live_notify_list list_class="w3-dropdown-content"%}	
+						{% live_notify_list list_class="w3-dropdown-content"%}
 						<div class="note_menu w3-dropdown-content-1">
-							
+
 						</div>
 						<div class="w3-container w3-center w3-margin">
+						    {% if request.user.is_authenticated %}
 							<a href="{% url 'notify_user' %}" class="w3-center w3-small w3-round-medium w3-btn w3-blue">View all</a>
+							{% else %}
+							<a href="{% url 'login' %}" class="w3-small">Please login/register to see notifications</a>
+							{% endif %}
 						</div>
 					</div>
-					
-					
+
+
 				</div>
+				{% endif %}
 				<a href="{% url 'profile' %}" class="w3-bar-item w3-btn w3-hide-small w3-right w3-padding-large w3-hover-white"
 					title="My Account">
 					{% if request.user.userprofile.profile_photo %}
@@ -178,6 +190,9 @@
 			});
 		});
 	</script>
+
+	{% if not exammode %}
+
 	<script>
 		var TxtRotate = function(el, toRotate, period) {
   this.toRotate = toRotate;
@@ -235,6 +250,6 @@ window.onload = function() {
 	</script>
 	<script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
 	{% register_notify_callbacks callbacks='fill_notification_list,fill_notification_badge' badge_class='notification' menu_class='note_menu' refresh_period=3 %}
-	
+{% endif %}
 </body>
 </html>

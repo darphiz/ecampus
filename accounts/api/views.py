@@ -3,14 +3,16 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from accounts.api.serializers import RegistrationSerializer
 from rest_framework.authtoken.models import Token
-
+from rest_framework.decorators import authentication_classes, permission_classes
 
 
 
 @api_view(['POST',])
+@authentication_classes([])
+@permission_classes([])
 def register(request):
-    data = {}    
-    serializer = RegistrationSerializer(data=request.data) 
+    data = {}
+    serializer = RegistrationSerializer(data=request.data)
     if serializer.is_valid():
         account = serializer.save()
         token = Token.objects.get(user=account)

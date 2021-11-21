@@ -16,21 +16,23 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 
 def charge_user(user,exam_type):
-    if exam_type == "quiz":
-        user.chakras.value-= 5
-        if user.chakras.value < 0:
-            return False
+    if user.is_authenticated:
+        if exam_type == "quiz":
+            user.chakras.value-= 5
+            if user.chakras.value < 0:
+                return False
+            else:
+                user.chakras.save()
+                return True
         else:
-            user.chakras.save()
-            return True
+            user.chakras.value -= 10
+            if user.chakras.value < 0:
+                return False
+            else:
+                user.chakras.save()
+                return True
     else:
-        user.chakras.value -= 10
-        if user.chakras.value < 0:
-            return False
-        else:
-            user.chakras.save()
-            return True
-
+        return True
 
 class QuizMarkerMixin(object):
     @method_decorator(login_required)
@@ -111,7 +113,7 @@ class QuizUserProgressView(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         return super(QuizUserProgressView, self)\
             .dispatch(request, *args, **kwargs)
-    
+
     def get_context_data(self, **kwargs):
         context = super(QuizUserProgressView, self).get_context_data(**kwargs)
         progress, c = Progress.objects.get_or_create(user=self.request.user)
@@ -179,9 +181,9 @@ class QuizTake(FormView):
 
         if self.sitting is False:
             return render(request, 'single_complete.html')
-        
+
         if self.quiz.answers_at_end is True:
-            self.examss = "this is an exam" 
+            self.examss = "this is an exam"
         else:
             self.examss = None
 
@@ -268,12 +270,12 @@ class QuizTake(FormView):
         if self.quiz.exam_paper is False:
             self.sitting.delete()
         return render(self.request, 'result.html', results)
-    
+
 #a function to terminate the quiz and return the result
 def endquiz(request,quiz_name):
     quiz = get_object_or_404(Quiz, url= quiz_name)
     sitting = Sitting.objects.user_sitting(request.user , quiz)
-   
+
     sitting.mark_quiz_complete()
 
     if quiz.answers_at_end:
@@ -335,11 +337,11 @@ def goto(request,question_number,quiz_name):
                         question_answer[quid] = str(guess)
                         sitting.user_answers = json.dumps(question_answer)
                         sitting.save()
-                    
+
                     except:
                         pass
 
-             
+
                 else:
                     #if user gave a correct answer but in the future
                     if quid not in question_answer:
@@ -351,7 +353,7 @@ def goto(request,question_number,quiz_name):
                             sitting.user_answers = json.dumps(question_answer)
                             sitting.save()
                         except:
-                            pass  
+                            pass
 
             else:
                 #if user was wrong but was wrong before
@@ -381,7 +383,7 @@ def goto(request,question_number,quiz_name):
                                 sitting.save()
                             except:
                                 pass
-                
+
             if quiz.answers_at_end is not True:
                 raise "error"
             else:
@@ -392,4 +394,3 @@ def goto(request,question_number,quiz_name):
         exammode = "True"
         form = QuestionForm(question)
         return render(request,'question.html',context)
-    
