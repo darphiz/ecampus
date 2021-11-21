@@ -11,8 +11,8 @@ from rest_framework.decorators import authentication_classes, permission_classes
 @authentication_classes([])
 @permission_classes([])
 def register(request):
-    data = {}    
-    serializer = RegistrationSerializer(data=request.data) 
+    data = {}
+    serializer = RegistrationSerializer(data=request.data)
     if serializer.is_valid():
         account = serializer.save()
         token = Token.objects.get(user=account)
