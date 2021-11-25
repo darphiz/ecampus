@@ -79,18 +79,24 @@ def question_progress(request):
 def ask_question(request):
     form = AskForm()
     if request.method == 'POST':
+        group_asked =request.POST.get('group_name')
         form = AskForm(request.POST, request.FILES)
         form.status = 'Pending'
         if form.is_valid():
             new_form = form.save(commit=False)
             new_form.asked_by = request.user
-
             new_form.save()
+            if group_asked:
+                get_group = Group.objects.get(id=group_asked)
+                get_group.questions.add(new_form)
             return redirect('question_progress')
+            
     else:
         form = AskForm()
     context = {'form':form}
     return render(request,'general/askquestion.html', context)
+
+
 
 @login_required
 def groups_list(request,action):
@@ -120,6 +126,7 @@ def groups_list(request,action):
     return render(request, 'group/groups_list.html',context)
 
 def group_details(request, slug):
+    form = AskForm()
     group = get_object_or_404(Group, slug=slug,)
     tags = get_popular_tag_for_group(Quest, group)
     get_group_questions = group.questions.order_by("-date_asked")
@@ -133,9 +140,10 @@ def group_details(request, slug):
         if request.is_ajax():
             return HttpResponse('')
         group_questions = paginator.page(paginator.num_pages)
-    context = {'group_questions': group_questions, 'tags': tags,"group":group }
+    context = {'group_questions': group_questions, 'tags': tags,"group":group, 'form':form}
     if request.is_ajax():
         return render(request, 'group/group_quest_scroll.html', context)
+    
     return render(request, 'group/group_detail.html', context)
 
 

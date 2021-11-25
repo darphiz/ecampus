@@ -310,14 +310,11 @@ def goto(request,question_number,quiz_name):
     progress,c = Progress.objects.get_or_create(user=request.user)
     question = sitting.get_question_number(question_number)
     form = QuestionForm(question)
-    exammode = "True"
+    exammode = True
     start = sitting.get_start_time()
     info = "Make Changes To  Question {}".format(question_number)
     context ={'question':question,'quiz':quiz,'form':form,'progress':progress,'c':c,
             'exammode':exammode,'start':start, 'info':info}
-    if quiz.premium and not request.user.userprofile.premium:
-        return render(request, 'premium.html')
-
     if request.method == 'POST':
     # create a form instance and populate it with data from the request:
         form = QuestionForm(question,request.POST)
@@ -340,8 +337,6 @@ def goto(request,question_number,quiz_name):
 
                     except:
                         pass
-
-
                 else:
                     #if user gave a correct answer but in the future
                     if quid not in question_answer:
@@ -354,7 +349,6 @@ def goto(request,question_number,quiz_name):
                             sitting.save()
                         except:
                             pass
-
             else:
                 #if user was wrong but was wrong before
                 if quid in incorrect_list:
@@ -388,9 +382,8 @@ def goto(request,question_number,quiz_name):
                 raise "error"
             else:
                 pass
-
         return HttpResponseRedirect('/cbt/{}/take/'.format(quiz_name))
     else:
-        exammode = "True"
+        exammode = True
         form = QuestionForm(question)
         return render(request,'question.html',context)

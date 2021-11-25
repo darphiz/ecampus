@@ -18,6 +18,16 @@
         <div class="w3-container w3-margin-top">
             <h1><b>{{ question.title }}</b></h1>
         </div>
+        {% if question.status == "rejected" %} 
+        <div class="w3-container w3-text-red">
+            <p>Your {{question.type}} was rejected because it contains disallowed images or content...</p>
+        </div>
+        {% endif %}
+        {% if question.status == "pending" %} 
+        <div class="w3-container w3-text-yellow">
+            <p>Your {{question.type}} will be visible to the public after it has been approved (usually takes less than 15min)...</p>
+        </div>
+        {% endif %}
         <div class="profile-img">
             {% if question.asked_by.userprofile.profile_photo %}
             {% thumbnail question.asked_by.userprofile.profile_photo "80x80" crop="center" format="WEBP" as im %}
@@ -41,6 +51,7 @@
         </p>
         {% endif %}
         </div>
+        {% if question.status == "approved" %}
         <!--Answers Section-->
 
         <div class="w3-container w3-padding w3-margin-top">
@@ -139,6 +150,7 @@
             Please <a class="w3-text-blue" href="{% url 'login' %}">login</a> to add your react on question...
         </small>
     </div> <br>
+        {% endif %}
         {% endif %}
     </div>
 

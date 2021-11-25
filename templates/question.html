@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
-{% load i18n%}
+{% load class_name %}
+
 {% load quiz_tags %}
 {% block title %} {{ quiz.title }}
 {% endblock %}
@@ -158,80 +159,26 @@
 <!--Buttons for small screen-->
 <div class="w3-margin-top  w3-hide-large w3-hide-medium">
 		<div class="w3-row w3-white">
-	<a href="{% url 'goto' question_number=1 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-margin  w3-col s2 " >1</a>
-	<a href="{% url 'goto' question_number=2 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-margin w3-col s2" >2</a>
-	<a href="{% url 'goto' question_number=3 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-margin w3-col s2 " >3</a>
-	<a href="{% url 'goto' question_number=4 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-margin  w3-col s2 " >4</a>
-
-	<a href="{% url 'goto' question_number=5 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >5</a>
-	<a href="{% url 'goto' question_number=6 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >6</a>
-
-
-	<a href="{% url 'goto' question_number=7 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >7</a>
-	<a href="{% url 'goto' question_number=8 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >8</a>
-	<a href="{% url 'goto' question_number=9 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >9</a>
-	<a href="{% url 'goto' question_number=10 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >10</a>
-	<a href="{% url 'goto' question_number=11 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >11</a>
-	<a href="{% url 'goto' question_number=12 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >12</a>
-	<a href="{% url 'goto' question_number=13 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >12</a>
-	<a href="{% url 'goto' question_number=14 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >14</a>
-	<a href="{% url 'goto' question_number=15 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >15</a>
-	<a href="{% url 'goto' question_number=16 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >16</a>
-	<a href="{% url 'goto' question_number=17 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >17</a>
-	<a href="{% url 'goto' question_number=18 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >18</a>
-	<a href="{% url 'goto' question_number=19 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >19</a>
-	<a href="{% url 'goto' question_number=20 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >20</a>
-	<a href="{% url 'goto' question_number=21 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >21</a>
-	<a href="{% url 'goto' question_number=22 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >22</a>
-	<a href="{% url 'goto' question_number=23 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >23</a>
-	<a href="{% url 'goto' question_number=24 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >24</a>
-	<a href="{% url 'goto' question_number=25 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-col s2 w3-margin" >25</a>
+	
+			{% for i in 25|times %}
+	<a href="{% url 'goto' question_number=forloop.counter quiz_name=quiz.url %}" class="w3-button w3-round w3-blue w3-margin w3-col s2" >{{forloop.counter}}</a>
+	{% endfor %}
 </div>
 	</div>
 
 <!--Buttons for desktop screen-->
 <div class="w3-margin-top w3-hide-small w3-content ">
-
-	<a href="{% url 'goto' question_number=1 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue     " >1</a>
-	<a href="{% url 'goto' question_number=2 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >2</a>
-	<a href="{% url 'goto' question_number=3 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue    " >3</a>
-	<a href="{% url 'goto' question_number=4 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue     " >4</a>
-
-	<a href="{% url 'goto' question_number=5 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >5</a>
-	<a href="{% url 'goto' question_number=6 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >6</a>
-
-
-	<a href="{% url 'goto' question_number=7 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >7</a>
-	<a href="{% url 'goto' question_number=8 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >8</a>
-	<a href="{% url 'goto' question_number=9 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >9</a>
-	<a href="{% url 'goto' question_number=10 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >10</a>
-	<a href="{% url 'goto' question_number=11 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >11</a>
-	<a href="{% url 'goto' question_number=12 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >12</a>
-	<a href="{% url 'goto' question_number=13 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >12</a>
-	<a href="{% url 'goto' question_number=14 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >14</a>
-	<a href="{% url 'goto' question_number=15 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >15</a>
-	<a href="{% url 'goto' question_number=16 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >16</a>
-	<a href="{% url 'goto' question_number=17 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >17</a>
-	<a href="{% url 'goto' question_number=18 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >18</a>
-	<a href="{% url 'goto' question_number=19 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >19</a>
-	<a href="{% url 'goto' question_number=20 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >20</a>
-	<a href="{% url 'goto' question_number=21 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >21</a>
-	<a href="{% url 'goto' question_number=22 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >22</a>
-	<a href="{% url 'goto' question_number=23 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >23</a>
-	<a href="{% url 'goto' question_number=24 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue   " >24</a>
-	<a href="{% url 'goto' question_number=25 quiz_name=quiz.url %}" class="w3-button w3-round w3-blue  " >25</a>
-
+	{% for i in 25|times %}
+	<a href="{% url 'goto' question_number=forloop.counter quiz_name=quiz.url %}" class="w3-button w3-round w3-blue" >{{forloop.counter}}</a>
+	{% endfor %}
 </div>
-
-
-
-
 	{% endif %}
 {% if exammode %}
 <!--The timer Script-->
+{{ start|json_script:"start_time" }}
 <script>
 	function startTimer(duration,display){
-		var start = {{ start }} ,
+		var start = JSON.parse(document.getElementById('start_time').textContent),
 		diff,
 		minutes,
 		seconds;

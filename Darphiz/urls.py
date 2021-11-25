@@ -27,7 +27,7 @@ urlpatterns = [
     path('cbt/', include('cbt.urls')),
     path('verify/', include('OTP.urls')),
     path('inbox/notifications/', include( notifications.urls, namespace='notifications')),
-    path("paystack/", include(('paystack.frameworks.django.urls','paystack' ), namespace='paystack')),
+  #  path("paystack/", include(('paystack.frameworks.django.urls','paystack' ), namespace='paystack')),
     #REST API
     path('api/accounts/', include('accounts.api.urls', 'accounts')),
     path('api/community/', include('community.api.urls', 'community')),

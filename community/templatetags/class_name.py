@@ -49,3 +49,6 @@ def mul(value, arg):
         pass
     return ''
 
+@register.filter(name='times') 
+def times(number):
+    return range(1, number)

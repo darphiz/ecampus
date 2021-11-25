@@ -34,12 +34,16 @@ Easy Campus
                     {% endif %}
                     {% endif %}
                 <hr>
+
+                <a href="{% url 'profile' %}">
                         {% if request.user.get_full_name %}
                     <p>{{ request.user.get_full_name|title }}</p>
                         {% else %}
                     <p>{{ request.user.username|title }}</p>
                         {% endif %}
-                    <p>{{ request.user.userprofile.faculty|title }}</p>
+                </a>
+                    
+                        <p>{{ request.user.userprofile.faculty|title }}</p>
                     <p> {{ request.user.userprofile.level }}</p>
                     <p> {{ request.user.userprofile.gender|title }} </p>
                     <a href="{% url 'logout' %}" class="w3-block w3-blue w3-btn w3-margin-bottom w3-round">Log Out</a>

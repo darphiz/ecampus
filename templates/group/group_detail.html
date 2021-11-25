@@ -52,9 +52,66 @@
         <div class="container-mobile-0 ">
             <div class="w3-card w3-round container-mobile-0 w3-white ">
                 <div class="w3-container w3-padding">
-                    <h6 class="w3-opacity">{% if request.user.is_authenticated %}Hello {% if request.user.get_full_name %}{{ request.user.get_full_name|title }}{% else %}{{ request.user.username|title }}{% endif %}!, {% endif %}What is your question?</h6>
-                    <p contenteditable="true" class="w3-border w3-round-large w3-padding"></p>
-                    <a href="{% url 'question_list' %}" class="w3-button w3-round-large w3-blue">Ask</a>
+
+                <h6 class="w3-opacity">{% if request.user.is_authenticated %}Hello {% if request.user.get_full_name %}{{ request.user.get_full_name|title }}{% else %}{{ request.user.username|title }}{% endif %}, {% endif %}What is your question? <span id="close-btn" onclick="closeRest()" class="w3-animate-opacity w3-right"><i class="fas fa-times-circle fa-2x w3-text-red"></i></span></h6>
+                   <form enctype="multipart/form-data" action="{% url 'ask_question' %}" method="POST">
+                    {% csrf_token %}
+  
+                    <input name="group_name" type="hidden" value="{{group.id}}">
+                    <p>
+                        <input id="id_title" name="title" type="text" class="w-100 w3-border w3-round-large w3-padding" placeholder="start typing your question.." onfocus="displayRest()">
+                    </p>                            
+                    <div class="w3-animate-zoom" id="other_forms">
+                        <p>
+                            <textarea name="body" cols="40" rows="10" id="id_body" hidden="true"></textarea>
+                            <script>
+                            var settings_id_body = {"width": "100%", "height": 480, "lang": "en-US", "toolbar": [["style", ["style"]], ["font", ["bold", "italic"]], ["para", ["ul", "ol", "paragraph"]], ["insert", ["link", "picture", "video"]]], "url": {"language": "/static/summernote/lang/summernote-en-US.min.js", "upload_attachment": "/summernote/upload_attachment/"}};
+                            </script>
+                            <div class="summernote-div"  cols="40" rows="10" width="100%" height="480">
+                              <iframe id="id_body_iframe" src="/summernote/editor/id_body/" frameborder="0" width="100%" height="480"></iframe>
+                            </div>      
+                          </p>
+                    
+                            <label for="id_image_upload">Thumbnail</label> 
+                            <input class="w3-input" type="file" name="image_upload" accept="image/*" id="id_image_upload">
+                          <p>  
+                            <input class="w3-input" type="text" name="tags" maxlength="255" id="id_tags" placeholder="Enter hashtags - seperated by a comma">
+                          </p>
+                          <p>
+                            <label for="id_type">Format as a/an</label> 
+                            <select class="w3-input" name="type" id="id_type">
+                              <option value="article">Article</option>
+                              <option value="question" selected>Question</option>
+                            </select>
+                          </p>      
+                                                     
+                    </div>
+                    <input class="w3-button w3-blue w3-round-medium" type="submit" value="Ask">
+                
+                    </form> 
+                
+                
+              <script>
+                  function displayRest(){
+                    const displayForm = document.getElementById("other_forms");
+                    const titleField = document.getElementById('id_title');
+                    const closeBtn = document.getElementById('close-btn');
+                    displayForm.style.display = "block";
+                    closeBtn.style.display = "block";
+                    titleField.value = "Suggest a catchy title for your question ...";
+                  }
+                  function closeRest(){
+                      const closeForm = document.getElementById("other_forms");
+                      const titleField = document.getElementById('id_title');
+                      const closeBtn = document.getElementById('close-btn');
+                      closeBtn.style.display = "none";
+                        closeForm.style.display = "none";
+                        titleField.value = "";
+                    
+                  }
+              </script> 
+               
+               
                 </div>
             </div>
         </div>

@@ -24,7 +24,9 @@ class ApprovedManager(models.Manager):
             # distinct() is often necessary with Q lookups
             qs = qs.filter(or_lookup).distinct()
         return qs
-
+class PendingManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(status="pending")
 
 class Quest(models.Model): 
     TYPE_CHOICES = (
@@ -64,7 +66,8 @@ class Quest(models.Model):
 
     objects = models.Manager()  # The default manager.
     Approved = ApprovedManager()  # Our custom manager.
-
+    Pending = PendingManager()
+   
     def __str__(self):
         return self.title
 

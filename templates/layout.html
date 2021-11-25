@@ -3,7 +3,6 @@
 {% load notifications_tags %}
 <!DOCTYPE html>
 <html>
-
 <head>
 	<title>{% block title %} {% endblock %}</title>
 	<meta charset="UTF-8" />
@@ -64,11 +63,12 @@
                 {% else %}
                 <a href="{% url 'question_list' %}" class="w3-bar-item">
 					<div class="logo-width">
-					<span class="txt-rotate" data-period="8000" data-rotate='[ "easyCampus", "Practice", "Ask", "Learn", "Connect" ]'></span>
+					<span class="txt-rotate" data-period="8000" data-rotate='[ "ecampus.edu.ng", "Practice", "Ask", "Learn", "Connect" ]'></span>
 					</div>
 				</a>
                 {% endif %}
 				<a href="{% url 'user_list' %}" title="Members List" class="w3-bar-item w3-btn w3-padding-large w3-hide-small"><i class="fas fa-user"></i></a>
+				<a href="{% url 'ask_question' %}" title="Ask a Question" class="w3-bar-item w3-btn w3-padding-large w3-hide-small"><i class="fas fa-comment"></i></a>
 				<a href="{% url 'groups_list' 'my' %}" title="Groups" class="w3-bar-item w3-btn w3-padding-large w3-hide-small"><i class="fas fa-users"></i></a>
 				{% if not exammode %}
 				<div class="w3-dropdown-hover w3-hide-small">
@@ -143,20 +143,20 @@
 							<a href="{% url 'quiz_index' %}">
 								<li>CBT Home</li>
 							</a>
-							<a href="#">
+							<a href="{% url 'ask_question' %}">
 								<li>Ask a question</li>
 							</a>
-							<a href="#">
+							<a href="{% url 'groups_list' 'my' %}">
 								<li>Groups</li>
 							</a>
-							<a href="#">
-								<li>CHM101</li>
-							</a>
-							<a href="#">
-								<li>Connect</li>
-							</a>
-							<a href="#">
+							<a href="{% url 'profile' %}">
 								<li>Dashboard</li>
+							</a>
+							<a href="#">
+								<li>Privacy-Policy</li>
+							</a>
+							<a href="#">
+								<li>Contact Us</li>
 							</a>
 						</ul>
 					</div>
