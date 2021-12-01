@@ -8,7 +8,7 @@
     <div class="w3-col m7 s12" >
         <div class="w3-center">
             {% if user.userprofile.profile_photo %}
-            {% thumbnail user.userprofile.profile_photo "150x150" crop="center" format="WEBP" as im %}            
+            {% thumbnail user.userprofile.profile_photo "150x150" crop="center" format="WEBP" as im %}
                 <img src="{{im.url}}" class="w3-circle" height="{{im.height}}px" width="{{im.width}}px" alt="{{user.username}}'s Profile Pics">
           {% endthumbnail %}
             {% else %}
@@ -43,12 +43,14 @@
     </div>
 </div>
 
+{% endblock %}
+{% block scripts %}
 <script>
     $.ajaxSetup({
         headers: {"X-CSRFToken":'{{csrf_token}}'}
 
     });
-$(document).ready(function(){  
+$(document).ready(function(){
     $('a.follow').click(function(e){
         e.preventDefault();
         $.post('{% url "user_follow" %}',

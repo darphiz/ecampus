@@ -23,7 +23,7 @@ KEY = os.getenv('IMAGE_DETECTOR_API_KEY')
 
 
 def api_check_nudity(image):
-    image = f'https://easycampus.pythonanywhere.com{image}'
+    image = f'https://www.easyclassmate.com{image}'
     r = requests.post("https://api.deepai.org/api/content-moderation",data={'image': image,}, headers={'api-key': KEY }).json()
     if r['output']["nsfw_score"] > 0.5:
         nude = True
@@ -73,18 +73,20 @@ def AutoApprove():
         for question in questions:
             constains_bad_images = check_images(question.body)
             contains_bad_words = check_text(question.body)
-            contains_bad_title = api_check_profanity(question.title) 
-            if question.image_upload.url:
+            contains_bad_title = api_check_profanity(question.title)
+            if question.image_upload:
                 contains_bad_thumbnail = api_check_nudity(question.image_upload.url)
             if constains_bad_images or contains_bad_words or contains_bad_title or contains_bad_thumbnail:
                 question.status = "rejected"
                 question.save()
                 message = f"rejected your {question.type}:  \"{question.title}\""
                 notify.send(user ,recipient=question.asked_by, verb=message, url=question.get_absolute_url())
-            else: 
+                print(f"rejected: {question.title} ")
+            else:
                 question.status = "approved"
                 question.save()
                 message = f"approved your {question.type}:  \"{question.title}\""
                 notify.send(user ,recipient=question.asked_by, verb=message, url=question.get_absolute_url())
+                print(f"approved: {question.title} ")
 
 AutoApprove()

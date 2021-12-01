@@ -14,6 +14,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 def charge_user(user,exam_type):
     if user.is_authenticated:
@@ -59,7 +61,7 @@ class QuizListView(ListView):
         return queryset.filter(draft=False)
 
 
-class QuizDetailView(DetailView):
+class QuizDetailView(LoginRequiredMixin,DetailView):
     model = Quiz
     slug_field = 'url'
 
@@ -67,12 +69,12 @@ class QuizDetailView(DetailView):
         self.object = self.get_object()
         if self.object.draft and not request.user.has_perm('quiz.change_quiz'):
             raise PermissionDenied
-        if self.object.answers_at_end is True:
-            charge_able = charge_user(self.request.user, "exam")
-        else:
-            charge_able = charge_user(self.request.user, "quiz")
-        if not charge_able:
-            return redirect('top_up')
+        # if self.object.answers_at_end is True:
+        #     charge_able = charge_user(self.request.user, "exam")
+        # else:
+        #     charge_able = charge_user(self.request.user, "quiz")
+        # if not charge_able:
+        #     return redirect('top_up')
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 

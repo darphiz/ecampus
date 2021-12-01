@@ -19,6 +19,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from community import views
 import notifications.urls
+from django.contrib.sitemaps.views import sitemap
+from community.sitemaps import QuestionSitemap
+
+sitemaps = {
+'questions': QuestionSitemap,
+}
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('community.urls')),
@@ -31,5 +37,6 @@ urlpatterns = [
     #REST API
     path('api/accounts/', include('accounts.api.urls', 'accounts')),
     path('api/community/', include('community.api.urls', 'community')),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap')
 ]
 urlpatterns= urlpatterns + static(settings.MEDIA_URL,document_root= settings.MEDIA_ROOT)

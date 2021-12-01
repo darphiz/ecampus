@@ -28,13 +28,13 @@ class PendingManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(status="pending")
 
-class Quest(models.Model): 
+class Quest(models.Model):
     TYPE_CHOICES = (
         ('article', 'Article'),
         ('question', 'Question'),
         ('link', 'Link'),
     )
-    
+
     STATUS_CHOICES = (
         ('approved', 'Approved'),
         ('pending', 'Pending'),
@@ -47,6 +47,7 @@ class Quest(models.Model):
                                  related_name='user', null=True,blank=True)
     body = models.TextField()
     date_asked = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=10,
                             choices=STATUS_CHOICES,
                             default='pending', blank=True,
@@ -67,7 +68,7 @@ class Quest(models.Model):
     objects = models.Manager()  # The default manager.
     Approved = ApprovedManager()  # Our custom manager.
     Pending = PendingManager()
-   
+
     def __str__(self):
         return self.title
 
@@ -138,14 +139,14 @@ class Group(models.Model):
 class Interest(models.Model):
     user = models.OneToOneField(User, on_delete=CASCADE, related_name="Interest",db_index=True)
     keytags = models.TextField(blank=True,null=True, db_index=True)
-    
+
     def save(self, *args, **kwargs):
         self.keytags = json.dumps(self.keytags)
         super(Interest, self).save(*args, **kwargs)
     def get_user_interest(self):
         jsonDec = json.decoder.JSONDecoder()
         get_interests = jsonDec.decode(self.keytags)
-        return get_interests 
+        return get_interests
 
     def __str__(self):
         return self.user.username
@@ -155,4 +156,3 @@ class Visit(models.Model):
     questions = models.ManyToManyField(Quest, blank=True)
     def __str__(self):
         return self.user.username
-    

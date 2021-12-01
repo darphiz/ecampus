@@ -6,18 +6,18 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-                       path('quiz_index/',
+                       path('quiz-index/',
                            QuizListView.as_view(),
                            name='quiz_index'),
-                   
+
                         path('<quiz_name>/take/<int:question_number>',
                                     views.goto,
                                 name='goto'),
-                                
+
                            path('<quiz_name>/take/endquiz',
                             views.endquiz,
                            name='endquiz'),
-                      
+
                        url(regex=r'^category/$',
                            view=CategoriesListView.as_view(),
                            name='quiz_category_list_all'),
@@ -45,8 +45,7 @@ urlpatterns = [
 
                        url(regex=r'^(?P<quiz_name>[\w-]+)/take/$',
                            view=QuizTake.as_view(),
-                           name='quiz_question'),                       
+                           name='quiz_question'),
 ]
 
 
-         

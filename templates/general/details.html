@@ -1,15 +1,49 @@
 {% extends "layout.html" %}
 {% load static %}
 {% load thumbnail %}
+{% load class_name %}
 {% block title %}
 {{ question.title }}
+{% endblock %}
+{% block meta %}
+<!- SEO ->
+	<script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{question.get_absoulte_uri}}"
+      },
+      "headline": "{{question.title}}",
+      "description": "{{question.body|pure_text|truncatechars:7}}",
+      {% if quetion.image_upload %}
+      "image": "https://www.easyclassmate.com{{question.image_upload.url}}",
+      {% endif %}
+      "author": {
+        "@type": "Person",
+        "name": "{{question.asked_by}}",
+        "url": "{{question.asked_by.get_absolute_url}}"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Easyclassmate",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "{% static 'images/easyclassmate.ico' %}"
+        }
+      },
+      "datePublished": "{{question.date_asked}}",
+      "dateModified": "{{question.updated}}"
+    }
+    </script>
 {% endblock %}
 {% block content %}
 
 <div class="w3-row w3-margin-top">
     <div class="w3-col m8 w3-white">
         <!--Post thumbnail-->
-        {% if question.image_upload %}    
+        {% if question.image_upload %}
         {% thumbnail question.image_upload "750x750" format="WEBP" as im %}
         <img class="w3-image" src='{{im.url}}' alt="{{ question.title }} thumbnail" width="100%">
         {% endthumbnail %}
@@ -18,12 +52,12 @@
         <div class="w3-container w3-margin-top">
             <h1><b>{{ question.title }}</b></h1>
         </div>
-        {% if question.status == "rejected" %} 
+        {% if question.status == "rejected" %}
         <div class="w3-container w3-text-red">
             <p>Your {{question.type}} was rejected because it contains disallowed images or content...</p>
         </div>
         {% endif %}
-        {% if question.status == "pending" %} 
+        {% if question.status == "pending" %}
         <div class="w3-container w3-text-yellow">
             <p>Your {{question.type}} will be visible to the public after it has been approved (usually takes less than 15min)...</p>
         </div>
@@ -93,7 +127,7 @@
             {% endfor %}
             {% if new_answer %}
             <h3 id="new_answer" class="w3-container">Your answer has been added</h3>
-            <br>            
+            <br>
             <div class="w3-animate-zoom w3-container w3-row d-flex w3-border w3-round-medium">
                 <div class="w3-col m1 s2 w3-margin-top">
                     <a href="#"  onclick="upvote_question({{new_answer.id}},'link_{{new_answer.id}}'); return false;"><i id="link_{{new_answer.id}}" class="fas fa-chevron-up fa-1x {% if request.user in answer.votes.all %}w3-text-blue{% endif %}"></i></a>
@@ -107,7 +141,7 @@
             </div><br>
             {% endif %}
         </div>
-        
+
         <!-- paginator -->
         <div class="pagination w3-margin-top w3-center w3-container">
             <div class="step-links">
@@ -155,7 +189,7 @@
     </div>
 
     <div class="w3-col m4 w3-container container-mobile">
-   
+
         <div class="w3-container  w3-white">
             <h3 class="w3-center w3-border-bottom w3-padding-16">Similar Questions</h3>
             {% for question in similar_questions %}
@@ -171,18 +205,18 @@
                 {% endif %}
                 <div>
                     <a href="{{question.get_absolute_url}}">
-                    <h5 class="margin-2">{{question.title}}</h5> 
-                    <p class="w3-text-grey">{{question.asked_by}} - {{question.date_asked}} </p>   
-                    </a>           
+                    <h5 class="margin-2">{{question.title}}</h5>
+                    <p class="w3-text-grey">{{question.asked_by}} - {{question.date_asked}} </p>
+                    </a>
                 </div>
             </div>
             {% empty %}
             <div class="w3-center w3-opacity w3-margin">
                 <p>No similar questions yet...</p>
             </div>
-            {% endfor %}         
+            {% endfor %}
     </div>
-   
+
     <br>
 {% if question.group_asked.all %}
     <div class="w3-white w3-container">
@@ -193,9 +227,9 @@
                 <img width="{{im.width}}" height="{{im.height}}"class="w3-circle" src="{{im.url}}" alt="{{group.name}} Thumbnail">
                 {% endthumbnail %}
             </div>
-            
+
             <p class="w3-border w3-padding">{{group.description}}</p>
-            
+
             <p><b>{{group.members.count}}</b> members</p>
             <a href="{{group.get_absolute_url}}" class="w3-button w3-blue w3-round-medium w3-margin-bottom">Visit</a>
             {% endfor %}
@@ -209,7 +243,7 @@
       $.ajaxSetup({
           headers: {"X-CSRFToken":'{{csrf_token}}'}
           });
-  
+
       $('a.vote-button').click(function(e){
           e.preventDefault();
           $.post('{% url "vote_post" %}',
@@ -226,7 +260,7 @@
                       // toggle link text
                       if (previous_action == 'up_vote'){
                           $('a.vote-button span').text('Down vote');
-                          
+
                       }
                       else{
                         $('a.vote-button span').text('Up vote');
@@ -241,7 +275,7 @@
               }
           );
       });
-  </script>  
+  </script>
   <script>
       function upvote_question(id,a){
         var count_id =document.getElementById(id);

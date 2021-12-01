@@ -14,7 +14,22 @@
 .w-100{
   width: 100%;
 }
-
+.w-auto{
+    width: auto;
+}
+.h-w-106{
+    height:106px;
+    width:106px;
+}
+.h-15{
+    height: 15px;
+}
+embed,
+iframe,
+object {
+    width: 100%;
+    max-width: 100%;
+}
 h1{
   font-size: 24px;
   font-family: Poppins, sans-serif;
@@ -306,7 +321,7 @@ body{
   width: 100%;
   height: 100%;
   object-fit: cover;
- 
+
 }
 .img-preview-2{
   height: 200px;

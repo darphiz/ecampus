@@ -99,7 +99,7 @@ class Quiz(models.Model):
                     " a user will be permitted."
                     " Non users cannot sit this exam."),
         verbose_name=_("Single Attempt"))
-    
+
     pass_mark = models.SmallIntegerField(
         blank=True, default=0,
         verbose_name=_("Pass Mark"),
@@ -114,6 +114,8 @@ class Quiz(models.Model):
         verbose_name=_("Fail Text"),
         blank=True, help_text=_("Displayed if user fails."))
 
+    premium = models.BooleanField(
+        blank=True, default=False)
     draft = models.BooleanField(
         blank=True, default=False,
         verbose_name=_("Draft"),
@@ -184,7 +186,7 @@ class Progress(models.Model):
 
     correct_answer = models.CharField(max_length=10, verbose_name=_('Correct Answers'))
 
-    wrong_answer = models.CharField(max_length=10, verbose_name=_('Wrong Answers')) 
+    wrong_answer = models.CharField(max_length=10, verbose_name=_('Wrong Answers'))
 
     objects = ProgressManager()
 
@@ -398,9 +400,9 @@ class Sitting(models.Model):
         question_id = int(first)
         return Question.objects.get_subclass(id=question_id)
 
-    def get_question_number(self,question_number):      
+    def get_question_number(self,question_number):
         """
-        Return the question requested for 
+        Return the question requested for
 
         """
         if not self.question_list:
@@ -411,8 +413,8 @@ class Sitting(models.Model):
         question_id = q_list[q_number]
 
         return Question.objects.get_subclass(id=question_id)
-        
-        
+
+
     def remove_first_question(self):
         if not self.question_list:
             return
@@ -513,7 +515,7 @@ class Sitting(models.Model):
 
         if with_answers:
             user_answers = json.loads(self.user_answers)
-            for question in questions: 
+            for question in questions:
                 try:
                     question.user_answer = user_answers[str(question.id)]
                 except:
@@ -529,7 +531,7 @@ class Sitting(models.Model):
     @property
     def get_max_score(self):
         return len(self._question_ids())
-        
+
     def get_start_time(self):
         time = float(self.start.timestamp()) * 1000
         return int(time)
@@ -542,14 +544,14 @@ class Sitting(models.Model):
         answered = len(json.loads(self.user_answers))
         total = self.get_max_score
         return answered, total
-   
+
 
 class Question(models.Model):
     """
     Base class for all question types.
     Shared properties placed here.
     """
-    
+
     quiz = models.ManyToManyField(Quiz,
                                   verbose_name=_("Quiz"),
                                   blank=True)
@@ -563,8 +565,8 @@ class Question(models.Model):
                                blank=True,
                                null=True,
                                verbose_name=_("Figure"))
-    
-    
+
+
     content = models.CharField(max_length=1000,
                                blank=False,
                                help_text=_("Enter the question text that "
@@ -643,7 +645,7 @@ def csv_upload_post_save(sender, instance, created, *args, **kwargs):
             # messages.success(parsed_items)
             print(parsed_items)
         csv_uploaded.send(sender=instance, user=instance.user, csv_file_list=parsed_items)
-        ''' 
+        '''
         if using a model directly
         for line in reader:
             new_obj = YourModelKlass()
@@ -654,7 +656,7 @@ def csv_upload_post_save(sender, instance, created, *args, **kwargs):
                 setattr(new_obj, key) = item
                 i+=1
             new_obj.save()
-        ''' 
+        '''
         instance.completed = True
         instance.save()
 

@@ -5,16 +5,29 @@
 <html>
 <head>
 	<title>{% block title %} {% endblock %}</title>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width = device-width , initial-scale=1" />
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+	<meta name="description" content="{% block description %} {% endblock %}">
+	{% block meta %}
+	{% endblock %}
 	<!-- Add icon library -->
+	<link rel="icon" type="image/x-icon" href="{% static 'images/easyclassmate.ico' %}">
+	<link rel="stylesheet" href="{% static 'css/main.css' %}?v=12">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/w3-css/4.1.0/w3.min.css" integrity="sha512-Z6UIAdEZ7JNzeX5M/c5QZj+oqbldGD+E8xJEoOwAx5e0phH7kdjsWULGeK5l2UjehKtChHDaUY2rQAF/NEiI9w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-	<link rel="stylesheet" href="{% static 'css/main.css' %}?v=6" />
 	<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue.css">
-	<link rel="stylesheet" href="{% static 'css/w3.css' %}"/>
-	<link rel="stylesheet" href="{% static 'css/all.min.css' %}"/>
-	<script src="{% static 'js/jquery.min.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V4BVK6LDLM"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-V4BVK6LDLM');
+    </script>
 </head>
 
 
@@ -30,7 +43,7 @@
 				<a href="{% url 'groups_list' 'my' %}" class="w3-bar-item w3-btn w3-padding-large">Groups</a>
 				<a href="{% url 'user_list' %}" class="w3-bar-item w3-btn w3-padding-large">Members List</a>
 				{% if request.user.is_authenticated %}
-				<a href="{% url 'profile' %}" class="w3-bar-item w3-btn w3-padding-large">Dashboard</a>
+				<a href="{% url 'profile' %}" class="w3-bar-item w3-btn w3-padding-large">My Profile</a>
 				<a href="{% url 'logout' %}" class="w3-bar-item w3-btn w3-padding-large">Logout</a>
 				{%	else %}
 				<a href="{% url 'login' %}" class="w3-bar-item w3-btn w3-padding-large">Login/Register</a>
@@ -41,7 +54,6 @@
 				<a href="#" class="w3-bar-item w3-btn w3-padding-large">Privacy Policy</a>
 				<a href="#" class="w3-bar-item w3-btn w3-padding-large">Contact Us</a>
 				<a href="#" class="w3-bar-item w3-btn w3-padding-large">Report Abuse</a>
-				<a href="#" class="w3-bar-item w3-btn w3-padding-large">Go Premium!</a>
 			</div>
 		</div>
 		<!-- Navbar -->
@@ -51,9 +63,11 @@
 					class="w3-bar-item w3-btn w3-hide-medium w3-hide-large w3-right w3-padding-large w3-large w3-theme-d2"><i
 						class="fa fa-bars"></i>
 				</button>
+				{% if request.user.is_authenticated %}
 				<a href="{% url 'notify_user' %}" class="w3-bar-item w3-btn w3-hide-medium w3-hide-large w3-right w3-padding-large w3-large w3-theme-d2" ><i class="fa fa-bell"></i>
 					<span class="notification w3-badge w3-right w3-small w3-green">{% live_notify_badge %}</span>
 				</a>
+				{% endif %}
                 {% if exammode %}
                 <a href="{% url 'question_list' %}" class="w3-bar-item">
 					<div class="logo-width">
@@ -63,7 +77,7 @@
                 {% else %}
                 <a href="{% url 'question_list' %}" class="w3-bar-item">
 					<div class="logo-width">
-					<span class="txt-rotate" data-period="8000" data-rotate='[ "ecampus.edu.ng", "Practice", "Ask", "Learn", "Connect" ]'></span>
+					<span>easyclassmate</span>
 					</div>
 				</a>
                 {% endif %}
@@ -75,7 +89,7 @@
 					<button class="w3-btn  w3-padding-large" title="Notifications"><i class="fa fa-bell"></i>
 						<span class="notification w3-badge w3-right w3-small w3-green">{% live_notify_badge %}</span>
 					</button>
-					<div class="w3-dropdown-content  w3-card-4 w3-bar-block" style="width:auto;">
+					<div class="w3-dropdown-content w-auto w3-card-4 w3-bar-block">
 						{% live_notify_list list_class="w3-dropdown-content"%}
 						<div class="note_menu w3-dropdown-content-1">
 
@@ -133,7 +147,7 @@
 				<div class="w3-third">
 					<h4 class="w3-text-white">About Us</h4>
 					<div class="footer-link">
-						<p>Easycampus is an online education platform that helps Nigerian students achieve academic excellence in their fields of study. The community is saturated with both tutors and students who are ready to share/impact knowledge. Ace your first-year exams in one sitting with our CBT tools, <a href="{% url 'quiz_index' %}">Get Started Now!</a></p>
+						<p>Easyclassmate is an online education platform that helps Nigerian students achieve academic excellence in their fields of study. The community is saturated with both tutors and students who are ready to share/impact knowledge. Ace your first-year exams in one sitting with our CBT tools, <a href="{% url 'quiz_index' %}">Get Started Now!</a></p>
 					</div>
 				</div>
 				<div class="w3-third">
@@ -150,7 +164,7 @@
 								<li>Groups</li>
 							</a>
 							<a href="{% url 'profile' %}">
-								<li>Dashboard</li>
+								<li>My Profile</li>
 							</a>
 							<a href="#">
 								<li>Privacy-Policy</li>
@@ -175,9 +189,8 @@
 			</div>
 		</div>
 	</footer>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<!-- JavaScripts -->
-	{% block scripts %}
-	{% endblock %}
 	<script>
 		$(document).ready(function () {
 			$("#openNav").click(function () {
@@ -190,66 +203,11 @@
 			});
 		});
 	</script>
-
-	{% if not exammode %}
-
-	<script>
-		var TxtRotate = function(el, toRotate, period) {
-  this.toRotate = toRotate;
-  this.el = el;
-  this.loopNum = 0;
-  this.period = parseInt(period, 10) || 2000;
-  this.txt = '';
-  this.tick();
-  this.isDeleting = false;
-};
-
-TxtRotate.prototype.tick = function() {
-  var i = this.loopNum % this.toRotate.length;
-  var fullTxt = this.toRotate[i];
-
-  if (this.isDeleting) {
-    this.txt = fullTxt.substring(0, this.txt.length - 1);
-  } else {
-    this.txt = fullTxt.substring(0, this.txt.length + 1);
-  }
-
-  this.el.innerHTML = this.txt;
-
-  var that = this;
-  var delta = 300 - Math.random() * 100;
-
-  if (this.isDeleting) { delta /= 2; }
-
-  if (!this.isDeleting && this.txt === fullTxt) {
-    delta = this.period;
-    this.isDeleting = true;
-  } else if (this.isDeleting && this.txt === '') {
-    this.isDeleting = false;
-    this.loopNum++;
-    delta = 500;
-  }
-
-  setTimeout(function() {
-    that.tick();
-  }, delta);
-};
-
-window.onload = function() {
-  var elements = document.getElementsByClassName('txt-rotate');
-  for (var i=0; i<elements.length; i++) {
-    var toRotate = elements[i].getAttribute('data-rotate');
-    var period = elements[i].getAttribute('data-period');
-    if (toRotate) {
-      new TxtRotate(elements[i], JSON.parse(toRotate), period);
-    }
-  }
-  // INJECT CSS
-
-};
-	</script>
-	<script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
-	{% register_notify_callbacks callbacks='fill_notification_list,fill_notification_badge' badge_class='notification' menu_class='note_menu' refresh_period=3 %}
+{% if request.user.is_authenticated %}
+<script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
+	{% register_notify_callbacks callbacks='fill_notification_list,fill_notification_badge' badge_class='notification' menu_class='note_menu' refresh_period=12 %}
 {% endif %}
+	{% block scripts %}
+	{% endblock %}
 </body>
 </html>

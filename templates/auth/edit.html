@@ -10,7 +10,7 @@
 <h1 class="w3-center"><b>Edit Profile</b></h1> <br>
     <div class="w3-row">
         <div class="w3-col m4 s1 w3-container">
-                                                
+
         </div>
         <div class="w3-col w3-margin-left m4 s10 w3-row">
             <div class="img-preview-2 w3-col m8 s8">
@@ -27,10 +27,10 @@
             </div>
         </div>
         <div class="w3-col m4 s1 w3-container">
-      
+
         </div>
     </div>
-        
+
     <p>
         {% if request.user.first_name %}
         <input value="{{request.user.first_name}}" id = "id_first_name" class="w3-input" type="text" placeholder="first name" name="first_name">
@@ -38,7 +38,7 @@
         <input id = "id_first_name" class="w3-input" type="text" placeholder="first name" name="first_name">
         {% endif %}
     </p>
-        
+
     <p>
         {% if request.user.last_name %}
         <input value="{{request.user.last_name}}" class="w3-input" id= "id_last_name"  placeholder="last name" type="text" name= "last_name" >
@@ -46,32 +46,33 @@
         <input class="w3-input" id= "id_last_name"  type="text"  placeholder="last name" name= "last_name" >
         {% endif %}
     </p>
-        
+
     <p>
         <select id= "id_faculty" class="w3-input" name= "faculty" >
-            <option value="" selected>Faculty</option>
-            <option value="Faculty of Education">Faculty of Education</option>
-            <option value="Faculty of Engineering">Faculty of Engineering</option>
-            <option value="Faculty of Agriculture">Faculty of Agriculture</option>
-            <option value="Faculty of Science">Faculty of Science</option>
-            <option value="Faculty of Art">Faculty of Art</option>
-            <option value="Faculty of Faculty of Management Science">Faculty of Management Science</option>
-            <option value="Faculty of Social Science">Faculty of Social Science</option>
-            <option value="Others">Others</option>
+            <option value="" {% if not request.user.userprofile.faculty %}selected{% endif %}>Faculty</option>
+            <option value="Faculty of Education" {% if request.user.userprofile.faculty == 'Faculty of Education' %}selected{% endif %}>Faculty of Education</option>
+            <option value="Faculty of Engineering" {% if request.user.userprofile.faculty == 'Faculty of Engineering' %}selected{% endif %}>Faculty of Engineering</option>
+            <option value="Faculty of Agriculture" {% if request.user.userprofile.faculty == 'Faculty of Agriculture' %}selected{% endif %}>Faculty of Agriculture</option>
+            <option value="Faculty of Science" {% if request.user.userprofile.faculty == 'Faculty of Science' %}selected{% endif %}>Faculty of Science</option>
+            <option value="Faculty of Art" {% if request.user.userprofile.faculty == 'Faculty of Art' %}selected{% endif %}>Faculty of Art</option>
+            <option value="Faculty of Faculty of Management Science" {% if request.user.userprofile.faculty == 'Faculty of Faculty of Management Science' %}selected{% endif %}>Faculty of Management Science</option>
+            <option value="Faculty of Social Science" {% if request.user.userprofile.faculty == 'Faculty of Social Science' %}selected{% endif %}>Faculty of Social Science</option>
+            <option value="Others" {% if request.user.userprofile.faculty == 'Others' %}selected{% endif %}>Others</option>
         </select>
-    </p>    
+    </p>
     <p>
+
         <select class="w3-input" name= "level" >
-            <option value="" selected>Level</option>
-            <option value="100L">100L</option>
-            <option value="200L">200L</option>
-            <option value="300L">300L</option>
-            <option value="400L">400L</option>
-            <option value="500L">500L</option>
-            <option value="600L">600L</option>
-    
+            <option value="" {% if not request.user.userprofile.level %}selected{% endif %}>Level</option>
+            <option value="100L" {% if request.user.userprofile.level == '100L' %}selected{% endif %}>100L</option>
+            <option value="200L" {% if request.user.userprofile.level == '200L' %}selected{% endif %}>200L</option>
+            <option value="300L" {% if request.user.userprofile.level == '300L' %}selected{% endif %}>300L</option>
+            <option value="400L" {% if request.user.userprofile.level == '400L' %}selected{% endif %}>400L</option>
+            <option value="500L" {% if request.user.userprofile.level == '500L' %}selected{% endif %}>500L</option>
+            <option value="600L" {% if request.user.userprofile.level == '600L' %}selected{% endif %}>600L</option>
+
         </select>
-        </p>        
+        </p>
         <p>
             {% if request.user.userprofile.gender == 'male' %}
         <input id= "id_gender_1" class="w3-radio" type="radio" name="gender" value="male" checked>
@@ -79,7 +80,7 @@
         <input id= "id_gender_1" class="w3-radio" type="radio" name="gender" value="male">
         {% endif %}
         <label for="id_gender_1">Male</label></p>
-        
+
         <p>
             {% if request.user.userprofile.gender == 'female' %}
         <input id= "id_gender_2" class="w3-radio" type="radio" name="gender" value="female" checked>
@@ -87,9 +88,9 @@
         <input id= "id_gender_2" class="w3-radio" type="radio" name="gender" value="female">
             {% endif %}
         <label for="id_gender_2">Female</label></p>
-           
+
         <button type="submit" class="w3-btn w3-round-medium w3-blue"><i class="fas fa-save"></i> Save changes</button>
-        
+
 </div>
 </div>
 </form>

@@ -42,7 +42,7 @@ def register(request):
         username = request.POST.get('username')
         email = request.POST.get('email')
         otp = request.POST.get('otp')
-        validate = otp_valid(email,username,otp) 
+        validate = otp_valid(email,username,otp)
         if validate['status']==False:
             form_error = validate["message"]
             return render(request,'auth/register.html',{'form_error':form_error,'form':form})
@@ -150,12 +150,24 @@ def auto_users(request):
 
 def edit_profile(request):
     if request.method == 'POST':
-        request.user.first_name = request.POST.get('first_name')
-        request.user.last_name  = request.POST.get('last_name')
-        request.user.userprofile.faculty  = request.POST.get('faculty')
-        request.user.userprofile.level = request.POST.get('level')
-        request.user.userprofile.gender  = request.POST.get('gender')
-        request.user.userprofile.profile_photo  = request.FILES.get('profile_photo')
+        first_name = request.POST.get('first_name')
+        last_name  = request.POST.get('last_name')
+        faculty  = request.POST.get('faculty')
+        level = request.POST.get('level')
+        gender  = request.POST.get('gender')
+        profile_photo  = request.FILES.get('profile_photo')
+        if first_name:
+            request.user.first_name = first_name
+        if last_name:
+            request.user.last_name  = last_name
+        if faculty:
+            request.user.userprofile.faculty  = faculty
+        if level:
+            request.user.userprofile.level = level
+        if gender:
+            request.user.userprofile.gender  = gender
+        if profile_photo:
+            request.user.userprofile.profile_photo  = profile_photo
         request.user.save()
         request.user.userprofile.save()
         messages.success(request, 'Profile updated successfully.')

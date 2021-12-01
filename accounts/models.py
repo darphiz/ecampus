@@ -62,7 +62,7 @@ class Contact(models.Model):
 
 class Chakra(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='chakras')
-    value = models.FloatField(default=10)
+    value = models.FloatField(default=200)
     next_claim_time = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return self.user.username

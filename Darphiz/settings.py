@@ -29,12 +29,12 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['www.easyclassmate.com','easyclassmate.com']
 
-
+SITE_ID = 1
 # Application definition
 
 INSTALLED_APPS = [
@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
     #'paystack.frameworks.django',
     'accounts',
     'cbt',
@@ -121,7 +123,7 @@ FORCE_LOWERCASE_TAGS = True
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 
-
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -133,14 +135,13 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'easycampus$appbase',
+        'NAME': 'easycampus$easyclassmatebase',
         'USER': 'easycampus',
         'PASSWORD': os.getenv("DATA_BASE_PASSWORD"),
         'HOST': 'easycampus.mysql.pythonanywhere-services.com',
-
     }
 }
-"""
+
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -204,15 +205,18 @@ def static_url(url):
     return os.path.join(STATIC_URL, url)
 
 SUMMERNOTE_CONFIG = {
+    'width':'100%',
     'toolbar': [
         ['style', ['style']],
-        ['font', ['bold', 'italic',]],
+        ['font', ['bold', 'italic','superscript','subscript','strikethrough']],
         ['para', ['ul', 'ol', 'paragraph']],
         ['height', ['height']],
 
         ['insert', ['link', 'picture', 'video',]],
         ['view', ['codeview']],
         ['help', ['help']],
+
+
         ],
           "imageTitle": {
           "specificAltField": True,
@@ -227,20 +231,17 @@ SUMMERNOTE_CONFIG = {
 }
 
 
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.zeptomail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_SSL = False
 
 PAYSTACK_PUBLIC_KEY = os.getenv('PAYSTACK_PUBLIC_KEY')
 PAYSTACK_SECRET_KEY = os.getenv('PAYSTACK_SECRET_KEY')
 PASSWORD_MIN_LENGTH = 8
 
 DJANGO_NOTIFICATIONS_CONFIG = { 'USE_JSONFIELD': True}
-
-PAYSTACK_FAILED_URL = ""
-
-PAYSTACK_SUCCESS_URL = "question_list"

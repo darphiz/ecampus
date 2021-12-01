@@ -3,28 +3,28 @@
 
             {% for question in questions %}
             <div class="w3-container container-mobile w3-card w3-white w3-round question-container margin-desktop">
-    
+
                 <div class="profile-img">
                     {% if question.asked_by.userprofile.profile_photo %}
                         {% thumbnail question.asked_by.userprofile.profile_photo "80x80" crop="center" format="WEBP" as im %}
                         <img class="w3-circle" src="{{im.url}}" alt="{{question.asked_by.username}}'s profile photo" height="{{im.height}}" width="{{im.width}}">
                         {% endthumbnail %}
-                       
+
                         {% else %}
                         <img class="w3-circle" src="{% static 'images/femaleprofile.png' %}" alt="Profile">
                     {% endif %}
                     <div class="profile-text w3-text-grey">
-                        <p><b>{{question.asked_by.username|title}}</b></p>
+                        <p><b>{{question.asked_by.username|title}}</b>{% if question.asked_by.is_superuser %}<img style="height: 15px;" src="{% static 'images/verified.svg' %}" alt="verified icon">{% endif %}</p>
                         <p>{{question.date_asked}}</p>
                         <p class="w3-tag w3-round-large w3-blue">{{question.type}}</p>
                     </div>
                 </div>
                 <div class="w3-container">
-                   
+
                         <h3 class="question-title"> <a href="{{question.get_absolute_url}}"><b>{{question.title}}</b></a></h3>
-            
+
                     {% if question.image_upload %}
-                    {% thumbnail question.image_upload "350x350" crop="center" format="WEBP" as im %}
+                    {% thumbnail question.image_upload "400x350" crop="center" format="WEBP" as im %}
                         <img src="{{im.url}}" class="w3-round-medium q-image" alt="{{question.title}} Thumbnail">
                     {% endthumbnail %}
                     {% endif %}

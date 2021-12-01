@@ -2,11 +2,9 @@
 {% load static %}
 {% load thumbnail %}
 {% block title %}
-
-Easy Campus
+easyclassmate - your go-to study app
 {% endblock %}
-
-
+{% block description %}Easyclassmate is an online education platform that helps Nigerian students achieve academic excellence in their fields of study{% endblock %}
 {% block content %}
 <!-- The Grid -->
 <div class="w3-row container-mobile">
@@ -26,11 +24,9 @@ Easy Campus
                     </p>
                         {% else %}
                     {% if request.user.userprofile.gender|title == "Male" %}
-                    <p class="w3-center"><img src="{% static 'images/maleprofile.png' %}" class="w3-circle"
-                            style="height:106px;width:106px" alt="Avatar"></p>
+                    <p class="w3-center"><img src="{% static 'images/maleprofile.png' %}" class="w3-circle h-w-106" alt="Avatar"></p>
                     {% else %}
-                    <p class="w3-center"><img src="{% static 'images/femaleprofile.png' %}" class="w3-circle"
-                            style="height:106px;width:106px" alt="Avatar"></p>
+                    <p class="w3-center"><img src="{% static 'images/femaleprofile.png' %}" class="w3-circle h-w-106" alt="Avatar"></p>
                     {% endif %}
                     {% endif %}
                 <hr>
@@ -42,15 +38,14 @@ Easy Campus
                     <p>{{ request.user.username|title }}</p>
                         {% endif %}
                 </a>
-                    
+
                         <p>{{ request.user.userprofile.faculty|title }}</p>
                     <p> {{ request.user.userprofile.level }}</p>
                     <p> {{ request.user.userprofile.gender|title }} </p>
                     <a href="{% url 'logout' %}" class="w3-block w3-blue w3-btn w3-margin-bottom w3-round">Log Out</a>
                 {% else %}
                     <p class="w3-center">
-                        <img src="{% static 'images/maleprofile.png' %}" class="w3-circle"
-                            style="height:106px;width:106px" alt="Avatar">
+                        <img src="{% static 'images/maleprofile.png' %}" class="w3-circlen h-w-106" alt="Avatar">
                         </p>
                     <a href="{% url 'login' %}" class="w3-block w3-blue w3-btn w3-margin-bottom w3-round">Log In</a>
                     <a href="{% url 'register' %}" class="w3-block w3-blue w3-btn w3-margin-bottom w3-round">Sign Up</a>
@@ -105,24 +100,24 @@ Easy Campus
 
     <!-- Middle Column -->
     <div class="w3-col m7 middle-column overflow-container">
-        
+
         <!--TOP Middle-->
         <div class="w3-row-padding ">
             <div class="w3-col m12 container-mobile-0">
                 <div class="w3-card w3-round container-mobile-0 w3-white ">
                     <div class="w3-container w3-padding">
-                        <h6 class="w3-opacity">{% if request.user.is_authenticated %}Hello {% if request.user.get_full_name %}{{ request.user.get_full_name|title }}{% else %}{{ request.user.username|title }}{% endif %}!, {% endif %}What would you like to do?</h6>
+                        <h6 class="w3-opacity">{% if request.user.is_authenticated %}Hello {% if request.user.get_full_name %}{{ request.user.get_full_name|title }}{% else %}{{ request.user.username|title }}{% endif %}, {% endif %}What would you like to do?</h6>
                     <form action="{% url 'query' action='search' arg='query' %}" method="GET">
                         <input name="search_query" type="text" id = "id_search_query"  class="w3-border w3-block w3-round-large w3-padding" placeholder="Type in the keyword and hit search...." required>
                         <br>
-                        <small> 
-                            <button type="submit" class="w3-btn w3-round-large w3-blue">Search</button>    
+                        <small>
+                            <button type="submit" class="w3-btn w3-round-large w3-blue">Search</button>
                             <a href="{% url 'quiz_index' %}" class="w3-btn w3-round-large w3-blue">Practice CBT</a>
                             <a href="{% url 'ask_question' %}" class="w3-btn w3-round-large w3-blue">Ask Question</a>
                         </small>
                     </form>
-                        
-                   
+
+
                     </div>
                 </div>
             </div>
@@ -130,10 +125,10 @@ Easy Campus
         <!--End Top Middle-->
 
         <!--Suggested Questions Intro-->
-      
+
 
         <div class="infinite-container">
-           
+
         {% include 'general/index_scroll.html' %}
         </div>
         <!--SPinner Div-->
@@ -160,13 +155,13 @@ Easy Campus
       ></rect>
       <defs>
         <clipPath id="clip-path">
-            <circle cx="31" cy="31" r="20" /> 
-            <rect x="58" y="18" rx="2" ry="2" width="140" height="10" /> 
-            <rect x="58" y="34" rx="2" ry="2" width="140" height="10" /> 
-            <rect x="19" y="117" rx="2" ry="2" width="357" height="320" /> 
-            <rect x="19" y="68" rx="2" ry="2" width="357" height="21" /> 
-            <rect x="177" y="447" rx="0" ry="0" width="5" height="0" /> 
-        
+            <circle cx="31" cy="31" r="20" />
+            <rect x="58" y="18" rx="2" ry="2" width="140" height="10" />
+            <rect x="58" y="34" rx="2" ry="2" width="140" height="10" />
+            <rect x="19" y="117" rx="2" ry="2" width="357" height="320" />
+            <rect x="19" y="68" rx="2" ry="2" width="357" height="21" />
+            <rect x="177" y="447" rx="0" ry="0" width="5" height="0" />
+
         </clipPath>
         <linearGradient id="fill">
           <stop
@@ -223,21 +218,21 @@ Easy Campus
     <div class="w3-col s12 m3 container-mobile-1">
         <div class="w3-card w3-round border-fix-mobile w3-white">
             <div class="w3-container">
-                <h4 class="w3-center"><b>CBT Exam Portal</b></h4>
-                <img class="w3-round w3-image" src="{% static 'images/learn.jpg' %}" alt="cbt">
+                <h1 class="w3-center">CBT Exam Portal</h1>
+                <img class="w3-round w3-image" src="{% static 'images/learn.jpg' %}" alt="practice cbt banner" height="200px" width="100%">
                 <div class="w3-margin-top">
                     <p class="w3-opacity w3-center">Did you know?</p>
                     <p>
                         An effective way to boost your CGPA is by practicing free
-                        cbt on easyCAMPUS. it increases confidence ,aids learning and increases the rate at which
+                        cbt on easyclassmate. It increases confidence ,aids learning and increases the rate at which
                         you
                         decide during the
-                        exam. Select a mode to get started!
+                        exam.
                     </p>
                 </div>
 
                 <a href="{% url 'quiz_index' %}" class="w3-btn w3-margin-top w3-block w3-blue w3-round-large">Get Started</a><br>
-                
+
             </div>
         </div> <br>
         <div class="w3-container w3-card w3-white">
@@ -258,6 +253,11 @@ Easy Campus
     <!--End Grid-->
 </div>
 <div id="dev"></div>
+
+
+{% endblock %}
+
+
 {% block scripts %}
 <script src="{% static 'js/jquery-infinite-scroll.js' %}"></script>
 <script>
@@ -274,6 +274,4 @@ Easy Campus
         }
     }
 </script>
-{% endblock %}
-
 {% endblock %}

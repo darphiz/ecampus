@@ -3,11 +3,11 @@ import datetime
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from random import randint
-from django.core.mail import send_mail
 from django.utils.timezone import now
 from .models import OTP
 from common.decorator import ajax_required
 from django.views.decorators.http import require_POST
+from django.core.mail import EmailMessage
 # Create your views here.
 
 
@@ -47,11 +47,18 @@ def send_otp(request):
             otp = generate_otp(email, username)
         except:
             otp = reset_otp(email, username)
-        subject = "Confirm Your Email On Easy Campus"
-        message = f"Hello {username}, Your OTP is {otp}. Do not share this otp if you do not intend to create an account on easycampus."
+        subject = "Confirm Your Email On Easyclassmate"
+        message = f"""Hello {username},
+        You have requested a Easyclassmate account using the email address {email}.
+
+
+        Use the following one-time password (OTP) to verify your email address.
+        Your OTP is {otp}. Do not share this otp if you do not intend to create an account on Easyclassmate."""
+
         try:
-            send_mail(subject, message, 'mail.easycampus@gmail.com',
-                  [email], fail_silently=False)
+            the_mail = EmailMessage(subject=subject, body=message, from_email = 'Easyclassmate Verify <easyverification@easyclassmate.com>',
+                  to = [email],headers={'Content-Type': 'text/plain'})
+            the_mail.send()
             return JsonResponse({'status': 'ok'})
         except:
             error = 'An error occurred, Try again'
